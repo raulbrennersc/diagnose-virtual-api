@@ -9,7 +9,7 @@ namespace DiagnoseVirtual.Service.Helpers
 {
     public static class TokenHelper
     {
-        public static SecurityToken GerarTokenUsuario(Usuario usuario, string tokenKey)
+        public static string GerarTokenUsuario(Usuario usuario, string tokenKey)
         {
             var claims = new[]
             {
@@ -31,7 +31,7 @@ namespace DiagnoseVirtual.Service.Helpers
             var tokenHandler = new JwtSecurityTokenHandler();
 
             var token = tokenHandler.CreateToken(tokenDescriptor);
-            return token;
+            return tokenHandler.WriteToken(token);
         }
     }
 }
