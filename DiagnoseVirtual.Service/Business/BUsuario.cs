@@ -9,12 +9,12 @@ namespace DiagnoseVirtual.Service.Business
     {
         private readonly BaseService<Usuario> sUsuario;
 
-        public BUsuario (BaseService<Usuario> sUsuario)
+        public BUsuario(BaseService<Usuario> sUsuario)
         {
             this.sUsuario = sUsuario;
         }
 
-        public bool ExisteUsuario (string cpf)
+        public bool ExisteUsuario(string cpf)
         {
             return sUsuario.GetAll().Any(u => u.Cpf == cpf);
         }
