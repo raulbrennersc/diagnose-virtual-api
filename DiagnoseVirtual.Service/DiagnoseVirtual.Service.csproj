@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.6.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DiagnoseVirtual.Domain\DiagnoseVirtual.Domain.csproj" />
     <ProjectReference Include="..\DiagnoseVirtual.Infra.Data\DiagnoseVirtual.Infra.Data.csproj" />
   </ItemGroup>
