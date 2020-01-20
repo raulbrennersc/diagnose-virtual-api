@@ -1,4 +1,5 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
+using DiagnoseVirtual.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
