@@ -14,6 +14,6 @@ namespace DiagnoseVirtual.Domain.Interfaces
 
         T Get(int id);
 
-        IQueryable<T> Get();
+        IQueryable<T> GetAll();
     }
 }

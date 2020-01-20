@@ -32,7 +32,7 @@ namespace DiagnoseVirtual.Service.Services
             repository.Remove(id);
         }
 
-        public IQueryable<T> Get() => repository.SelectAll();
+        public IQueryable<T> GetAll() => repository.SelectAll();
 
         public T Get(int id)
         {
