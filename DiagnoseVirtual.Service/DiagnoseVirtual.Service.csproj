@@ -1,7 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DiagnoseVirtual.Domain\DiagnoseVirtual.Domain.csproj" />
+    <ProjectReference Include="..\DiagnoseVirtual.Infra.Data\DiagnoseVirtual.Infra.Data.csproj" />
+  </ItemGroup>
 
 </Project>
