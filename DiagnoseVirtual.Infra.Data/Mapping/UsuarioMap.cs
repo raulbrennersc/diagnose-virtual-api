@@ -8,7 +8,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
     {
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
-            builder.ToTable("User");
+            builder.ToTable("Usuario");
 
             builder.HasKey(u => u.Id);
 
