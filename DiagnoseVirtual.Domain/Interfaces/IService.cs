@@ -1,5 +1,6 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace DiagnoseVirtual.Domain.Interfaces
 {
@@ -13,6 +14,6 @@ namespace DiagnoseVirtual.Domain.Interfaces
 
         T Get(int id);
 
-        IList<T> Get();
+        IQueryable<T> Get();
     }
 }
