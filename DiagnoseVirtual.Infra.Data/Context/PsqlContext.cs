@@ -1,6 +1,7 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
+using Npgsql.EntityFrameworkCore.PostgreSQL;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -19,7 +20,8 @@ namespace DiagnoseVirtual.Infra.Data.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-                optionsBuilder.UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=qipixel_ark;");
+                optionsBuilder.UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=qipixel_ark;", x => x.UseNetTopologySuite());
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
