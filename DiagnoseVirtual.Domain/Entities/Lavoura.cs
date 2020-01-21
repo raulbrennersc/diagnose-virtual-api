@@ -9,7 +9,7 @@ namespace DiagnoseVirtual.Domain.Entities
     {
         public DadosLavoura DadosLavoura { get; set; }
         public Geometry Demarcacao { get; set; }
-        public ICollection<Geometry> Talhoes { get; set; }
+        public ICollection<Talhao> Talhoes { get; set; }
         public bool Concluida { get; set; }
     }
 }
