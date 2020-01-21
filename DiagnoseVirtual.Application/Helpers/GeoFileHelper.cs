@@ -1,8 +1,12 @@
-﻿using System;
+﻿using DiagnoseVirtual.Domain.Entities;
+using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using System.Text;
+using System.IO;
+using System.Linq;
 
-namespace DiagnoseVirtual.Service.Helpers
+namespace DiagnoseVirtual.Application.Helpers
 {
     public static class GeoFileHelper
     {
