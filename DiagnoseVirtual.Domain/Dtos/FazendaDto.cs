@@ -21,7 +21,7 @@ namespace DiagnoseVirtual.Domain.Dtos
             Id = fazenda.Id;
             LocalizacaoFazenda = fazenda.LocalizacaoFazenda != null ? new LocalizacaoFazendaDto(fazenda.LocalizacaoFazenda) : null;
             DadosFazenda = fazenda.DadosFazenda != null ? new DadosFazendaDto(fazenda.DadosFazenda) : null;
-            Lavouras = fazenda.Lavouras != null ? fazenda.Lavouras.Select(l => new LavouraDto(l)).ToList() : null;
+            Lavouras = fazenda.Lavouras?.Select(l => new LavouraDto(l)).ToList();
             Ativa = fazenda.Ativa;
             Concluida = fazenda.Concluida;
         }

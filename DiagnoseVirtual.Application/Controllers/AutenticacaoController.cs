@@ -25,7 +25,7 @@ namespace DiagnoseVirtual.Application.Controllers
             if (sUsuario.ExisteUsuario(novoUsuarioDto.Cpf))
                 return BadRequest("Já existe um cadastro com este CPF");
 
-            var novoUsuario = sUsuario.Cadastrar(novoUsuarioDto);
+            sUsuario.Cadastrar(novoUsuarioDto);
 
             return StatusCode(201);
         }

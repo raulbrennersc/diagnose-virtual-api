@@ -23,8 +23,7 @@ namespace DiagnoseVirtual.Service.Services
                 Email = novoUsuarioDto.Email,
             };
 
-            byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(novoUsuarioDto.Password, out passwordHash, out passwordSalt);
+            CreatePasswordHash(novoUsuarioDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             novoUsuario.PasswordHash = passwordHash;
             novoUsuario.PasswordSalt = passwordSalt;
