@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DiagnoseVirtual.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text;
 

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using NetTopologySuite.Geometries;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DiagnoseVirtual.Domain.Entities
 {
-    public class Geometria
+    public class Geometria : BaseEntity
     {
-        public int Id { get; set; }
         public Geometry Geometry { get; set; }
     }
 }

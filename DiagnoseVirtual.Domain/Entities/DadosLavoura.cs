@@ -4,9 +4,8 @@ using System.Text;
 
 namespace DiagnoseVirtual.Domain.Entities
 {
-    public class DadosLavoura
+    public class DadosLavoura : BaseEntity
     {
-        public int Id { get; set; }
         public string Nome { get; set; }
         public string MesAnoPlantio { get; set; }
         public string Cultivar { get; set; }

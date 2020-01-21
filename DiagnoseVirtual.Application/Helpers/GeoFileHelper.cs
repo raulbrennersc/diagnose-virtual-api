@@ -5,6 +5,13 @@ using Microsoft.AspNetCore.Http;
 using System.Text;
 using System.IO;
 using System.Linq;
+using NTSGeometries = NetTopologySuite.Geometries;
+using SharpKml.Base;
+using SharpKml.Dom;
+using NetTopologySuite.IO;
+using NetTopologySuite.Geometries;
+using System.IO.Compression;
+using NetTopologySuite.IO.ShapeFile.Extended;
 
 namespace DiagnoseVirtual.Application.Helpers
 {
@@ -40,16 +47,16 @@ namespace DiagnoseVirtual.Application.Helpers
             var document = (Document)a.Feature;
             var features = document.Features;
 
-            var polygons = new List<LinearRing>();
+            var polygons = new List<SharpKml.Dom.LinearRing>();
             foreach (var feature in features)
             {
-                var polygon = ((Polygon)((Placemark)feature).Geometry).OuterBoundary.LinearRing;
+                var polygon = ((SharpKml.Dom.Polygon)((Placemark)feature).Geometry).OuterBoundary.LinearRing;
                 polygons.Add(polygon);
             }
 
             var factory = NTSGeometries.Geometry.DefaultFactory;
             var NTSPolygons = polygons
-                .Select(g => (NTSGeometries.Polygon)factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c.Latitude, c.Longitude)).ToArray())).ToList();
+                .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c.Latitude, c.Longitude)).ToArray())).ToList();
             var geometrias = NTSPolygons.Select(p => (NTSGeometries.Geometry)factory.CreateGeometry(p))
                 .Select(g => new Geometria { Geometry = g }).ToList();
             return geometrias;

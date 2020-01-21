@@ -4,9 +4,8 @@ using System.Text;
 
 namespace DiagnoseVirtual.Domain.Entities
 {
-    public class LocalizacaoGeo
+    public class LocalizacaoGeo : BaseEntity
     {
-        public int Id { get; set; }
         public ICollection<Geometria> Geometrias { get; set; }
     }
 }

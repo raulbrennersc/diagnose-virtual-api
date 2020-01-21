@@ -1,12 +1,12 @@
-﻿using System;
+﻿using DiagnoseVirtual.Domain.Dtos;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace DiagnoseVirtual.Domain.Entities
 {
-    public class Fazenda
+    public class Fazenda : BaseEntity
     {
-        public int Id { get; set; }
         public Usuario Usuario { get; set; }
         public LocalizacaoFazenda LocalizacaoFazenda { get; set; }
         public DadosFazenda DadosFazenda { get; set; }
