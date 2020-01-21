@@ -9,7 +9,12 @@ namespace DiagnoseVirtual.Infra.Data.Context
 {
     public class PsqlContext : DbContext
     {
-        public DbSet<Usuario> User { get; set; }
+        public DbSet<Usuario> Usuarios { get; set; }
+        public DbSet<DadosFazenda> DadosFazendas { get; set; }
+        public DbSet<DadosLavoura> DadosLavouras { get; set; }
+        public DbSet<Fazenda> Fazendas { get; set; }
+        public DbSet<Lavoura> Lavouras { get; set; }
+        public DbSet<LocalizacaoFazenda> LocalizacaoFazendas { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
