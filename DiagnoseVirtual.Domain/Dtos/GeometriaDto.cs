@@ -13,14 +13,14 @@ namespace DiagnoseVirtual.Domain.Dtos
 
 
         public GeometriaDto() { }
-        public GeometriaDto(Geometria geometria)
-        {
-            Type = geometria.Geometry.OgcGeometryType.ToString();
-            Coordinates = geometria.Geometry.Coordinates.Select(c => new double[]
-            {
-                c.X,
-                c.Y
-            }).ToArray();
-        }
+        //public GeometriaDto(Geometria geometria)
+        //{
+        //    Type = geometria.Geometry.OgcGeometryType.ToString();
+        //    Coordinates = geometria.Geometry.Coordinates.Select(c => new double[]
+        //    {
+        //        c.X,
+        //        c.Y
+        //    }).ToArray();
+        //}
     }
 }
