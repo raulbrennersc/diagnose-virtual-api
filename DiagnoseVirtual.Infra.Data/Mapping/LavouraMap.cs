@@ -28,6 +28,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasDefaultValue(false);
 
             //Relacoes
+            builder.HasOne(x => x.DadosLavoura)
+                .WithOne(d => d.Lavoura)
+                .HasForeignKey<DadosLavoura>(d => d.IdLavoura);
             builder.HasMany(x => x.Talhoes)
                 .WithOne(t => t.Lavoura)
                 .HasForeignKey(t => t.IdLavoura);
