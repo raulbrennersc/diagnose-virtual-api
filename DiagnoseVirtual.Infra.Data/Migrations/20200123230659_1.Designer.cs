@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiagnoseVirtual.Infra.Data.Migrations
 {
     [DbContext(typeof(PsqlContext))]
-    [Migration("20200123012946_0")]
-    partial class _0
+    [Migration("20200123230659_1")]
+    partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,6 +22,8 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            modelBuilder.HasPostgresExtension("postgis");
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.DadosFazenda", b =>
                 {
