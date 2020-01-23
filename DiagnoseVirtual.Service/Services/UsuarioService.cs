@@ -1,22 +1,17 @@
 ﻿using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
-using DiagnoseVirtual.Service.Services;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
-namespace DiagnoseVirtual.Service.Business
+namespace DiagnoseVirtual.Service.Services
 {
-    public class BUsuario
+    public class UsuarioService : BaseService<Usuario>
     {
-        private readonly BaseService<Usuario> sUsuario;
-
-        public BUsuario(BaseService<Usuario> sUsuario)
-        {
-            this.sUsuario = sUsuario;
-        }
-
         public bool ExisteUsuario(string cpf)
         {
-            return sUsuario.GetAll().Any(u => u.Cpf == cpf);
+            return GetAll().Any(u => u.Cpf == cpf);
         }
 
         public Usuario Cadastrar(UsuarioRegistroDto novoUsuarioDto)
@@ -28,20 +23,19 @@ namespace DiagnoseVirtual.Service.Business
                 Email = novoUsuarioDto.Email,
             };
 
-            byte[] passwordHash, passwordSalt;
-            CreatePasswordHash(novoUsuarioDto.Password, out passwordHash, out passwordSalt);
+            CreatePasswordHash(novoUsuarioDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
 
             novoUsuario.PasswordHash = passwordHash;
             novoUsuario.PasswordSalt = passwordSalt;
 
-            sUsuario.Post(novoUsuario);
+            Post(novoUsuario);
 
             return novoUsuario;
         }
 
         public Usuario Login(string cpf, string password)
         {
-            var usuario = sUsuario.GetAll().FirstOrDefault(u => u.Cpf == cpf);
+            var usuario = GetAll().FirstOrDefault(u => u.Cpf == cpf);
 
             if (usuario == null)
                 return null;

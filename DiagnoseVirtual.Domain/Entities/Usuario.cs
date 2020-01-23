@@ -1,4 +1,6 @@
-﻿namespace DiagnoseVirtual.Domain.Entities
+﻿using System.Collections.Generic;
+
+namespace DiagnoseVirtual.Domain.Entities
 {
     public class Usuario : BaseEntity
     {
@@ -7,5 +9,7 @@
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
+        public bool Ativo { get; set; }
+        public ICollection<Fazenda> Fazendas { get; set; }
     }
 }

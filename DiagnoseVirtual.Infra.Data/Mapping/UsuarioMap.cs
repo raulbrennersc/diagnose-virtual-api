@@ -8,32 +8,46 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
     {
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
+            //Tabela
             builder.ToTable("usuario");
+            builder.HasKey(x => x.Id);
 
-            builder.HasKey(u => u.Id);
-
-            builder.Property(u => u.Id)
-                .HasColumnName("id");
-
-            builder.Property(u => u.Cpf)
+            //Propriedades
+            builder.Property(x => x.Id)
                 .IsRequired()
-                .HasColumnName("cpf");
-
-            builder.Property(c => c.Email)
+                .HasColumnName("id")
+                .ValueGeneratedOnAdd();
+            builder.Property(x => x.Nome)
                 .IsRequired()
-                .HasColumnName("email");
-
-            builder.Property(c => c.Nome)
+                .HasColumnName("nome")
+                .HasMaxLength(100);
+            builder.Property(x => x.Cpf)
                 .IsRequired()
-                .HasColumnName("nome");
-
-            builder.Property(c => c.PasswordHash)
+                .HasColumnName("cpf")
+                .HasMaxLength(11);
+            builder.Property(x => x.Email)
+                .IsRequired()
+                .HasColumnName("email")
+                .HasMaxLength(50);
+            builder.Property(x => x.PasswordHash)
                 .IsRequired()
                 .HasColumnName("password_hash");
-
-            builder.Property(c => c.PasswordSalt)
+            builder.Property(x => x.PasswordSalt)
                 .IsRequired()
                 .HasColumnName("password_salt");
+            builder.Property(x => x.Ativo)
+                .HasDefaultValue(true)
+                .HasColumnName("ativo");
+
+            //Relacoes
+            builder.HasMany(x => x.Fazendas)
+                .WithOne(f => f.Usuario)
+                .HasForeignKey(f => f.IdUsuario);
+
+            //Indices e uniques
+            builder.HasIndex(x => x.Cpf).IsUnique();
+            builder.HasIndex(x => x.Email).IsUnique();
+            builder.HasIndex(x => x.Id).IsUnique();
         }
     }
 }
