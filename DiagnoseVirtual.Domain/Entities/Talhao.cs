@@ -7,6 +7,8 @@ namespace DiagnoseVirtual.Domain.Entities
 {
     public class Talhao: BaseEntity
     {
-        public Geometry Geometry { get; set; }
+        public Geometry Geometria { get; set; }
+        public Lavoura Lavoura { get; set; }
+        public int IdLavoura { get; set; }
     }
 }

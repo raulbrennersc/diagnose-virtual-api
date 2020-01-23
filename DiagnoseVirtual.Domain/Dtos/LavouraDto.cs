@@ -21,7 +21,7 @@ namespace DiagnoseVirtual.Domain.Dtos
             Id = lavoura.Id;
             DadosLavoura = lavoura.DadosLavoura != null ? new DadosLavouraDto(lavoura.DadosLavoura) : null;
             Demarcacao = lavoura.Demarcacao;
-            Talhoes = lavoura.Talhoes?.Select(t => t.Geometry).ToList();
+            Talhoes = lavoura.Talhoes?.Select(t => t.Geometria).ToList();
             Concluida = lavoura.Concluida;
         }
     }

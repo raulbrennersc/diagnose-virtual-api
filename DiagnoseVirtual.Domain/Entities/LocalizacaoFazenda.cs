@@ -13,5 +13,7 @@ namespace DiagnoseVirtual.Domain.Entities
         public string Gerente { get; set; }
         public string Contato { get; set; }
         public string PontoReferencia { get; set; }
+        public Fazenda Fazenda { get; set; }
+        public int IdFazenda { get; set; }
     }
 }

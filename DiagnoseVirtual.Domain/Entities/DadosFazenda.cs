@@ -9,5 +9,7 @@ namespace DiagnoseVirtual.Domain.Entities
         public string Cultura { get; set; }
         public double AreaTotal { get; set; }
         public int QuantidadeLavouras { get; set; }
+        public Fazenda Fazenda { get; set; }
+        public int IdFazenda { get; set; }
     }
 }

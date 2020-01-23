@@ -13,6 +13,8 @@ namespace DiagnoseVirtual.Domain.Entities
         public double EspacamentoVertical { get; set; }
         public double EspacamentoHorizontal { get; set; }
         public string Observacoes { get; set; }
+        public Lavoura Lavoura { get; set; }
+        public int IdLavoura { get; set; }
 
     }
 }
