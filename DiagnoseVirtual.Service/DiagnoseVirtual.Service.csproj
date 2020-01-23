@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.6.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DiagnoseVirtual.Domain\DiagnoseVirtual.Domain.csproj" />
+    <ProjectReference Include="..\DiagnoseVirtual.Infra.Data\DiagnoseVirtual.Infra.Data.csproj" />
+  </ItemGroup>
+
+</Project>
