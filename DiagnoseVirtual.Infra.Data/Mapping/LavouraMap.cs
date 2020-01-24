@@ -28,6 +28,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasDefaultValue(false);
 
             //Relacoes
+            builder.Property(x => x.IdFazenda)
+                .IsRequired()
+                .HasColumnName("id_fazenda");
             builder.HasOne(x => x.DadosLavoura)
                 .WithOne(d => d.Lavoura)
                 .HasForeignKey<DadosLavoura>(d => d.IdLavoura);

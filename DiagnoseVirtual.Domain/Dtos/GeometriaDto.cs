@@ -1,4 +1,5 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
+using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,14 +14,14 @@ namespace DiagnoseVirtual.Domain.Dtos
 
 
         public GeometriaDto() { }
-        //public GeometriaDto(Geometria geometria)
-        //{
-        //    Type = geometria.Geometry.OgcGeometryType.ToString();
-        //    Coordinates = geometria.Geometry.Coordinates.Select(c => new double[]
-        //    {
-        //        c.X,
-        //        c.Y
-        //    }).ToArray();
-        //}
+        public GeometriaDto(Geometry geometria)
+        {
+            Type = geometria?.OgcGeometryType.ToString();
+            Coordinates = geometria?.Coordinates.Select(c => new double[]
+            {
+                c.X,
+                c.Y
+            }).ToArray();
+        }
     }
 }

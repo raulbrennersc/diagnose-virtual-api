@@ -9,12 +9,12 @@ namespace DiagnoseVirtual.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AutenticacaoController : ControllerBase
+    public class AuthController : ControllerBase
     {
         private readonly UsuarioService sUsuario = new UsuarioService();
         private readonly IConfiguration config;
 
-        public AutenticacaoController(IConfiguration config)
+        public AuthController(IConfiguration config)
         {
             this.config = config;
         }

@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiagnoseVirtual.Infra.Data.Migrations
 {
     [DbContext(typeof(PsqlContext))]
-    [Migration("20200123230659_1")]
+    [Migration("20200124011639_1")]
     partial class _1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,8 +22,6 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
-
-            modelBuilder.HasPostgresExtension("postgis");
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.DadosFazenda", b =>
                 {
@@ -44,6 +42,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasMaxLength(100);
 
                     b.Property<int>("IdFazenda")
+                        .HasColumnName("id_fazenda")
                         .HasColumnType("integer");
 
                     b.Property<int>("QuantidadeLavouras")
@@ -84,6 +83,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("double precision");
 
                     b.Property<int>("IdLavoura")
+                        .HasColumnName("id_lavoura")
                         .HasColumnType("integer");
 
                     b.Property<string>("MesAnoPlantio")
@@ -177,6 +177,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("geometry");
 
                     b.Property<int>("IdFazenda")
+                        .HasColumnName("id_fazenda")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -216,6 +217,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasMaxLength(30);
 
                     b.Property<int>("IdFazenda")
+                        .HasColumnName("id_fazenda")
                         .HasColumnType("integer");
 
                     b.Property<string>("Municipio")
@@ -267,6 +269,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("geometry");
 
                     b.Property<int>("IdLavoura")
+                        .HasColumnName("id_lavoura")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

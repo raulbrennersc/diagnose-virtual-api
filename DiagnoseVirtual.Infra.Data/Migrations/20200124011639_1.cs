@@ -65,14 +65,14 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     cultura = table.Column<string>(maxLength: 100, nullable: false),
                     area_total = table.Column<double>(nullable: false),
                     quantidade_lavouras = table.Column<int>(nullable: false),
-                    IdFazenda = table.Column<int>(nullable: false)
+                    id_fazenda = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_dados_fazenda", x => x.id);
                     table.ForeignKey(
-                        name: "FK_dados_fazenda_fazenda_IdFazenda",
-                        column: x => x.IdFazenda,
+                        name: "FK_dados_fazenda_fazenda_id_fazenda",
+                        column: x => x.id_fazenda,
                         principalSchema: "diagnose_virtual",
                         principalTable: "fazenda",
                         principalColumn: "id",
@@ -88,14 +88,14 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     demarcacao_geom = table.Column<Geometry>(nullable: false),
                     concluida = table.Column<bool>(nullable: false, defaultValue: false),
-                    IdFazenda = table.Column<int>(nullable: false)
+                    id_fazenda = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_lavoura", x => x.id);
                     table.ForeignKey(
-                        name: "FK_lavoura_fazenda_IdFazenda",
-                        column: x => x.IdFazenda,
+                        name: "FK_lavoura_fazenda_id_fazenda",
+                        column: x => x.id_fazenda,
                         principalSchema: "diagnose_virtual",
                         principalTable: "fazenda",
                         principalColumn: "id",
@@ -116,14 +116,14 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     gerente = table.Column<string>(maxLength: 30, nullable: false),
                     contato = table.Column<string>(maxLength: 50, nullable: false),
                     ponto_referencia = table.Column<string>(maxLength: 70, nullable: false),
-                    IdFazenda = table.Column<int>(nullable: false)
+                    id_fazenda = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_localizacao_fazenda", x => x.id);
                     table.ForeignKey(
-                        name: "FK_localizacao_fazenda_fazenda_IdFazenda",
-                        column: x => x.IdFazenda,
+                        name: "FK_localizacao_fazenda_fazenda_id_fazenda",
+                        column: x => x.id_fazenda,
                         principalSchema: "diagnose_virtual",
                         principalTable: "fazenda",
                         principalColumn: "id",
@@ -144,14 +144,14 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     expacamento_vertical = table.Column<double>(nullable: false),
                     espacamento_horizontal = table.Column<double>(nullable: false),
                     observacoes = table.Column<string>(maxLength: 250, nullable: false),
-                    IdLavoura = table.Column<int>(nullable: false)
+                    id_lavoura = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_dados_lavoura", x => x.id);
                     table.ForeignKey(
-                        name: "FK_dados_lavoura_lavoura_IdLavoura",
-                        column: x => x.IdLavoura,
+                        name: "FK_dados_lavoura_lavoura_id_lavoura",
+                        column: x => x.id_lavoura,
                         principalSchema: "diagnose_virtual",
                         principalTable: "lavoura",
                         principalColumn: "id",
@@ -166,14 +166,14 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     geometria_geom = table.Column<Geometry>(nullable: false),
-                    IdLavoura = table.Column<int>(nullable: false)
+                    id_lavoura = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_talhao", x => x.id);
                     table.ForeignKey(
-                        name: "FK_talhao_lavoura_IdLavoura",
-                        column: x => x.IdLavoura,
+                        name: "FK_talhao_lavoura_id_lavoura",
+                        column: x => x.id_lavoura,
                         principalSchema: "diagnose_virtual",
                         principalTable: "lavoura",
                         principalColumn: "id",
@@ -188,10 +188,10 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_dados_fazenda_IdFazenda",
+                name: "IX_dados_fazenda_id_fazenda",
                 schema: "diagnose_virtual",
                 table: "dados_fazenda",
-                column: "IdFazenda",
+                column: "id_fazenda",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -202,10 +202,10 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_dados_lavoura_IdLavoura",
+                name: "IX_dados_lavoura_id_lavoura",
                 schema: "diagnose_virtual",
                 table: "dados_lavoura",
-                column: "IdLavoura",
+                column: "id_lavoura",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -229,10 +229,10 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_lavoura_IdFazenda",
+                name: "IX_lavoura_id_fazenda",
                 schema: "diagnose_virtual",
                 table: "lavoura",
-                column: "IdFazenda");
+                column: "id_fazenda");
 
             migrationBuilder.CreateIndex(
                 name: "IX_localizacao_fazenda_id",
@@ -242,10 +242,10 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_localizacao_fazenda_IdFazenda",
+                name: "IX_localizacao_fazenda_id_fazenda",
                 schema: "diagnose_virtual",
                 table: "localizacao_fazenda",
-                column: "IdFazenda",
+                column: "id_fazenda",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -256,10 +256,10 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_talhao_IdLavoura",
+                name: "IX_talhao_id_lavoura",
                 schema: "diagnose_virtual",
                 table: "talhao",
-                column: "IdLavoura");
+                column: "id_lavoura");
 
             migrationBuilder.CreateIndex(
                 name: "IX_usuario_cpf",

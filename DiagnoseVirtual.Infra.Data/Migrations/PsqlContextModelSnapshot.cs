@@ -40,6 +40,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasMaxLength(100);
 
                     b.Property<int>("IdFazenda")
+                        .HasColumnName("id_fazenda")
                         .HasColumnType("integer");
 
                     b.Property<int>("QuantidadeLavouras")
@@ -80,6 +81,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("double precision");
 
                     b.Property<int>("IdLavoura")
+                        .HasColumnName("id_lavoura")
                         .HasColumnType("integer");
 
                     b.Property<string>("MesAnoPlantio")
@@ -173,6 +175,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("geometry");
 
                     b.Property<int>("IdFazenda")
+                        .HasColumnName("id_fazenda")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -212,6 +215,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasMaxLength(30);
 
                     b.Property<int>("IdFazenda")
+                        .HasColumnName("id_fazenda")
                         .HasColumnType("integer");
 
                     b.Property<string>("Municipio")
@@ -263,6 +267,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("geometry");
 
                     b.Property<int>("IdLavoura")
+                        .HasColumnName("id_lavoura")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");

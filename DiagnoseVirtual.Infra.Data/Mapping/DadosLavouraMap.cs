@@ -47,6 +47,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasMaxLength(250);
 
             //Relacoes
+            builder.Property(x => x.IdLavoura)
+                .IsRequired()
+                .HasColumnName("id_lavoura");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();

@@ -4,12 +4,12 @@ namespace DiagnoseVirtual.Domain.Entities
 {
     public class Usuario : BaseEntity
     {
-        public string Nome { get; set; }
-        public string Cpf { get; set; }
-        public string Email { get; set; }
-        public byte[] PasswordHash { get; set; }
-        public byte[] PasswordSalt { get; set; }
-        public bool Ativo { get; set; }
-        public ICollection<Fazenda> Fazendas { get; set; }
+        public virtual string Nome { get; set; }
+        public virtual string Cpf { get; set; }
+        public virtual string Email { get; set; }
+        public virtual byte[] PasswordHash { get; set; }
+        public virtual byte[] PasswordSalt { get; set; }
+        public virtual bool Ativo { get; set; }
+        public virtual ICollection<Fazenda> Fazendas { get; set; }
     }
 }
