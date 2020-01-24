@@ -1,5 +1,4 @@
 ﻿using DiagnoseVirtual.Domain.Dtos;
-using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Service.Helpers;
 using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Mvc;

@@ -2,9 +2,7 @@
 using DiagnoseVirtual.Domain.Interfaces;
 using DiagnoseVirtual.Infra.Data.Repository;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DiagnoseVirtual.Service.Services
 {

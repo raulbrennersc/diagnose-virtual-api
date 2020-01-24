@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DiagnoseVirtual.Domain.Entities
+﻿namespace DiagnoseVirtual.Domain.Entities
 {
     public class DadosFazenda : BaseEntity
     {

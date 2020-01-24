@@ -1,17 +1,15 @@
-﻿using DiagnoseVirtual.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
-using System.Text;
-using System.IO;
-using System.Linq;
-using NTSGeometries = NetTopologySuite.Geometries;
+﻿using Microsoft.AspNetCore.Http;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
+using NetTopologySuite.IO.ShapeFile.Extended;
 using SharpKml.Base;
 using SharpKml.Dom;
-using NetTopologySuite.IO;
-using NetTopologySuite.Geometries;
+using System;
+using System.Collections.Generic;
+using System.IO;
 using System.IO.Compression;
-using NetTopologySuite.IO.ShapeFile.Extended;
+using System.Linq;
+using NTSGeometries = NetTopologySuite.Geometries;
 
 namespace DiagnoseVirtual.Application.Helpers
 {

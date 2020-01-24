@@ -1,8 +1,5 @@
-﻿using DiagnoseVirtual.Domain.Dtos;
-using NetTopologySuite.Geometries;
-using System;
+﻿using NetTopologySuite.Geometries;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DiagnoseVirtual.Domain.Entities
 {

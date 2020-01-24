@@ -1,10 +1,7 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Domain.Interfaces;
 using DiagnoseVirtual.Infra.Data.Context;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DiagnoseVirtual.Infra.Data.Repository
 {

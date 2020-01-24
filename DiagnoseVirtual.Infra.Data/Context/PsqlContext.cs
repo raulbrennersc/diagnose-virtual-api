@@ -1,10 +1,6 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DiagnoseVirtual.Infra.Data.Context
 {
