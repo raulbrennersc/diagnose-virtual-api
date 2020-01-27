@@ -1,11 +1,38 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using NHibernate.Mapping.ByCode;
+using NHibernate.Mapping.ByCode.Conformist;
 
 namespace DiagnoseVirtual.Infra.Data.Mapping
 {
-    public class FazendaMap : IEntityTypeConfiguration<Fazenda>
+    public class FazendaMap : ClassMapping<Fazenda>, IEntityTypeConfiguration<Fazenda>
     {
+
+        public FazendaMap()
+        {
+            Table("fazenda");
+            Schema("diagnose_virtual");
+
+            Id(x => x.Id, id =>
+            {
+                id.Generator(Generators.Increment);
+            });
+
+            //NHibernate.Mapping.ByCode.Impl.Manytoone
+
+            
+            Property(x => x.Concluida, p =>
+            {
+                p.Column("concluida");
+            });
+
+            Property(x => x.Ativa, p =>
+            {
+                p.Column("ativa");
+            });
+        }
+        
         public void Configure(EntityTypeBuilder<Fazenda> builder)
         {
             //Tabela

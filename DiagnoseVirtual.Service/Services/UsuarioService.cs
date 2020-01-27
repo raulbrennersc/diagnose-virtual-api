@@ -1,11 +1,13 @@
 ﻿using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
+using NHibernate;
 using System.Linq;
 
 namespace DiagnoseVirtual.Service.Services
 {
     public class UsuarioService : BaseService<Usuario>
     {
+        public UsuarioService(ISession session) : base(session) { }
         public bool ExisteUsuario(string cpf)
         {
             return GetAll().Any(u => u.Cpf == cpf);

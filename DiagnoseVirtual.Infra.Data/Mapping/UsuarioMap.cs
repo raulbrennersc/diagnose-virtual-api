@@ -1,11 +1,101 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using NHibernate.Mapping.ByCode;
+using NHibernate.Mapping.ByCode.Conformist;
 
 namespace DiagnoseVirtual.Infra.Data.Mapping
 {
-    public class UsuarioMap : IEntityTypeConfiguration<Usuario>
+    public class UsuarioMap : ClassMapping<Usuario>, IEntityTypeConfiguration<Usuario>
     {
+        public UsuarioMap()
+        {
+            Table("usuario");
+            Schema("diagnose_virtual");
+
+            ManyToOne(x => x.Fazendas, m =>
+            {
+                m.Column("id_usuario");
+
+
+                m.Cascade(Cascade.All | Cascade.None | Cascade.Persist | Cascade.Remove);
+                m.Fetch(FetchKind.Join);
+                m.Update(true);
+                m.Insert(true);
+                //m.Access(Accessor.Field);
+                m.Unique(true);
+                m.OptimisticLock(true);
+
+                m.Lazy(LazyRelation.Proxy);
+                m.NotNullable(true);
+            });
+
+            Set(x => x.Fazendas, c =>
+            {
+                ManyToOne(x => x.Fazendas, m =>
+                {
+                    m.Column("id_usuario");
+
+
+                    m.Cascade(Cascade.All | Cascade.None | Cascade.Persist | Cascade.Remove);
+                    m.Fetch(FetchKind.Join);
+                    m.Update(true);
+                    m.Insert(true);
+                    //m.Access(Accessor.Field);
+                    m.Unique(true);
+                    m.OptimisticLock(true);
+
+                    m.Lazy(LazyRelation.Proxy);
+                    m.NotNullable(true);
+                });
+
+            }, r =>
+            {
+                r.OneToMany(m =>
+                {
+                    m.NotFound(NotFoundMode.Exception); // or NotFoundMode.Ignore
+                    m.Class(typeof(Usuario));
+                    m.EntityName("Usuario");
+                    m.Class(typeof(Usuario));
+                });
+            });
+
+            Id(x => x.Id, id =>
+            {
+                id.Generator(NHibernate.Mapping.ByCode.Generators.Increment);
+            });
+
+            Property(x => x.Nome, p =>
+            {
+                p.Column("nome");
+            });
+
+            Property(x => x.Cpf, p =>
+            {
+                p.Column("cpf");
+            });
+
+            Property(x => x.Email, p =>
+            {
+                p.Column("email");
+            });
+
+            Property(x => x.PasswordHash, p =>
+            {
+                p.Column("password_hash");
+            });
+
+            Property(x => x.PasswordSalt, p =>
+            {
+                p.Column("password_salt");
+            });
+
+            Property(x => x.Ativo, p =>
+            {
+                p.Column("ativo");
+            });
+        }
+
         public void Configure(EntityTypeBuilder<Usuario> builder)
         {
             //Tabela

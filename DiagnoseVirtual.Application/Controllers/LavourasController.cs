@@ -4,25 +4,33 @@ using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
+using NHibernate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Net;
 
 namespace DiagnoseVirtual.Application.Controllers
 {
+    [Route("api/[controller]")]
+    [ApiController]
     public class LavourasController : ControllerBase
     {
-        private readonly BaseService<Lavoura> _lavouraService = new BaseService<Lavoura>();
-        private readonly BaseService<DadosLavoura> _dadosLavouraService = new BaseService<DadosLavoura>();
-        private readonly BaseService<Fazenda> _fazendaService = new BaseService<Fazenda>();
+        private readonly BaseService<Lavoura> _lavouraService;
+        private readonly BaseService<DadosLavoura> _dadosLavouraService;
+        private readonly BaseService<Fazenda> _fazendaService;
+        private readonly BaseService<Talhao> _talhaoService;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly BaseService<Geometria> _geometriaService = new BaseService<Geometria>();
+        private readonly ISession _session;
 
-
-        public LavourasController(IWebHostEnvironment hostingEnvironment)
+        public LavourasController(IWebHostEnvironment hostingEnvironment, ISession session)
         {
+            _session = session;
             _hostingEnvironment = hostingEnvironment;
+            _lavouraService  = new BaseService<Lavoura>(session);
+            _dadosLavouraService  = new BaseService<DadosLavoura>(session);
+            _fazendaService  = new BaseService<Fazenda>(session);
+            _talhaoService = new BaseService<Talhao>(session);
         }
 
         [HttpPost]
@@ -30,26 +38,34 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PostConcluirLavoura(int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
-
-            if (lavouraBd == null)
-                return BadRequest();
+            if (lavouraBd == null || lavouraBd.Concluida)
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
 
             lavouraBd.Concluida = true;
 
-            _lavouraService.Put(lavouraBd);
-            var response = new LavouraDto(lavouraBd);
-
-            return Ok(response);
+            using(var transaction = _session.BeginTransaction())
+            {
+                try
+                {
+                    _lavouraService.Put(lavouraBd);
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch(Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
         }
 
         [HttpGet("{idLavoura}")]
         public ActionResult Get(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
-
-            var response = new LavouraDto(lavoura);
-
-            return Ok(response);
+            if (lavoura == null)
+                return NotFound(Constants.ERR_LAVOURA_NAO_ENCONTRADA);
+            return Ok(new LavouraDto(lavoura));
         }
 
         [HttpGet]
@@ -58,7 +74,7 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavoura = _lavouraService.Get(idLavoura);
             if (lavoura == null || lavoura.DadosLavoura == null)
-                return NotFound();
+                return BadRequest(Constants.ERR_DADOS_LAVOURA_NAO_ENCONTRADOS);
 
             return Ok(new DadosLavouraDto(lavoura.DadosLavoura));
         }
@@ -69,7 +85,7 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavoura = _lavouraService.Get(idLavoura);
             if (lavoura == null || lavoura.Demarcacao == null)
-                return NotFound();
+                return BadRequest(Constants.ERR_DEMARCACAO_LAVOURA_NAO_ENCONTRADA);
 
             return Ok(new GeometriaDto(lavoura.Demarcacao));
         }
@@ -79,8 +95,8 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult GetTalhoesLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
-            if (lavoura == null || lavoura.Talhoes == null || !lavoura.Talhoes.Any())
-                return NotFound();
+            if (lavoura == null || lavoura.Talhoes == null)
+                return BadRequest(Constants.ERR_TALHOES_LAVOURA_NAO_ENCONTRADOS);
 
             return Ok(lavoura.Talhoes.Select(t => new GeometriaDto(t.Geometria)));
         }
@@ -89,12 +105,14 @@ namespace DiagnoseVirtual.Application.Controllers
         [Route("DadosLavoura/{idFazenda}")]
         public ActionResult PostDadosLavoura(DadosLavouraDto dadosLavoura, int idFazenda)
         {
-            if (dadosLavoura == null)
-                return BadRequest();
-
             var fazendaBd = _fazendaService.Get(idFazenda);
-            if (fazendaBd == null)
-                return BadRequest();
+            if (dadosLavoura == null || fazendaBd == null || fazendaBd.Concluida)
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
+
+            var lavouraBd = new Lavoura
+            {
+                Fazenda = fazendaBd,
+            };
 
             var dadosLavouraBd = new DadosLavoura
             {
@@ -105,38 +123,33 @@ namespace DiagnoseVirtual.Application.Controllers
                 Nome = dadosLavoura.Nome,
                 NumeroPlantas = dadosLavoura.NumeroPlantas,
                 Observacoes = dadosLavoura.Observacoes,
+                Lavoura = lavouraBd,
             };
 
-            _dadosLavouraService.Post(dadosLavouraBd);
-            var lavouraBd = new Lavoura
+            using(var transaction = _session.BeginTransaction())
             {
-                DadosLavoura = dadosLavouraBd
-            };
-
-            _lavouraService.Post(lavouraBd);
-
-            if (fazendaBd.Lavouras == null)
-                fazendaBd.Lavouras = new List<Lavoura>();
-            fazendaBd.Lavouras.Add(lavouraBd);
-
-            _fazendaService.Put(fazendaBd);
-
-            var response = new LavouraDto(lavouraBd);
-
-            return Ok(response);
+                try
+                {
+                    _lavouraService.Post(lavouraBd);
+                    _dadosLavouraService.Post(dadosLavouraBd);
+                    transaction.Commit();
+                    return Ok(new LavouraDto(lavouraBd));
+                }
+                catch(Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
         }
 
         [HttpPost]
         [Route("DemarcacaoLavoura/{idLavoura}")]
         public ActionResult PostDemarcacaoLavoura(GeometriaDto geometriaDemarcacao, int idLavoura)
         {
-            if (geometriaDemarcacao == null)
-                return BadRequest();
-
             var lavouraBd = _lavouraService.Get(idLavoura);
-
-            if (lavouraBd == null)
-                return BadRequest();
+            if (geometriaDemarcacao == null || lavouraBd == null || lavouraBd.Concluida)
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
 
             var factory = Geometry.DefaultFactory;
             var polygon = factory.CreatePolygon(geometriaDemarcacao.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray());
@@ -144,110 +157,155 @@ namespace DiagnoseVirtual.Application.Controllers
 
             lavouraBd.Demarcacao = demarcacaoBd;
 
-            _lavouraService.Put(lavouraBd);
-            var response = new LavouraDto(lavouraBd);
-
-            return Ok(response);
+            using (var transaction = _session.BeginTransaction())
+            {
+                try
+                {
+                    _lavouraService.Put(lavouraBd);
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
         }
 
         [HttpPost]
         [Route("TalhoesLavoura/{idLavoura}")]
         public ActionResult PostTalhoesLavoura(List<GeometriaDto> talhoes, int idLavoura)
         {
-            if (talhoes == null || !talhoes.Any())
-                return BadRequest();
-
             var lavouraBd = _lavouraService.Get(idLavoura);
-
-            if (lavouraBd == null)
-                return BadRequest();
+            if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Concluida)
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
 
             var factory = Geometry.DefaultFactory;
             var polygons = talhoes
-                .Select(g => (Polygon)factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray())).ToList();
-            var geometrias = polygons.Select(p => factory.CreateGeometry(p))
-                .Select(g => new Talhao { Geometria = g }).ToList();
+                .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray())).ToList();
+            var talhoesBd = polygons.Select(p => factory.CreateGeometry(p))
+                .Select(g => new Talhao { Geometria = g, Lavoura = lavouraBd }).ToList();
 
-            lavouraBd.Talhoes = geometrias;
+            using (var transaction = _session.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var talhao in lavouraBd.Talhoes)
+                    {
+                        _talhaoService.Delete(talhao.Id);
+                    }
 
-            _lavouraService.Put(lavouraBd);
-            var response = new LavouraDto(lavouraBd);
+                    foreach (var talhao in talhoesBd)
+                    {
+                        _talhaoService.Post(talhao);
+                    }
 
-            return Ok(response);
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
         }
 
         [HttpPut]
         [Route("DadosLavoura/{idLavoura}")]
         public ActionResult PutDadosLavoura(DadosLavouraDto dadosLavoura, int idLavoura)
         {
-            if (dadosLavoura == null)
-                return BadRequest();
-
             var lavouraBd = _lavouraService.Get(idLavoura);
-            if (lavouraBd == null && lavouraBd.DadosLavoura == null)
-                return BadRequest();
+            if (dadosLavoura == null || !lavouraBd.Concluida)
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
 
-            lavouraBd.DadosLavoura.Cultivar = dadosLavoura.Cultivar;
-            lavouraBd.DadosLavoura.EspacamentoHorizontal = dadosLavoura.EspacamentoHorizontal;
-            lavouraBd.DadosLavoura.EspacamentoVertical = dadosLavoura.EspacamentoVertical;
-            lavouraBd.DadosLavoura.MesAnoPlantio = dadosLavoura.MesAnoPlantio;
-            lavouraBd.DadosLavoura.Nome = dadosLavoura.Nome;
-            lavouraBd.DadosLavoura.NumeroPlantas = dadosLavoura.NumeroPlantas;
-            lavouraBd.DadosLavoura.Observacoes = dadosLavoura.Observacoes;
+            var dadosLavouraBd = lavouraBd.DadosLavoura;
 
-            _dadosLavouraService.Put(lavouraBd.DadosLavoura);
+            dadosLavouraBd.Cultivar = dadosLavoura.Cultivar;
+            dadosLavouraBd.EspacamentoHorizontal = dadosLavoura.EspacamentoHorizontal;
+            dadosLavouraBd.EspacamentoVertical = dadosLavoura.EspacamentoVertical;
+            dadosLavouraBd.MesAnoPlantio = dadosLavoura.MesAnoPlantio;
+            dadosLavouraBd.Nome = dadosLavoura.Nome;
+            dadosLavouraBd.NumeroPlantas = dadosLavoura.NumeroPlantas;
+            dadosLavouraBd.Observacoes = dadosLavoura.Observacoes;
 
-            var response = new LavouraDto(lavouraBd);
-
-            return Ok(response);
+            using (var transaction = _session.BeginTransaction())
+            {
+                try
+                {
+                    _dadosLavouraService.Put(dadosLavouraBd);
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
         }
 
         [HttpPut]
         [Route("DemarcacaoLavoura/{idLavoura}")]
         public ActionResult PutDemarcacaoLavoura(GeometriaDto geometriaDemarcacao, int idLavoura)
         {
-            if (geometriaDemarcacao == null)
-                return BadRequest();
-
             var lavouraBd = _lavouraService.Get(idLavoura);
-
-            if (lavouraBd == null || lavouraBd.Demarcacao == null)
-                return BadRequest();
+            if (geometriaDemarcacao == null || lavouraBd == null || !lavouraBd.Concluida)
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
 
             var factory = Geometry.DefaultFactory;
             var polygon = factory.CreatePolygon(geometriaDemarcacao.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray());
             lavouraBd.Demarcacao = factory.CreateGeometry(polygon);
 
-            _lavouraService.Put(lavouraBd);
-            var response = new LavouraDto(lavouraBd);
-
-            return Ok(response);
+            using (var transaction = _session.BeginTransaction())
+            {
+                try
+                {
+                    _lavouraService.Put(lavouraBd);
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
         }
 
         [HttpPut]
         [Route("TalhoesLavoura/{idLavoura}")]
         public ActionResult PutTalhoesLavoura(List<GeometriaDto> talhoes, int idLavoura)
         {
-            if (talhoes == null || !talhoes.Any())
-                return BadRequest();
-
             var lavouraBd = _lavouraService.Get(idLavoura);
-
-            if (lavouraBd == null || lavouraBd.Talhoes == null)
-                return BadRequest();
+            if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Talhoes == null)
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
 
             var factory = Geometry.DefaultFactory;
             var polygons = talhoes
-                .Select(g => (Polygon)factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray())).ToList();
-            var geometrias = polygons.Select(p => (Geometry)factory.CreateGeometry(p))
-                .Select(g => new Talhao { Geometria = g }).ToList();
+                .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray())).ToList();
+            var talhoesBd = polygons.Select(p => factory.CreateGeometry(p))
+                .Select(g => new Talhao { Geometria = g, Lavoura = lavouraBd }).ToList();
 
-            lavouraBd.Talhoes = geometrias;
+            using (var transaction = _session.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var talhao in talhoesBd)
+                    {
+                        _talhaoService.Post(talhao);
+                    }
 
-            _lavouraService.Post(lavouraBd);
-            var response = new LavouraDto(lavouraBd);
-
-            return Ok(response);
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
         }
     }
 }

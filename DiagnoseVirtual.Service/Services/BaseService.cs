@@ -1,6 +1,7 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Domain.Interfaces;
 using DiagnoseVirtual.Infra.Data.Repository;
+using NHibernate;
 using System;
 using System.Linq;
 
@@ -8,7 +9,12 @@ namespace DiagnoseVirtual.Service.Services
 {
     public class BaseService<T> : IService<T> where T : BaseEntity
     {
-        private BaseRepository<T> repository = new BaseRepository<T>();
+        private BaseRepository<T> repository;
+
+        public BaseService(ISession session)
+        {
+            repository = new BaseRepository<T>(session);
+        }
 
         public T Post(T obj)
         {
