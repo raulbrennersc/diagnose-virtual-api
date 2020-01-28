@@ -6,6 +6,5 @@ namespace DiagnoseVirtual.Domain.Entities
     {
         public virtual Geometry Geometria { get; set; }
         public virtual Lavoura Lavoura { get; set; }
-        public virtual int IdLavoura { get; set; }
     }
 }

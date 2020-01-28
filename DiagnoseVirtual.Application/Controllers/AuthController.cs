@@ -1,9 +1,9 @@
 ﻿using DiagnoseVirtual.Domain.Dtos;
+using DiagnoseVirtual.Infra.Data.Context;
 using DiagnoseVirtual.Service.Helpers;
 using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using NHibernate;
 using System;
 using System.Net;
 
@@ -14,14 +14,13 @@ namespace DiagnoseVirtual.Application.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UsuarioService _usuarioService;
+        private readonly PsqlContext _context = new PsqlContext();
         private readonly IConfiguration config;
-        private readonly ISession _session;
 
-        public AuthController(IConfiguration config, ISession session)
+        public AuthController(IConfiguration config)
         {
             this.config = config;
-            _session = session;
-            _usuarioService = new UsuarioService(session);
+            _usuarioService = new UsuarioService(_context);
         }
 
         [HttpPost("Register")]
@@ -29,7 +28,7 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             if (_usuarioService.ExisteUsuario(novoUsuarioDto.Cpf))
                 return BadRequest(Constants.ERR_CPF_CADASTRADO);
-            using(var transaction = _session.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 _usuarioService.Cadastrar(novoUsuarioDto);
                 try

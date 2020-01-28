@@ -1,43 +1,45 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Domain.Interfaces;
-using NHibernate;
+using DiagnoseVirtual.Infra.Data.Context;
 using System.Linq;
 
 namespace DiagnoseVirtual.Infra.Data.Repository
 {
     public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {
-        private ISession session;
-
-        public BaseRepository(ISession session)
+        private readonly PsqlContext context;
+        public BaseRepository(PsqlContext context)
         {
-            this.session = session;
+            this.context = context;
         }
+
 
         public void Insert(T obj)
         {
-            session.Save(obj);
+            context.Set<T>().Add(obj);
+            context.SaveChanges();
         }
 
         public void Update(T obj)
         {
-            session.Update(obj);
+            context.Entry(obj).State = Microsoft.EntityFrameworkCore.EntityState.Modified;
+            context.SaveChanges();
         }
 
         public void Remove(int id)
         {
-            var obj = session.Query<T>().FirstOrDefault(x => x.Id == id);
-            session.Delete(obj);
+            context.Set<T>().Remove(Select(id));
+            context.SaveChanges();
         }
 
         public IQueryable<T> SelectAll()
         {
-            return session.Query<T>();
+            return context.Set<T>();
         }
 
         public T Select(int id)
         {
-            return session.Query<T>().FirstOrDefault(x => x.Id == id);
+            return context.Set<T>().Find(id);
         }
     }
 }

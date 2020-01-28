@@ -10,6 +10,5 @@ namespace DiagnoseVirtual.Domain.Entities
         public virtual Geometry Demarcacao { get; set; }
         public virtual bool Concluida { get; set; }
         public virtual ICollection<Talhao> Talhoes { get; set; }
-        public virtual int IdFazenda { get; set; }
     }
 }

@@ -1,12 +1,12 @@
 ﻿using DiagnoseVirtual.Application.Helpers;
 using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
+using DiagnoseVirtual.Infra.Data.Context;
 using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
-using NHibernate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,16 +25,15 @@ namespace DiagnoseVirtual.Application.Controllers
         private readonly BaseService<LocalizacaoFazenda> _localizacaoService;
         private readonly BaseService<DadosFazenda> _dadosFazendaService;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly ISession _session;
+        private readonly PsqlContext _context = new PsqlContext();
 
-        public FazendasController(IWebHostEnvironment hostingEnvironment, ISession session)
+        public FazendasController(IWebHostEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
-            _usuarioService  = new UsuarioService(session);
-            _fazendaService  = new BaseService<Fazenda>(session);
-            _localizacaoService  = new BaseService<LocalizacaoFazenda>(session);
-            _dadosFazendaService  = new BaseService<DadosFazenda>(session);
-            _session = session;
+            _fazendaService = new BaseService<Fazenda>(_context);
+            _usuarioService = new UsuarioService(_context);
+            _localizacaoService = new BaseService<LocalizacaoFazenda>(_context);
+            _dadosFazendaService = new BaseService<DadosFazenda>(_context);
         }
 
         [HttpPost]
@@ -66,7 +65,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             fazenda.Concluida = true;
 
-            using(var transaction = _session.BeginTransaction())
+            using(var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -179,7 +178,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 Fazenda = fazendaBd
             };
 
-            using (var transaction = _session.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -212,7 +211,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 Fazenda = fazendaBd
             };
 
-            using(var transaction = _session.BeginTransaction())
+            using(var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -243,7 +242,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             fazendaBd.Demarcacao = geometrias.FirstOrDefault();
 
-            using(var transaction = _session.BeginTransaction())
+            using(var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -277,7 +276,7 @@ namespace DiagnoseVirtual.Application.Controllers
             localizacaoBd.PontoReferencia = localizacao.PontoReferencia;
             localizacaoBd.Estado = localizacao.Estado;
 
-            using(var transaction = _session.BeginTransaction())
+            using(var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -307,7 +306,7 @@ namespace DiagnoseVirtual.Application.Controllers
             dadosFazendaBd.Cultura = dadosFazenda.Cultura;
             dadosFazendaBd.QuantidadeLavouras = dadosFazenda.QuantidadeLavouras;
 
-            using(var transaction = _session.BeginTransaction())
+            using(var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -336,7 +335,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             fazendaBd.Demarcacao = geometrias.FirstOrDefault();
 
-            using(var transaction = _session.BeginTransaction())
+            using(var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {

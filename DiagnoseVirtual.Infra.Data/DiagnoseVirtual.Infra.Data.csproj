@@ -17,7 +17,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="3.1.1" />
     <PackageReference Include="NetTopologySuite.IO.GeoJSON" Version="2.0.1" />
     <PackageReference Include="NetTopologySuite.IO.ShapeFile" Version="2.0.0" />
-    <PackageReference Include="NHibernate" Version="5.2.7" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="3.1.0" />
     <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="3.1.0" />
     <PackageReference Include="Npgsql.NetTopologySuite" Version="4.1.2" />

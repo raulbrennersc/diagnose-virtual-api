@@ -12,6 +12,5 @@ namespace DiagnoseVirtual.Domain.Entities
         public virtual bool Concluida { get; set; }
         public virtual bool Ativa { get; set; }
         public virtual ICollection<Lavoura> Lavouras { get; set; }
-        public virtual int IdUsuario { get; set; }
     }
 }

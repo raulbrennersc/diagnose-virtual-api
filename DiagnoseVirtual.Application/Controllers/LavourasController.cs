@@ -1,10 +1,10 @@
 ﻿using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
+using DiagnoseVirtual.Infra.Data.Context;
 using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
-using NHibernate;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,16 +21,15 @@ namespace DiagnoseVirtual.Application.Controllers
         private readonly BaseService<Fazenda> _fazendaService;
         private readonly BaseService<Talhao> _talhaoService;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly ISession _session;
+        private readonly PsqlContext _context = new PsqlContext();
 
-        public LavourasController(IWebHostEnvironment hostingEnvironment, ISession session)
+        public LavourasController(IWebHostEnvironment hostingEnvironment)
         {
-            _session = session;
             _hostingEnvironment = hostingEnvironment;
-            _lavouraService  = new BaseService<Lavoura>(session);
-            _dadosLavouraService  = new BaseService<DadosLavoura>(session);
-            _fazendaService  = new BaseService<Fazenda>(session);
-            _talhaoService = new BaseService<Talhao>(session);
+            _lavouraService = new BaseService<Lavoura>(_context);
+            _dadosLavouraService = new BaseService<DadosLavoura>(_context);
+            _fazendaService = new BaseService<Fazenda>(_context);
+            _talhaoService = new BaseService<Talhao>(_context);
         }
 
         [HttpPost]
@@ -43,7 +42,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             lavouraBd.Concluida = true;
 
-            using(var transaction = _session.BeginTransaction())
+            using(var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -126,7 +125,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 Lavoura = lavouraBd,
             };
 
-            using(var transaction = _session.BeginTransaction())
+            using(var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -157,7 +156,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             lavouraBd.Demarcacao = demarcacaoBd;
 
-            using (var transaction = _session.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -187,7 +186,7 @@ namespace DiagnoseVirtual.Application.Controllers
             var talhoesBd = polygons.Select(p => factory.CreateGeometry(p))
                 .Select(g => new Talhao { Geometria = g, Lavoura = lavouraBd }).ToList();
 
-            using (var transaction = _session.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -230,7 +229,7 @@ namespace DiagnoseVirtual.Application.Controllers
             dadosLavouraBd.NumeroPlantas = dadosLavoura.NumeroPlantas;
             dadosLavouraBd.Observacoes = dadosLavoura.Observacoes;
 
-            using (var transaction = _session.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -258,7 +257,7 @@ namespace DiagnoseVirtual.Application.Controllers
             var polygon = factory.CreatePolygon(geometriaDemarcacao.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray());
             lavouraBd.Demarcacao = factory.CreateGeometry(polygon);
 
-            using (var transaction = _session.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -288,7 +287,7 @@ namespace DiagnoseVirtual.Application.Controllers
             var talhoesBd = polygons.Select(p => factory.CreateGeometry(p))
                 .Select(g => new Talhao { Geometria = g, Lavoura = lavouraBd }).ToList();
 
-            using (var transaction = _session.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {

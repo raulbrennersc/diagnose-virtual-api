@@ -8,12 +8,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
-using NHibernate.Cfg;
 using System.Net;
 using System.Text;
-using NHibernate.Mapping.ByCode;
-using NHibernate.Dialect;
-using NHibernate.Cfg.MappingSchema;
 
 namespace DiagnoseVirtual.Application
 {
@@ -42,30 +38,6 @@ namespace DiagnoseVirtual.Application
                         ValidateAudience = false,
                     };
                 });
-
-
-            var mapper = new ModelMapper();
-            mapper.AddMapping(typeof(FazendaMap));
-            mapper.AddMapping(typeof(UsuarioMap));
-            HbmMapping domainMapping = mapper.CompileMappingForAllExplicitlyAddedEntities();
-
-            var connStr = Configuration.GetConnectionString("DefaultConnection");
-            var configuration = new Configuration();
-            configuration.DataBaseIntegration(c =>
-            {
-                c.Dialect<PostgreSQLDialect>();
-                c.ConnectionString = connStr;
-                c.KeywordsAutoImport = Hbm2DDLKeyWords.AutoQuote;
-                c.LogFormattedSql = true;
-                c.LogSqlInConsole = true;
-            });
-            configuration.AddMapping(domainMapping);
-
-            var sessionFactory = configuration.BuildSessionFactory();
-
-            services.AddSingleton(sessionFactory);
-
-            services.AddScoped(factory => sessionFactory.OpenSession());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
