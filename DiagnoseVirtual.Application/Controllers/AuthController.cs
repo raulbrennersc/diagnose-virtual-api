@@ -30,9 +30,9 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_CPF_CADASTRADO);
             using (var transaction = _context.Database.BeginTransaction())
             {
-                _usuarioService.Cadastrar(novoUsuarioDto);
                 try
                 {
+                    _usuarioService.Cadastrar(novoUsuarioDto);
                     transaction.Commit();
                     return StatusCode((int)HttpStatusCode.Created);
                 }

@@ -85,7 +85,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult Get()
         {
             var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == Int32.Parse(idUsuario));
+            var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == Int32.Parse(idUsuario)).ToList();
 
             var result = fazendas.Select(f => new FazendaDto(f));
 
@@ -232,7 +232,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PostLocalizacaoGeoFazenda(DemarcacaoDto demarcacaoDto, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
-            if (demarcacaoDto == null || demarcacaoDto.Geometrias == null || !demarcacaoDto.Geometrias.Any() || fazendaBd == null || fazendaBd.Concluida)
+            if (demarcacaoDto == null || demarcacaoDto.Geometrias == null || !demarcacaoDto.Geometrias.Any() || fazendaBd == null || fazendaBd.Demarcacao != null || fazendaBd.Concluida)
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
 
             var factory = Geometry.DefaultFactory;

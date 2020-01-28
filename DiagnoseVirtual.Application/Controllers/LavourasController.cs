@@ -105,7 +105,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PostDadosLavoura(DadosLavouraDto dadosLavoura, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
-            if (dadosLavoura == null || fazendaBd == null || fazendaBd.Concluida)
+            if (dadosLavoura == null || fazendaBd == null || !fazendaBd.Concluida)
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
 
             var lavouraBd = new Lavoura
