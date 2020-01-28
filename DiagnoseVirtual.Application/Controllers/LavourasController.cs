@@ -42,7 +42,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             lavouraBd.Concluida = true;
 
-            using(var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -50,7 +50,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     transaction.Commit();
                     return Ok();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
                     return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
@@ -125,7 +125,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 Lavoura = lavouraBd,
             };
 
-            using(var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -134,7 +134,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     transaction.Commit();
                     return Ok(new LavouraDto(lavouraBd));
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
                     return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);

@@ -8,7 +8,7 @@ namespace DiagnoseVirtual.Service.Services
     public class UsuarioService : BaseService<Usuario>
     {
 
-        public UsuarioService(PsqlContext context): base(context) { }
+        public UsuarioService(PsqlContext context) : base(context) { }
         public bool ExisteUsuario(string cpf)
         {
             return GetAll().Any(u => u.Cpf == cpf);

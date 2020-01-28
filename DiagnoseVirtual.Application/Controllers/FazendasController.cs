@@ -65,7 +65,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             fazenda.Concluida = true;
 
-            using(var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -73,7 +73,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     transaction.Commit();
                     return Ok();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
                     return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
@@ -187,7 +187,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     transaction.Commit();
                     return Ok(new FazendaDto { Id = fazendaBd.Id });
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
                     return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
@@ -211,7 +211,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 Fazenda = fazendaBd
             };
 
-            using(var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -219,10 +219,10 @@ namespace DiagnoseVirtual.Application.Controllers
                     transaction.Commit();
                     return Ok();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
-                    return StatusCode((int)HttpStatusCode.InternalServerError,  ex.Message);
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
                 }
             }
         }
@@ -242,7 +242,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             fazendaBd.Demarcacao = geometrias.FirstOrDefault();
 
-            using(var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -250,7 +250,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     transaction.Commit();
                     return Ok();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
                     return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
@@ -276,7 +276,7 @@ namespace DiagnoseVirtual.Application.Controllers
             localizacaoBd.PontoReferencia = localizacao.PontoReferencia;
             localizacaoBd.Estado = localizacao.Estado;
 
-            using(var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -284,7 +284,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     transaction.Commit();
                     return Ok();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     transaction.Rollback();
                     return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
@@ -306,14 +306,14 @@ namespace DiagnoseVirtual.Application.Controllers
             dadosFazendaBd.Cultura = dadosFazenda.Cultura;
             dadosFazendaBd.QuantidadeLavouras = dadosFazenda.QuantidadeLavouras;
 
-            using(var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
                     _dadosFazendaService.Put(dadosFazendaBd);
                     return Ok();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
                 }
@@ -335,14 +335,14 @@ namespace DiagnoseVirtual.Application.Controllers
 
             fazendaBd.Demarcacao = geometrias.FirstOrDefault();
 
-            using(var transaction = _context.Database.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
                     _fazendaService.Put(fazendaBd);
                     return Ok();
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
                 }
