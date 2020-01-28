@@ -19,7 +19,7 @@ namespace DiagnoseVirtual.Service.Services
             var novoUsuario = new Usuario
             {
                 Nome = novoUsuarioDto.Nome,
-                Cpf = novoUsuarioDto.Cpf,
+                Cpf = novoUsuarioDto.Cpf.Replace(".", "").Replace("-", ""),
                 Email = novoUsuarioDto.Email,
             };
 
@@ -35,6 +35,7 @@ namespace DiagnoseVirtual.Service.Services
 
         public Usuario Login(string cpf, string password)
         {
+            cpf = cpf.Replace(".", "").Replace("-", "");
             var usuario = GetAll().FirstOrDefault(u => u.Cpf == cpf);
 
             if (usuario == null)
