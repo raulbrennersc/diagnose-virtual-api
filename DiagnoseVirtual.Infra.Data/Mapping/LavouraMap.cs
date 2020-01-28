@@ -25,19 +25,15 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasDefaultValue(false);
 
             //Relacoes
-            builder.Property(x => x.IdFazenda)
-                .IsRequired()
-                .HasColumnName("id_fazenda");
             builder.HasOne(x => x.DadosLavoura)
                 .WithOne(d => d.Lavoura)
-                .HasForeignKey<DadosLavoura>(d => d.IdLavoura);
+                .HasForeignKey<DadosLavoura>("id_lavoura");
             builder.HasMany(x => x.Talhoes)
                 .WithOne(t => t.Lavoura)
-                .HasForeignKey(t => t.IdLavoura);
+                .HasForeignKey("id_lavoura");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
-            builder.HasIndex(x => x.IdFazenda);
         }
     }
 }

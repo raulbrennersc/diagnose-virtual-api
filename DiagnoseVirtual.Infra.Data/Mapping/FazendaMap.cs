@@ -27,23 +27,18 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasColumnName("ativa");
 
             //Relacoes
-            builder.Property(x => x.IdUsuario)
-                .IsRequired()
-                .HasColumnName("id_usuario");
             builder.HasOne(x => x.LocalizacaoFazenda)
                 .WithOne(l => l.Fazenda)
-                .HasForeignKey<LocalizacaoFazenda>(l => l.IdFazenda);
+                .HasForeignKey<LocalizacaoFazenda>("id_fazenda");
             builder.HasOne(x => x.DadosFazenda)
                 .WithOne(d => d.Fazenda)
-                .HasForeignKey<DadosFazenda>(d => d.IdFazenda);
+                .HasForeignKey<DadosFazenda>("id_fazenda");
             builder.HasMany(x => x.Lavouras)
                 .WithOne(l => l.Fazenda)
-                .HasForeignKey(l => l.IdFazenda);
+                .HasForeignKey("id_fazenda");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
-            builder.HasIndex(x => x.IdUsuario);
-
         }
     }
 }

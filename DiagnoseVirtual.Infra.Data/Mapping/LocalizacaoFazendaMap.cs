@@ -47,13 +47,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .IsRequired();
 
             //Relacoes
-            builder.Property(x => x.IdFazenda)
-                .IsRequired()
-                .HasColumnName("id_fazenda");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
-            builder.HasIndex(x => x.IdFazenda);
 
         }
     }

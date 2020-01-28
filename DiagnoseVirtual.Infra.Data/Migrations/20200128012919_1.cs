@@ -37,10 +37,10 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id_usuario = table.Column<int>(nullable: true),
                     demarcacao_geom = table.Column<Geometry>(nullable: true),
                     concluida = table.Column<bool>(nullable: false, defaultValue: false),
-                    ativa = table.Column<bool>(nullable: false, defaultValue: true),
-                    id_usuario = table.Column<int>(nullable: false)
+                    ativa = table.Column<bool>(nullable: false, defaultValue: true)
                 },
                 constraints: table =>
                 {
@@ -51,7 +51,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         principalSchema: "diagnose_virtual",
                         principalTable: "usuario",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -64,7 +64,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     cultura = table.Column<string>(maxLength: 100, nullable: false),
                     area_total = table.Column<double>(nullable: false),
                     quantidade_lavouras = table.Column<int>(nullable: false),
-                    id_fazenda = table.Column<int>(nullable: false)
+                    id_fazenda = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -75,7 +75,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         principalSchema: "diagnose_virtual",
                         principalTable: "fazenda",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -85,9 +85,9 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 {
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    id_fazenda = table.Column<int>(nullable: true),
                     demarcacao_geom = table.Column<Geometry>(nullable: false),
-                    concluida = table.Column<bool>(nullable: false, defaultValue: false),
-                    id_fazenda = table.Column<int>(nullable: false)
+                    concluida = table.Column<bool>(nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -98,7 +98,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         principalSchema: "diagnose_virtual",
                         principalTable: "fazenda",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -115,7 +115,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     gerente = table.Column<string>(maxLength: 30, nullable: false),
                     contato = table.Column<string>(maxLength: 50, nullable: false),
                     ponto_referencia = table.Column<string>(maxLength: 70, nullable: false),
-                    id_fazenda = table.Column<int>(nullable: false)
+                    id_fazenda = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -126,7 +126,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         principalSchema: "diagnose_virtual",
                         principalTable: "fazenda",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -143,7 +143,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     expacamento_vertical = table.Column<double>(nullable: false),
                     espacamento_horizontal = table.Column<double>(nullable: false),
                     observacoes = table.Column<string>(maxLength: 250, nullable: false),
-                    id_lavoura = table.Column<int>(nullable: false)
+                    id_lavoura = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -154,7 +154,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         principalSchema: "diagnose_virtual",
                         principalTable: "lavoura",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -165,7 +165,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     geometria_geom = table.Column<Geometry>(nullable: false),
-                    id_lavoura = table.Column<int>(nullable: false)
+                    id_lavoura = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -176,7 +176,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         principalSchema: "diagnose_virtual",
                         principalTable: "lavoura",
                         principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(

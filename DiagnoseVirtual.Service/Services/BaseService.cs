@@ -1,5 +1,6 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Domain.Interfaces;
+using DiagnoseVirtual.Infra.Data.Context;
 using DiagnoseVirtual.Infra.Data.Repository;
 using System;
 using System.Linq;
@@ -8,7 +9,11 @@ namespace DiagnoseVirtual.Service.Services
 {
     public class BaseService<T> : IService<T> where T : BaseEntity
     {
-        private BaseRepository<T> repository = new BaseRepository<T>();
+        private readonly BaseRepository<T> repository;
+        public BaseService(PsqlContext context)
+        {
+            repository = new BaseRepository<T>(context);
+        }
 
         public T Post(T obj)
         {

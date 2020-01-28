@@ -7,7 +7,12 @@ namespace DiagnoseVirtual.Infra.Data.Repository
 {
     public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {
-        private PsqlContext context = new PsqlContext();
+        private readonly PsqlContext context;
+        public BaseRepository(PsqlContext context)
+        {
+            this.context = context;
+        }
+
 
         public void Insert(T obj)
         {

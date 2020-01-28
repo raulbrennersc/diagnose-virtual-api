@@ -10,7 +10,6 @@
         public virtual double EspacamentoHorizontal { get; set; }
         public virtual string Observacoes { get; set; }
         public virtual Lavoura Lavoura { get; set; }
-        public virtual int IdLavoura { get; set; }
 
     }
 }
