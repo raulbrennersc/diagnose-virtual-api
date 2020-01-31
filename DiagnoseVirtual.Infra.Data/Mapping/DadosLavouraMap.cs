@@ -24,7 +24,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             builder.Property(x => x.MesAnoPlantio)
                 .HasColumnName("mes_ano_plantio")
                 .IsRequired()
-                .HasMaxLength(7);
+                .HasMaxLength(20);
             builder.Property(x => x.Cultivar)
                 .HasColumnName("cultivar")
                 .IsRequired()
