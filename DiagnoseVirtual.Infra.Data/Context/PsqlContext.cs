@@ -18,7 +18,7 @@ namespace DiagnoseVirtual.Infra.Data.Context
             if (!optionsBuilder.IsConfigured)
                 optionsBuilder
                     .UseLazyLoadingProxies()
-                    .UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=qipixel_ark;", x => x.UseNetTopologySuite());
+                    .UseNpgsql("User ID=docker;Password=docker;Host=localhost;Port=5432;Database=qipixel_ark;", x => x.UseNetTopologySuite());
 
         }
 
