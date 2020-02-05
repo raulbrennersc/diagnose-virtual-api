@@ -24,7 +24,6 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             //Relacoes
 
             //Indices
-            builder.HasIndex(x => x.Id).IsUnique();
         }
     }
 }

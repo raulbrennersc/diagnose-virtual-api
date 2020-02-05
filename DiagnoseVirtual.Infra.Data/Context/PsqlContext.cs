@@ -19,7 +19,6 @@ namespace DiagnoseVirtual.Infra.Data.Context
                 optionsBuilder
                     .UseLazyLoadingProxies()
                     .UseNpgsql("User ID=docker;Password=docker;Host=localhost;Port=5432;Database=qipixel_ark;", x => x.UseNetTopologySuite());
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -27,13 +26,8 @@ namespace DiagnoseVirtual.Infra.Data.Context
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.HasDefaultSchema("diagnose_virtual");
-            modelBuilder.Entity<Usuario>(new UsuarioMap().Configure);
-            modelBuilder.Entity<Fazenda>(new FazendaMap().Configure);
-            modelBuilder.Entity<DadosFazenda>(new DadosFazendaMap().Configure);
-            modelBuilder.Entity<LocalizacaoFazenda>(new LocalizacaoFazendaMap().Configure);
-            modelBuilder.Entity<Lavoura>(new LavouraMap().Configure);
-            modelBuilder.Entity<DadosLavoura>(new DadosLavouraMap().Configure);
-            modelBuilder.Entity<Talhao>(new TalhaoMap().Configure);
+            var assembly = typeof(Usuario).Assembly;
+            modelBuilder.ApplyConfigurationsFromAssembly(assembly);
         }
     }
 }

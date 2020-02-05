@@ -47,7 +47,6 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             //Indices e uniques
             builder.HasIndex(x => x.Cpf).IsUnique();
             builder.HasIndex(x => x.Email).IsUnique();
-            builder.HasIndex(x => x.Id).IsUnique();
         }
     }
 }

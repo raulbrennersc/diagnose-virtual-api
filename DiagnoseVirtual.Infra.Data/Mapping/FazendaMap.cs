@@ -38,7 +38,6 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasForeignKey("id_fazenda");
 
             //Indices
-            builder.HasIndex(x => x.Id).IsUnique();
         }
     }
 }

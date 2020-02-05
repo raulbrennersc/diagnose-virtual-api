@@ -48,7 +48,7 @@ namespace DiagnoseVirtual.Application.Controllers
             }
             catch
             {
-                return BadRequest("Arquivo inálido");
+                return BadRequest("Arquivo inválido");
             }
         }
 
