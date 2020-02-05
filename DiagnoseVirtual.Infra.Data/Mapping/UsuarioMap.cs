@@ -45,6 +45,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasForeignKey("id_usuario");
 
             //Indices e uniques
+            builder.HasIndex(x => x.Id).IsUnique();
             builder.HasIndex(x => x.Cpf).IsUnique();
             builder.HasIndex(x => x.Email).IsUnique();
         }

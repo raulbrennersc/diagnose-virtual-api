@@ -11,6 +11,7 @@ namespace DiagnoseVirtual.Domain.Entities
         public virtual Geometry Demarcacao { get; set; }
         public virtual bool Concluida { get; set; }
         public virtual bool Ativa { get; set; }
-        public virtual ICollection<Lavoura> Lavouras { get; set; }
+        public virtual IList<Lavoura> Lavouras { get; set; }
+        public virtual IList<Monitoramento> Monitoramentos { get; set; }
     }
 }

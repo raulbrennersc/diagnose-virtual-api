@@ -32,6 +32,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasForeignKey("id_lavoura");
 
             //Indices
+            builder.HasIndex(x => x.Id).IsUnique();
         }
     }
 }

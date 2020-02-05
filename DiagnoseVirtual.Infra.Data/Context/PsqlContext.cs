@@ -28,6 +28,16 @@ namespace DiagnoseVirtual.Infra.Data.Context
             modelBuilder.HasDefaultSchema("diagnose_virtual");
             var assembly = typeof(Usuario).Assembly;
             modelBuilder.ApplyConfigurationsFromAssembly(assembly);
+            modelBuilder.Entity<Usuario>(new UsuarioMap().Configure);
+            modelBuilder.Entity<Fazenda>(new FazendaMap().Configure);
+            modelBuilder.Entity<DadosFazenda>(new DadosFazendaMap().Configure);
+            modelBuilder.Entity<LocalizacaoFazenda>(new LocalizacaoFazendaMap().Configure);
+            modelBuilder.Entity<Lavoura>(new LavouraMap().Configure);
+            modelBuilder.Entity<DadosLavoura>(new DadosLavouraMap().Configure);
+            modelBuilder.Entity<Talhao>(new TalhaoMap().Configure);
+            modelBuilder.Entity<Monitoramento>(new MonitoramentoMap().Configure);
+            modelBuilder.Entity<ProblemaMonitoramento>(new ProblemaMonitoramentoMap().Configure);
+            modelBuilder.Entity<UploadMonitoramento>(new UploadMonitoramentoMap().Configure);
         }
     }
 }

@@ -36,8 +36,12 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             builder.HasMany(x => x.Lavouras)
                 .WithOne(l => l.Fazenda)
                 .HasForeignKey("id_fazenda");
+            builder.HasMany(x => x.Monitoramentos)
+                .WithOne(m => m.Fazenda)
+                .HasForeignKey("id_fazenda");
 
             //Indices
+            builder.HasIndex(x => x.Id).IsUnique();
         }
     }
 }
