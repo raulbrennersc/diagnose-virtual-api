@@ -132,7 +132,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     _lavouraService.Post(lavouraBd);
                     _dadosLavouraService.Post(dadosLavouraBd);
                     transaction.Commit();
-                    return Ok(new LavouraDto(lavouraBd));
+                    return Ok(new LavouraDto { Id = lavouraBd.Id });
                 }
                 catch (Exception ex)
                 {
