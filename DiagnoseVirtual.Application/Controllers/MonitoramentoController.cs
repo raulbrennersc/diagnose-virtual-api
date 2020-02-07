@@ -159,9 +159,9 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("teste")]
-        public ActionResult Teste(IFormFile file)
+        public ActionResult Teste([FromForm]MonitoramentoPostDto monitoramento)
         {
-            return Ok(file);
+            return Ok();
         }
 
     }
