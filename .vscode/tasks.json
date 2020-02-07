@@ -37,6 +37,13 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
-        }
+        },
+        {
+            "label": "publish release Nano",
+            "command": "dotnet",
+            "type":"process",
+            "args" : ["publish", "--configuration", "Release", "--output", "./publish"],
+            "problemMatcher": "$msCompile"
+        },
     ]
 }
