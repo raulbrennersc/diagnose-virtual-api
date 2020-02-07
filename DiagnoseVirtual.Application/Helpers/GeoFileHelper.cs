@@ -15,7 +15,6 @@ namespace DiagnoseVirtual.Application.Helpers
 {
     public static class GeoFileHelper
     {
-
         public static List<NTSGeometries.Geometry> ReadFile(IFormFile file, string path)
         {
             var uploads = Path.Combine(path, "uploads", DateTime.Now.Ticks.ToString());

@@ -5,6 +5,7 @@ using DiagnoseVirtual.Infra.Data.Context;
 using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
 using System;
@@ -38,7 +39,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("UploadGeometrias")]
-        public ActionResult ValidarLocalizacao(Microsoft.AspNetCore.Http.IFormFile file)
+        public ActionResult ValidarLocalizacao(IFormFile file)
         {
             var path = _hostingEnvironment.ContentRootPath;
             try
@@ -148,6 +149,17 @@ namespace DiagnoseVirtual.Application.Controllers
                 return NotFound(Constants.ERR_LAVOURAS_FAZENDA_NAO_ENCONTRADA);
 
             return Ok(fazenda.Lavouras.Select(l => new LavouraDto(l)));
+        }
+
+        [HttpGet]
+        [Route("MonitoramentosFazenda/{idFazenda}")]
+        public ActionResult GetMonitoramentosFazenda(int idFazenda)
+        {
+            var fazenda = _fazendaService.Get(idFazenda);
+            if (fazenda == null)
+                return NotFound(Constants.ERR_LAVOURAS_FAZENDA_NAO_ENCONTRADA);
+
+            return Ok(fazenda.Monitoramentos.Select(m => new MonitoramentoDetailDto(m)));
         }
 
         [HttpPost]

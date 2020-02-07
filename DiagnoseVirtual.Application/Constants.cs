@@ -20,6 +20,9 @@
         public static readonly string ERR_TALHOES_LAVOURA_NAO_ENCONTRADOS = "Talhões da lavoura não encontrados.";
         //public static readonly string ERR_LAVOURA_CONCLUIDA = "Esta lavoura já foi concluída.";
 
+        public static readonly string ERR_MONITORAMENTO_NAO_ENCONTRADO = "Não foi possível encontrar o monitoramento.";
+
+
 
 
 

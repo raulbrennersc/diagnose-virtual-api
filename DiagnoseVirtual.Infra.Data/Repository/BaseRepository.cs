@@ -1,6 +1,7 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Domain.Interfaces;
 using DiagnoseVirtual.Infra.Data.Context;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace DiagnoseVirtual.Infra.Data.Repository
@@ -17,6 +18,12 @@ namespace DiagnoseVirtual.Infra.Data.Repository
         public void Insert(T obj)
         {
             context.Set<T>().Add(obj);
+            context.SaveChanges();
+        }
+
+        public void Insert(List<T> objs)
+        {
+            context.Set<T>().AddRange(objs);
             context.SaveChanges();
         }
 
