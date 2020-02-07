@@ -1,9 +1,6 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DiagnoseVirtual.Infra.Data.Mapping
 {
@@ -51,11 +48,8 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
 
             //Relacoes
 
-
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
-            builder.HasIndex(x => x.IdFazenda);
-
         }
     }
 }

@@ -1,9 +1,6 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DiagnoseVirtual.Infra.Data.Mapping
 {
@@ -27,7 +24,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             builder.Property(x => x.MesAnoPlantio)
                 .HasColumnName("mes_ano_plantio")
                 .IsRequired()
-                .HasMaxLength(7);
+                .HasMaxLength(20);
             builder.Property(x => x.Cultivar)
                 .HasColumnName("cultivar")
                 .IsRequired()
@@ -50,8 +47,6 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
-            builder.HasIndex(x => x.IdLavoura);
-
         }
     }
 }

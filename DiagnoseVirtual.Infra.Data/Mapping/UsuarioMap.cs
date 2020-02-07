@@ -42,12 +42,12 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             //Relacoes
             builder.HasMany(x => x.Fazendas)
                 .WithOne(f => f.Usuario)
-                .HasForeignKey(f => f.IdUsuario);
+                .HasForeignKey("id_usuario");
 
             //Indices e uniques
+            builder.HasIndex(x => x.Id).IsUnique();
             builder.HasIndex(x => x.Cpf).IsUnique();
             builder.HasIndex(x => x.Email).IsUnique();
-            builder.HasIndex(x => x.Id).IsUnique();
         }
     }
 }

@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace DiagnoseVirtual.Domain.Entities
+﻿namespace DiagnoseVirtual.Domain.Entities
 {
     public class DadosLavoura : BaseEntity
     {
-        public string Nome { get; set; }
-        public string MesAnoPlantio { get; set; }
-        public string Cultivar { get; set; }
-        public int NumeroPlantas { get; set; }
-        public double EspacamentoVertical { get; set; }
-        public double EspacamentoHorizontal { get; set; }
-        public string Observacoes { get; set; }
-        public Lavoura Lavoura { get; set; }
-        public int IdLavoura { get; set; }
+        public virtual string Nome { get; set; }
+        public virtual string MesAnoPlantio { get; set; }
+        public virtual string Cultivar { get; set; }
+        public virtual int NumeroPlantas { get; set; }
+        public virtual double EspacamentoVertical { get; set; }
+        public virtual double EspacamentoHorizontal { get; set; }
+        public virtual string Observacoes { get; set; }
+        public virtual Lavoura Lavoura { get; set; }
 
     }
 }

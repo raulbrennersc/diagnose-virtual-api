@@ -1,10 +1,6 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Infra.Data.Mapping;
 using Microsoft.EntityFrameworkCore;
-using Npgsql.EntityFrameworkCore.PostgreSQL;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DiagnoseVirtual.Infra.Data.Context
 {
@@ -20,8 +16,9 @@ namespace DiagnoseVirtual.Infra.Data.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
-                optionsBuilder.UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=qipixel_ark;", x => x.UseNetTopologySuite());
-
+                optionsBuilder
+                    .UseLazyLoadingProxies()
+                    .UseNpgsql("User ID=docker;Password=docker;Host=localhost;Port=5432;Database=qipixel_ark;", x => x.UseNetTopologySuite());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -29,6 +26,8 @@ namespace DiagnoseVirtual.Infra.Data.Context
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.HasDefaultSchema("diagnose_virtual");
+            var assembly = typeof(Usuario).Assembly;
+            modelBuilder.ApplyConfigurationsFromAssembly(assembly);
             modelBuilder.Entity<Usuario>(new UsuarioMap().Configure);
             modelBuilder.Entity<Fazenda>(new FazendaMap().Configure);
             modelBuilder.Entity<DadosFazenda>(new DadosFazendaMap().Configure);
@@ -36,6 +35,9 @@ namespace DiagnoseVirtual.Infra.Data.Context
             modelBuilder.Entity<Lavoura>(new LavouraMap().Configure);
             modelBuilder.Entity<DadosLavoura>(new DadosLavouraMap().Configure);
             modelBuilder.Entity<Talhao>(new TalhaoMap().Configure);
+            modelBuilder.Entity<Monitoramento>(new MonitoramentoMap().Configure);
+            modelBuilder.Entity<ProblemaMonitoramento>(new ProblemaMonitoramentoMap().Configure);
+            modelBuilder.Entity<UploadMonitoramento>(new UploadMonitoramentoMap().Configure);
         }
     }
 }

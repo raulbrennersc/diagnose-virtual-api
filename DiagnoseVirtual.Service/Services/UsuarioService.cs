@@ -1,14 +1,14 @@
 ﻿using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
-using System;
-using System.Collections.Generic;
+using DiagnoseVirtual.Infra.Data.Context;
 using System.Linq;
-using System.Text;
 
 namespace DiagnoseVirtual.Service.Services
 {
     public class UsuarioService : BaseService<Usuario>
     {
+
+        public UsuarioService(PsqlContext context) : base(context) { }
         public bool ExisteUsuario(string cpf)
         {
             return GetAll().Any(u => u.Cpf == cpf);
@@ -19,7 +19,7 @@ namespace DiagnoseVirtual.Service.Services
             var novoUsuario = new Usuario
             {
                 Nome = novoUsuarioDto.Nome,
-                Cpf = novoUsuarioDto.Cpf,
+                Cpf = novoUsuarioDto.Cpf.Replace(".", "").Replace("-", ""),
                 Email = novoUsuarioDto.Email,
             };
 
@@ -35,6 +35,7 @@ namespace DiagnoseVirtual.Service.Services
 
         public Usuario Login(string cpf, string password)
         {
+            cpf = cpf.Replace(".", "").Replace("-", "");
             var usuario = GetAll().FirstOrDefault(u => u.Cpf == cpf);
 
             if (usuario == null)

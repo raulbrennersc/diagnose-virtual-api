@@ -1,20 +1,29 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Domain.Interfaces;
 using DiagnoseVirtual.Infra.Data.Context;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DiagnoseVirtual.Infra.Data.Repository
 {
     public class BaseRepository<T> : IRepository<T> where T : BaseEntity
     {
-        private PsqlContext context = new PsqlContext();
+        private readonly PsqlContext context;
+        public BaseRepository(PsqlContext context)
+        {
+            this.context = context;
+        }
+
 
         public void Insert(T obj)
         {
             context.Set<T>().Add(obj);
+            context.SaveChanges();
+        }
+
+        public void Insert(List<T> objs)
+        {
+            context.Set<T>().AddRange(objs);
             context.SaveChanges();
         }
 

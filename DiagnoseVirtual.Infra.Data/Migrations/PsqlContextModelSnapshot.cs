@@ -39,11 +39,11 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("character varying(100)")
                         .HasMaxLength(100);
 
-                    b.Property<int>("IdFazenda")
-                        .HasColumnType("integer");
-
                     b.Property<int>("QuantidadeLavouras")
                         .HasColumnName("quantidade_lavouras")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("id_fazenda")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -51,7 +51,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("IdFazenda")
+                    b.HasIndex("id_fazenda")
                         .IsUnique();
 
                     b.ToTable("dados_fazenda");
@@ -79,14 +79,11 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnName("expacamento_vertical")
                         .HasColumnType("double precision");
 
-                    b.Property<int>("IdLavoura")
-                        .HasColumnType("integer");
-
                     b.Property<string>("MesAnoPlantio")
                         .IsRequired()
                         .HasColumnName("mes_ano_plantio")
-                        .HasColumnType("character varying(7)")
-                        .HasMaxLength(7);
+                        .HasColumnType("character varying(20)")
+                        .HasMaxLength(20);
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -104,12 +101,15 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("character varying(250)")
                         .HasMaxLength(250);
 
+                    b.Property<int?>("id_lavoura")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("IdLavoura")
+                    b.HasIndex("id_lavoura")
                         .IsUnique();
 
                     b.ToTable("dados_lavoura");
@@ -139,8 +139,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnName("demarcacao_geom")
                         .HasColumnType("geometry");
 
-                    b.Property<int>("IdUsuario")
-                        .HasColumnName("id_usuario")
+                    b.Property<int?>("id_usuario")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -148,7 +147,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("IdUsuario");
+                    b.HasIndex("id_usuario");
 
                     b.ToTable("fazenda");
                 });
@@ -168,11 +167,10 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<Geometry>("Demarcacao")
-                        .IsRequired()
                         .HasColumnName("demarcacao_geom")
                         .HasColumnType("geometry");
 
-                    b.Property<int>("IdFazenda")
+                    b.Property<int?>("id_fazenda")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -180,7 +178,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("IdFazenda");
+                    b.HasIndex("id_fazenda");
 
                     b.ToTable("lavoura");
                 });
@@ -211,9 +209,6 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("character varying(30)")
                         .HasMaxLength(30);
 
-                    b.Property<int>("IdFazenda")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Municipio")
                         .IsRequired()
                         .HasColumnName("municipio")
@@ -238,15 +233,81 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
+                    b.Property<int?>("id_fazenda")
+                        .HasColumnType("integer");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("IdFazenda")
+                    b.HasIndex("id_fazenda")
                         .IsUnique();
 
                     b.ToTable("localizacao_fazenda");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Monitoramento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<DateTime>("DataMonitoramento")
+                        .HasColumnName("data_monitoramento")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<int?>("id_fazenda")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("id_fazenda");
+
+                    b.ToTable("monitoramento");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.ProblemaMonitoramento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnName("descricao")
+                        .HasColumnType("character varying(140)")
+                        .HasMaxLength(140);
+
+                    b.Property<Geometry>("Ponto")
+                        .IsRequired()
+                        .HasColumnName("ponto_geom")
+                        .HasColumnType("geometry");
+
+                    b.Property<string>("Recomendacao")
+                        .IsRequired()
+                        .HasColumnName("recomendacao")
+                        .HasColumnType("character varying(140)")
+                        .HasMaxLength(140);
+
+                    b.Property<int?>("id_monitoramento")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("id_monitoramento");
+
+                    b.ToTable("problema_monitoramento");
                 });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Talhao", b =>
@@ -262,7 +323,7 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnName("geometria_geom")
                         .HasColumnType("geometry");
 
-                    b.Property<int>("IdLavoura")
+                    b.Property<int?>("id_lavoura")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -270,9 +331,42 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("IdLavoura");
+                    b.HasIndex("id_lavoura");
 
                     b.ToTable("talhao");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.UploadMonitoramento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("NomeArquivo")
+                        .IsRequired()
+                        .HasColumnName("nome_arquivo")
+                        .HasColumnType("character varying(25)")
+                        .HasMaxLength(25);
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnName("url")
+                        .HasColumnType("character varying(100)")
+                        .HasMaxLength(100);
+
+                    b.Property<int?>("id_monitoramento")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("id_monitoramento");
+
+                    b.ToTable("upload_monitoramento");
                 });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Usuario", b =>
@@ -335,54 +429,63 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 {
                     b.HasOne("DiagnoseVirtual.Domain.Entities.Fazenda", "Fazenda")
                         .WithOne("DadosFazenda")
-                        .HasForeignKey("DiagnoseVirtual.Domain.Entities.DadosFazenda", "IdFazenda")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DiagnoseVirtual.Domain.Entities.DadosFazenda", "id_fazenda");
                 });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.DadosLavoura", b =>
                 {
                     b.HasOne("DiagnoseVirtual.Domain.Entities.Lavoura", "Lavoura")
                         .WithOne("DadosLavoura")
-                        .HasForeignKey("DiagnoseVirtual.Domain.Entities.DadosLavoura", "IdLavoura")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DiagnoseVirtual.Domain.Entities.DadosLavoura", "id_lavoura");
                 });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Fazenda", b =>
                 {
                     b.HasOne("DiagnoseVirtual.Domain.Entities.Usuario", "Usuario")
                         .WithMany("Fazendas")
-                        .HasForeignKey("IdUsuario")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("id_usuario");
                 });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Lavoura", b =>
                 {
                     b.HasOne("DiagnoseVirtual.Domain.Entities.Fazenda", "Fazenda")
                         .WithMany("Lavouras")
-                        .HasForeignKey("IdFazenda")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("id_fazenda");
                 });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.LocalizacaoFazenda", b =>
                 {
                     b.HasOne("DiagnoseVirtual.Domain.Entities.Fazenda", "Fazenda")
                         .WithOne("LocalizacaoFazenda")
-                        .HasForeignKey("DiagnoseVirtual.Domain.Entities.LocalizacaoFazenda", "IdFazenda")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DiagnoseVirtual.Domain.Entities.LocalizacaoFazenda", "id_fazenda");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Monitoramento", b =>
+                {
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.Fazenda", "Fazenda")
+                        .WithMany("Monitoramentos")
+                        .HasForeignKey("id_fazenda");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.ProblemaMonitoramento", b =>
+                {
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.Monitoramento", "Monitoramento")
+                        .WithMany("Problemas")
+                        .HasForeignKey("id_monitoramento");
                 });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Talhao", b =>
                 {
                     b.HasOne("DiagnoseVirtual.Domain.Entities.Lavoura", "Lavoura")
                         .WithMany("Talhoes")
-                        .HasForeignKey("IdLavoura")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("id_lavoura");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.UploadMonitoramento", b =>
+                {
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.Monitoramento", "Monitoramento")
+                        .WithMany("Uploads")
+                        .HasForeignKey("id_monitoramento");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,9 +1,7 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using NetTopologySuite.Geometries;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DiagnoseVirtual.Domain.Dtos
 {
@@ -11,8 +9,8 @@ namespace DiagnoseVirtual.Domain.Dtos
     {
         public int Id { get; set; }
         public DadosLavouraDto DadosLavoura { get; set; }
-        public Geometry Demarcacao { get; set; }
-        public ICollection<Geometry> Talhoes { get; set; }
+        public GeometriaDto Demarcacao { get; set; }
+        public ICollection<GeometriaDto> Talhoes { get; set; }
         public bool Concluida { get; set; }
 
         public LavouraDto() { }
@@ -20,8 +18,8 @@ namespace DiagnoseVirtual.Domain.Dtos
         {
             Id = lavoura.Id;
             DadosLavoura = lavoura.DadosLavoura != null ? new DadosLavouraDto(lavoura.DadosLavoura) : null;
-            Demarcacao = lavoura.Demarcacao;
-            Talhoes = lavoura.Talhoes?.Select(t => t.Geometria).ToList();
+            Demarcacao = new GeometriaDto(lavoura.Demarcacao);
+            Talhoes = lavoura.Talhoes?.Select(t => new GeometriaDto(t.Geometria)).ToList();
             Concluida = lavoura.Concluida;
         }
     }

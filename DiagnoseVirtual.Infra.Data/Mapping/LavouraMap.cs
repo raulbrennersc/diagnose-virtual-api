@@ -1,9 +1,6 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DiagnoseVirtual.Infra.Data.Mapping
 {
@@ -21,8 +18,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Demarcacao)
-                .HasColumnName("demarcacao_geom")
-                .IsRequired();
+                .HasColumnName("demarcacao_geom");
             builder.Property(x => x.Concluida)
                 .HasColumnName("concluida")
                 .HasDefaultValue(false);
@@ -30,14 +26,13 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             //Relacoes
             builder.HasOne(x => x.DadosLavoura)
                 .WithOne(d => d.Lavoura)
-                .HasForeignKey<DadosLavoura>(d => d.IdLavoura);
+                .HasForeignKey<DadosLavoura>("id_lavoura");
             builder.HasMany(x => x.Talhoes)
                 .WithOne(t => t.Lavoura)
-                .HasForeignKey(t => t.IdLavoura);
+                .HasForeignKey("id_lavoura");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
-            builder.HasIndex(x => x.IdFazenda);
         }
     }
 }
