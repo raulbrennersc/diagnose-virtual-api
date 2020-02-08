@@ -19,7 +19,7 @@ namespace DiagnoseVirtual.Application.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    // [Authorize]
+    [Authorize]
     public class MonitoramentoController : ControllerBase
     {
         private readonly BaseService<Fazenda> _fazendaService;
