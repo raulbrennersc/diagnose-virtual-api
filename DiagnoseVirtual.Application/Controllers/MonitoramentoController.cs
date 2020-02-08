@@ -73,13 +73,13 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("{idFazenda}")]
-        public ActionResult Concluir(MonitoramentoPostDto monitoramentoDto, int idFazenda)
+        public ActionResult Post([FromForm]MonitoramentoPostDto monitoramentoDto, int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null)
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
 
-            if (fazenda.Concluida)
+            if (!fazenda.Concluida)
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
 
             var monitoramento = new Monitoramento { Fazenda = fazenda, DataMonitoramento = DateTime.Now };
@@ -88,9 +88,12 @@ namespace DiagnoseVirtual.Application.Controllers
             {
                 try
                 {
+                    var problemas = MontarProblemas(monitoramentoDto, monitoramento);
+                    var uploads = MontarUploads(monitoramentoDto, monitoramento);
+
                     _monitoramentoService.Post(monitoramento);
-                    _problemaMonitoramentoService.Post(MontarProblemas(monitoramentoDto, monitoramento));
-                    _uploadMonitoramentoService.Post(MontarUploads(monitoramentoDto, monitoramento));
+                    _problemaMonitoramentoService.Post(problemas);
+                    _uploadMonitoramentoService.Post(uploads);
                     transaction.Commit();
                     return Ok();
                 }
@@ -105,9 +108,9 @@ namespace DiagnoseVirtual.Application.Controllers
         private List<ProblemaMonitoramento> MontarProblemas(MonitoramentoPostDto monitoramentoDto, Monitoramento monitoramento){
             var problemasMonitoramento = new List<ProblemaMonitoramento>();
             var factory = Geometry.DefaultFactory;
-            foreach (var problemaDto in monitoramento.Problemas)
+            foreach (var problemaDto in monitoramentoDto.Problemas)
             {
-                var ponto = factory.CreatePoint(new Coordinate(problemaDto.Ponto.Coordinate.X, problemaDto.Ponto.Coordinate.Y));
+                var ponto = factory.CreatePoint(new Coordinate(problemaDto.Ponto.Coordinates[0][0], problemaDto.Ponto.Coordinates[0][1]));
                 var problema = new ProblemaMonitoramento
                 {
                     Descricao = problemaDto.Descricao,
@@ -123,17 +126,22 @@ namespace DiagnoseVirtual.Application.Controllers
         private List<UploadMonitoramento> MontarUploads(MonitoramentoPostDto monitoramentoDto, Monitoramento monitoramento){
             var uploads = new List<UploadMonitoramento>();
             var basePath = _webHostingEnvironment.ContentRootPath;
-            var caminho = $"/arquivos/fazendas/{monitoramento.Fazenda.Id}/monitoramentos/{monitoramento.Id}/uploads_monitoramento/";
+            var caminho = $"files\\fazendas\\{monitoramento.Fazenda.Id}\\monitoramentos\\{monitoramento.Id}\\uploads_monitoramento\\";
             var caminhoFinal = Path.Combine(basePath, caminho);
-            if(monitoramentoDto.Uploads.Any())
+            var arquivosExistentes = new List<string>();
+            if(monitoramentoDto.Uploads.Any()){
                 Directory.CreateDirectory(caminhoFinal);
+                arquivosExistentes = Directory.GetFiles(caminhoFinal).ToList();
+                arquivosExistentes = arquivosExistentes.Select(x => x.Split("\\").LastOrDefault()).ToList();
+            }
 
             foreach (var uploadDto in monitoramentoDto.Uploads)
             {
                 var nomeArquivo = uploadDto.FileName;
                 var finalNomeArquivo = "";
                 var count = 0;
-                while (uploads.Any(u => u.NomeArquivo == (nomeArquivo + finalNomeArquivo)))
+                while (uploads.Any(u => u.NomeArquivo == (nomeArquivo + finalNomeArquivo)
+                || arquivosExistentes.Any(a => a == nomeArquivo + finalNomeArquivo)))
                 {
                     count++;
                     finalNomeArquivo = $"({count})";
@@ -150,8 +158,9 @@ namespace DiagnoseVirtual.Application.Controllers
                 {
                     Monitoramento = monitoramento,
                     NomeArquivo = uploadDto.FileName,
-                    Url = filePath,
+                    Url = filePath.Replace(basePath, "localhost"),
                 };
+                uploads.Add(upload);
             }
             return uploads;
         }
