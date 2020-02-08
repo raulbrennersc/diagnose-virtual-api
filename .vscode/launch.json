@@ -30,7 +30,9 @@
             "name": ".NET Core Attach",
             "type": "coreclr",
             "request": "attach",
-            "processId": "${command:pickProcess}"
+            "preLaunchTask": "publish release",
+            "processName": "w3wp.exe",
+            // "processId": "${command:pickProcess}",
         }
     ]
 }
