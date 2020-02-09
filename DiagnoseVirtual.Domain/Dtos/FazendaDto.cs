@@ -11,6 +11,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public DadosFazendaDto DadosFazenda { get; set; }
         public DemarcacaoDto LocalizacaoGeo { get; set; }
         public List<LavouraDto> Lavouras { get; set; }
+        public List<MonitoramentoToListDto> Monitoramentos { get; set; }
         public bool Ativa { get; set; }
         public bool Concluida { get; set; }
 
@@ -26,6 +27,7 @@ namespace DiagnoseVirtual.Domain.Dtos
             LocalizacaoFazenda = fazenda.LocalizacaoFazenda != null ? new LocalizacaoFazendaDto(fazenda.LocalizacaoFazenda) : null;
             DadosFazenda = fazenda.DadosFazenda != null ? new DadosFazendaDto(fazenda.DadosFazenda) : null;
             Lavouras = fazenda.Lavouras?.Select(l => new LavouraDto(l)).ToList();
+            Monitoramentos = fazenda.Monitoramentos?.Select(m => new MonitoramentoToListDto(m)).ToList();
             LocalizacaoGeo = demarcacao;
             Ativa = fazenda.Ativa;
             Concluida = fazenda.Concluida;
