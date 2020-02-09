@@ -20,7 +20,7 @@ namespace DiagnoseVirtual.Application.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class MonitoramentoController : ControllerBase
+    public class MonitoramentosController : ControllerBase
     {
         private readonly BaseService<Fazenda> _fazendaService;
         private readonly UsuarioService _usuarioService;
@@ -33,7 +33,7 @@ namespace DiagnoseVirtual.Application.Controllers
         // private readonly BaseService<DadosFazenda> _dadosFazendaService;
         private readonly PsqlContext _context = new PsqlContext();
 
-        public MonitoramentoController(IWebHostEnvironment hostingEnvironment)
+        public MonitoramentosController(IWebHostEnvironment hostingEnvironment)
         {
             _fazendaService = new BaseService<Fazenda>(_context);
             _usuarioService = new UsuarioService(_context);
@@ -71,11 +71,25 @@ namespace DiagnoseVirtual.Application.Controllers
             return Ok(new MonitoramentoDetailDto(monitoramento));
         }
 
-        [HttpPost]
-        [Route("{idFazenda}")]
-        public ActionResult Post([FromForm]MonitoramentoPostDto monitoramentoDto, int idFazenda)
+        [HttpPost("Filtrar/")]
+        public ActionResult Consultar(FiltroDto filtro)
         {
-            var fazenda = _fazendaService.Get(idFazenda);
+            if (filtro.IdFazenda == 0 || filtro.Data == DateTime.MinValue)
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
+
+            var fazenda = _fazendaService.Get(filtro.IdFazenda);
+            var monitoramento = fazenda.Monitoramentos
+                .FirstOrDefault(m => m.DataMonitoramento.Date == filtro.Data.Date);
+            if (monitoramento == null)
+                return NotFound(Constants.ERR_MONITORAMENTO_NAO_ENCONTRADO);
+
+            return Ok(new MonitoramentoDetailDto(monitoramento));
+        }
+
+        [HttpPost]
+        public ActionResult Post(MonitoramentoPostDto monitoramentoDto)
+        {
+            var fazenda = _fazendaService.Get(monitoramentoDto.IdFazenda);
             if (fazenda == null)
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
 
@@ -83,15 +97,15 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
 
             var monitoramento = new Monitoramento { Fazenda = fazenda, DataMonitoramento = DateTime.Now };
-            
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    var problemas = MontarProblemas(monitoramentoDto, monitoramento);
-                    var uploads = MontarUploads(monitoramentoDto, monitoramento);
 
                     _monitoramentoService.Post(monitoramento);
+                    var problemas = MontarProblemas(monitoramentoDto, monitoramento);
+                    var uploads = MontarUploads(monitoramentoDto, monitoramento);
                     _problemaMonitoramentoService.Post(problemas);
                     _uploadMonitoramentoService.Post(uploads);
                     transaction.Commit();
@@ -105,7 +119,8 @@ namespace DiagnoseVirtual.Application.Controllers
             }
         }
 
-        private List<ProblemaMonitoramento> MontarProblemas(MonitoramentoPostDto monitoramentoDto, Monitoramento monitoramento){
+        private List<ProblemaMonitoramento> MontarProblemas(MonitoramentoPostDto monitoramentoDto, Monitoramento monitoramento)
+        {
             var problemasMonitoramento = new List<ProblemaMonitoramento>();
             var factory = Geometry.DefaultFactory;
             foreach (var problemaDto in monitoramentoDto.Problemas)
@@ -123,13 +138,15 @@ namespace DiagnoseVirtual.Application.Controllers
             return problemasMonitoramento;
         }
 
-        private List<UploadMonitoramento> MontarUploads(MonitoramentoPostDto monitoramentoDto, Monitoramento monitoramento){
+        private List<UploadMonitoramento> MontarUploads(MonitoramentoPostDto monitoramentoDto, Monitoramento monitoramento)
+        {
             var uploads = new List<UploadMonitoramento>();
             var basePath = _webHostingEnvironment.ContentRootPath;
             var caminho = $"files\\fazendas\\{monitoramento.Fazenda.Id}\\monitoramentos\\{monitoramento.Id}\\uploads_monitoramento\\";
             var caminhoFinal = Path.Combine(basePath, caminho);
             var arquivosExistentes = new List<string>();
-            if(monitoramentoDto.Uploads.Any()){
+            if (monitoramentoDto.Uploads.Any())
+            {
                 Directory.CreateDirectory(caminhoFinal);
                 arquivosExistentes = Directory.GetFiles(caminhoFinal).ToList();
                 arquivosExistentes = arquivosExistentes.Select(x => x.Split("\\").LastOrDefault()).ToList();
@@ -137,34 +154,52 @@ namespace DiagnoseVirtual.Application.Controllers
 
             foreach (var uploadDto in monitoramentoDto.Uploads)
             {
-                var nomeArquivo = uploadDto.FileName;
-                var finalNomeArquivo = "";
-                var count = 0;
-                while (uploads.Any(u => u.NomeArquivo == (nomeArquivo + finalNomeArquivo)
-                || arquivosExistentes.Any(a => a == nomeArquivo + finalNomeArquivo)))
+                try
                 {
-                    count++;
-                    finalNomeArquivo = $"({count})";
-                }
+                    var nomeArquivo = uploadDto.FileName;
+                    var finalNomeArquivo = "";
+                    var count = 0;
+                    while (ExisteArquivo(uploads, arquivosExistentes, nomeArquivo, finalNomeArquivo))
+                    {
+                        count++;
+                        finalNomeArquivo = $"({count})";
+                    }
 
-                nomeArquivo += finalNomeArquivo;
+                    var extensao = "." + nomeArquivo.Split(".").Last();
+                    var nomeSimplificado = nomeArquivo.Replace(extensao, "");
+                    nomeArquivo = nomeSimplificado + finalNomeArquivo + extensao;
 
-                var filePath = Path.Combine(caminhoFinal, nomeArquivo);
-                using (var fileStream = new FileStream(filePath, FileMode.Create))
-                {
-                    uploadDto.CopyTo(fileStream);
+                    var filePath = Path.Combine(caminhoFinal, nomeArquivo);
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        uploadDto.CopyTo(fileStream);
+                    }
+                    var upload = new UploadMonitoramento
+                    {
+                        Monitoramento = monitoramento,
+                        NomeArquivo = nomeArquivo,
+                        Url = filePath.Replace(basePath, "18.229.125.193"),
+                    };
+                    uploads.Add(upload);
                 }
-                var upload = new UploadMonitoramento
+                catch
                 {
-                    Monitoramento = monitoramento,
-                    NomeArquivo = uploadDto.FileName,
-                    Url = filePath.Replace(basePath, "localhost"),
-                };
-                uploads.Add(upload);
+                    throw new Exception($"Erro ao tentar salvar o arquivo {uploadDto.FileName}");
+                }
             }
             return uploads;
         }
 
+        private bool ExisteArquivo(List<UploadMonitoramento> uploads, List<string> arquivosExistentes, string nomeArquivo, string finalNomeArquivo)
+        {
+            var extensao = "." + nomeArquivo.Split(".").Last();
+            var nomeSimplificado = nomeArquivo.Replace(extensao, "");
+            var nomeArquivoModificado = nomeSimplificado + finalNomeArquivo + extensao;
+
+
+            return uploads.Any(u => u.NomeArquivo == nomeArquivoModificado)
+                || arquivosExistentes.Any(a => a == nomeArquivoModificado);
+        }
 
         [HttpPost]
         [Route("teste")]
