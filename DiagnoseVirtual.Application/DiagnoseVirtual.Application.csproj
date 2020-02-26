@@ -14,7 +14,4 @@
     <ProjectReference Include="..\DiagnoseVirtual.Service\DiagnoseVirtual.Service.csproj" />
   </ItemGroup>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-    <Exec Command="echo &quot;App Offline&quot; /a &gt; &quot;../publish/app_offline.htm&quot;" />
-  </Target>
 </Project>
