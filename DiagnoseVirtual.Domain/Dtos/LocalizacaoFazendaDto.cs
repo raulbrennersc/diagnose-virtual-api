@@ -9,7 +9,8 @@ namespace DiagnoseVirtual.Domain.Dtos
         public string Municipio { get; set; }
         public string Proprietario { get; set; }
         public string Gerente { get; set; }
-        public string Contato { get; set; }
+        public string Telefone { get; set; }
+        public string Email { get; set; }
         public string PontoReferencia { get; set; }
 
         public LocalizacaoFazendaDto() { }
@@ -20,7 +21,8 @@ namespace DiagnoseVirtual.Domain.Dtos
             Municipio = localizacao.Municipio;
             Proprietario = localizacao.Proprietario;
             Gerente = localizacao.Gerente;
-            Contato = localizacao.Contato;
+            Telefone = localizacao.Telefone;
+            Email = localizacao.Email;
             PontoReferencia = localizacao.PontoReferencia;
         }
     }
