@@ -39,7 +39,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .IsRequired();
 
             //Relacoes
-            builder.HasOne(typeof(Municipio), "id_municipio");
+            builder.HasOne(x => x.Municipio)
+                .WithMany()
+                .HasForeignKey("id_municipio");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();

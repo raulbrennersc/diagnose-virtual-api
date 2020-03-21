@@ -12,7 +12,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
         public void Configure(EntityTypeBuilder<Municipio> builder)
         {
             //Tabela
-            builder.ToTable("estado");
+            builder.ToTable("municipio");
             builder.HasKey(x => x.Id);
 
             //Proriedades
@@ -28,6 +28,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .IsRequired();
 
             //Relacoes
+            builder.HasOne(x => x.Estado)
+                .WithMany(e => e.Municipios)
+                .HasForeignKey("id_estado");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();

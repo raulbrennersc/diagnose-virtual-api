@@ -12,6 +12,8 @@ namespace DiagnoseVirtual.Infra.Data.Context
         public DbSet<DadosLavoura> DadosLavouras { get; set; }
         public DbSet<Lavoura> Lavouras { get; set; }
         public DbSet<LocalizacaoFazenda> LocalizacaoFazendas { get; set; }
+        public DbSet<Estado> Estados { get; set; }
+        public DbSet<Municipio> Municipios { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -40,6 +42,8 @@ namespace DiagnoseVirtual.Infra.Data.Context
             modelBuilder.Entity<Monitoramento>(new MonitoramentoMap().Configure);
             modelBuilder.Entity<ProblemaMonitoramento>(new ProblemaMonitoramentoMap().Configure);
             modelBuilder.Entity<UploadMonitoramento>(new UploadMonitoramentoMap().Configure);
+            modelBuilder.Entity<Estado>(new EstadoMapping().Configure);
+            modelBuilder.Entity<Municipio>(new MunicipioMapping().Configure);
         }
     }
 }
