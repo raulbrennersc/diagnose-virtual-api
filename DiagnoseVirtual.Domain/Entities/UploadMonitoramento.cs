@@ -1,5 +1,3 @@
-using System;
-
 namespace DiagnoseVirtual.Domain.Entities
 {
     public class UploadMonitoramento : BaseEntity

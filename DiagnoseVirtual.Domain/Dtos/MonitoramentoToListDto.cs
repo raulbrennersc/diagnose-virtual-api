@@ -1,5 +1,5 @@
-using System;
 using DiagnoseVirtual.Domain.Entities;
+using System;
 
 namespace DiagnoseVirtual.Domain.Dtos
 {

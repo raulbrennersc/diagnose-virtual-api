@@ -29,7 +29,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasColumnName("url");
 
             //Relacoes
-            
+
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
         }

@@ -20,8 +20,10 @@ namespace DiagnoseVirtual.Domain.Dtos
         {
             var demarcacao = new DemarcacaoDto();
             demarcacao.Geometrias = new List<GeometriaDto>();
-            if(fazenda.Demarcacao != null)
+            if (fazenda.Demarcacao != null)
+            {
                 demarcacao.Geometrias.Add(new GeometriaDto(fazenda.Demarcacao));
+            }
 
             Id = fazenda.Id;
             LocalizacaoFazenda = fazenda.LocalizacaoFazenda != null ? new LocalizacaoFazendaDto(fazenda.LocalizacaoFazenda) : null;

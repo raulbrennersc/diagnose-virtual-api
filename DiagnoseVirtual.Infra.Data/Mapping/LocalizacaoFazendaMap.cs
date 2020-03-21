@@ -40,7 +40,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             builder.Property(x => x.Telefone)
                 .HasColumnName("telefone")
                 .HasMaxLength(50)
-                .IsRequired(); 
+                .IsRequired();
             builder.Property(x => x.Email)
                  .HasColumnName("email")
                  .HasMaxLength(50)

@@ -23,12 +23,12 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .IsRequired()
                 .HasColumnName("descricao");
 
-			builder.Property(x => x.Recomendacao)
+            builder.Property(x => x.Recomendacao)
                 .HasMaxLength(140)
                 .IsRequired()
                 .HasColumnName("recomendacao");
 
-			builder.Property(x => x.Ponto)
+            builder.Property(x => x.Ponto)
                 .IsRequired()
                 .HasColumnName("ponto_geom");
 

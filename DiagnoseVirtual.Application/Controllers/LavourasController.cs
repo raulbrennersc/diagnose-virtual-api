@@ -38,7 +38,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (lavouraBd == null || lavouraBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             lavouraBd.Concluida = true;
 
@@ -63,7 +65,10 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavoura = _lavouraService.Get(idLavoura);
             if (lavoura == null)
+            {
                 return NotFound(Constants.ERR_LAVOURA_NAO_ENCONTRADA);
+            }
+
             return Ok(new LavouraDto(lavoura));
         }
 
@@ -73,7 +78,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavoura = _lavouraService.Get(idLavoura);
             if (lavoura == null || lavoura.DadosLavoura == null)
+            {
                 return BadRequest(Constants.ERR_DADOS_LAVOURA_NAO_ENCONTRADOS);
+            }
 
             return Ok(new DadosLavouraDto(lavoura.DadosLavoura));
         }
@@ -84,7 +91,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavoura = _lavouraService.Get(idLavoura);
             if (lavoura == null || lavoura.Demarcacao == null)
+            {
                 return BadRequest(Constants.ERR_DEMARCACAO_LAVOURA_NAO_ENCONTRADA);
+            }
 
             return Ok(new GeometriaDto(lavoura.Demarcacao));
         }
@@ -95,7 +104,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavoura = _lavouraService.Get(idLavoura);
             if (lavoura == null || lavoura.Talhoes == null)
+            {
                 return BadRequest(Constants.ERR_TALHOES_LAVOURA_NAO_ENCONTRADOS);
+            }
 
             return Ok(lavoura.Talhoes.Select(t => new GeometriaDto(t.Geometria)));
         }
@@ -106,7 +117,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (dadosLavoura == null || fazendaBd == null || !fazendaBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var lavouraBd = new Lavoura
             {
@@ -148,7 +161,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (geometriaDemarcacao == null || lavouraBd == null || lavouraBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var factory = Geometry.DefaultFactory;
             var polygon = factory.CreatePolygon(geometriaDemarcacao.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray());
@@ -178,7 +193,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var factory = Geometry.DefaultFactory;
             var polygons = talhoes
@@ -217,7 +234,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (dadosLavoura == null || !lavouraBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var dadosLavouraBd = lavouraBd.DadosLavoura;
 
@@ -251,7 +270,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (geometriaDemarcacao == null || lavouraBd == null || !lavouraBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var factory = Geometry.DefaultFactory;
             var polygon = factory.CreatePolygon(geometriaDemarcacao.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray());
@@ -279,7 +300,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Talhoes == null)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var factory = Geometry.DefaultFactory;
             var polygons = talhoes

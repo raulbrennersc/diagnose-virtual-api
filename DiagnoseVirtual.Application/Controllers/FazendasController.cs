@@ -59,10 +59,14 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             if (fazenda.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             fazenda.Concluida = true;
 
@@ -98,7 +102,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null)
+            {
                 return NotFound(Constants.ERR_FAZENDA_NAO_ENCONTRADA);
+            }
 
             return Ok(new FazendaDto(fazenda));
         }
@@ -109,7 +115,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null || fazenda.LocalizacaoFazenda == null)
+            {
                 return NotFound(Constants.ERR_LOCALIZACAO_FAZENDA_NAO_ENCONTRADA);
+            }
 
             return Ok(new LocalizacaoFazendaDto(fazenda.LocalizacaoFazenda));
         }
@@ -120,7 +128,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null || fazenda.DadosFazenda == null)
+            {
                 return NotFound(Constants.ERR_DADOS_FAZENDA_NAO_ENCONTRADOS);
+            }
 
             return Ok(new DadosFazendaDto(fazenda.DadosFazenda));
         }
@@ -131,7 +141,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null || fazenda.Demarcacao == null)
+            {
                 return NotFound(Constants.ERR_DEMARCACAO_FAZENDA_NAO_ENCONTRADA);
+            }
 
             var demarcacao = new DemarcacaoDto();
             demarcacao.Geometrias = new List<GeometriaDto>();
@@ -146,7 +158,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null)
+            {
                 return NotFound(Constants.ERR_LAVOURAS_FAZENDA_NAO_ENCONTRADA);
+            }
 
             return Ok(fazenda.Lavouras.Select(l => new LavouraDto(l)));
         }
@@ -157,7 +171,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null)
+            {
                 return NotFound(Constants.ERR_LAVOURAS_FAZENDA_NAO_ENCONTRADA);
+            }
 
             return Ok(fazenda.Monitoramentos.Select(m => new MonitoramentoDetailDto(m)));
         }
@@ -167,7 +183,9 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PostLocalizacaoFazenda(LocalizacaoFazendaDto localizacao)
         {
             if (localizacao == null)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var usuario = _usuarioService.Get(Int32.Parse(idUsuario));
@@ -213,7 +231,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (dadosFazenda == null || fazendaBd == null || fazendaBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var dadosFazendaBd = new DadosFazenda
             {
@@ -245,7 +265,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (demarcacaoDto == null || demarcacaoDto.Geometrias == null || !demarcacaoDto.Geometrias.Any() || fazendaBd == null || fazendaBd.Demarcacao != null || fazendaBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var factory = Geometry.DefaultFactory;
             var polygons = demarcacaoDto.Geometrias
@@ -276,7 +298,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (localizacao == null || fazendaBd == null || !fazendaBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var localizacaoBd = fazendaBd.LocalizacaoFazenda;
 
@@ -310,7 +334,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (dadosFazenda == null || fazendaBd == null || !fazendaBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var dadosFazendaBd = fazendaBd.DadosFazenda;
 
@@ -338,7 +364,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (demarcacaoDto == null || demarcacaoDto.Geometrias == null || !demarcacaoDto.Geometrias.Any() || fazendaBd == null || !fazendaBd.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var factory = Geometry.DefaultFactory;
             var polygons = demarcacaoDto.Geometrias

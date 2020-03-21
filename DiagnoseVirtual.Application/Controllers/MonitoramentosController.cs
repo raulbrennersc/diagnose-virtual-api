@@ -1,10 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Security.Claims;
-using DiagnoseVirtual.Application.Helpers;
 using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Infra.Data.Context;
@@ -14,6 +7,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Net;
+using System.Security.Claims;
 
 namespace DiagnoseVirtual.Application.Controllers
 {
@@ -66,7 +65,9 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var monitoramento = _monitoramentoService.Get(idMonitoramento);
             if (monitoramento == null)
+            {
                 return NotFound(Constants.ERR_MONITORAMENTO_NAO_ENCONTRADO);
+            }
 
             return Ok(new MonitoramentoDetailDto(monitoramento));
         }
@@ -75,13 +76,17 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult Consultar(FiltroDto filtro)
         {
             if (filtro.IdFazenda == 0 || filtro.Data == DateTime.MinValue)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var fazenda = _fazendaService.Get(filtro.IdFazenda);
             var monitoramento = fazenda.Monitoramentos
                 .FirstOrDefault(m => m.DataMonitoramento.Date == filtro.Data.Date);
             if (monitoramento == null)
+            {
                 return NotFound(Constants.ERR_MONITORAMENTO_NAO_ENCONTRADO);
+            }
 
             return Ok(new MonitoramentoDetailDto(monitoramento));
         }
@@ -91,10 +96,14 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazenda = _fazendaService.Get(monitoramentoDto.IdFazenda);
             if (fazenda == null)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             if (!fazenda.Concluida)
+            {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
 
             var monitoramento = new Monitoramento { Fazenda = fazenda, DataMonitoramento = DateTime.Now };
 

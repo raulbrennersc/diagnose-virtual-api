@@ -1,7 +1,7 @@
+using DiagnoseVirtual.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DiagnoseVirtual.Domain.Entities;
 
 namespace DiagnoseVirtual.Domain.Dtos
 {
@@ -23,7 +23,7 @@ namespace DiagnoseVirtual.Domain.Dtos
             {
                 talhoes.AddRange(lavoura.Talhoes.Select(t => new GeometriaDto(t.Geometria)));
             }
-            
+
             Id = monitoramento.Id;
             NomeFazenda = monitoramento.Fazenda.LocalizacaoFazenda.Nome;
             DataMonitoramento = monitoramento.DataMonitoramento;

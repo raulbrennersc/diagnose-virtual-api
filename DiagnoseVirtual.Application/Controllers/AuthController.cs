@@ -27,7 +27,10 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult Register(UsuarioRegistroDto novoUsuarioDto)
         {
             if (_usuarioService.ExisteUsuario(novoUsuarioDto.Cpf))
+            {
                 return BadRequest(Constants.ERR_CPF_CADASTRADO);
+            }
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -50,7 +53,9 @@ namespace DiagnoseVirtual.Application.Controllers
             var usuario = _usuarioService.Login(usuarioLoginDto.Cpf, usuarioLoginDto.Password);
 
             if (usuario == null)
+            {
                 return Unauthorized();
+            }
 
             var token = TokenHelper.GerarTokenUsuario(usuario, config.GetSection("AppSettings:Token").Value);
 

@@ -23,7 +23,7 @@ namespace DiagnoseVirtual.Service.Services
                 Email = novoUsuarioDto.Email,
             };
 
-            CreatePasswordHash(novoUsuarioDto.Password, out byte[] passwordHash, out byte[] passwordSalt);
+            CreatePasswordHash(novoUsuarioDto.Password, out var passwordHash, out var passwordSalt);
 
             novoUsuario.PasswordHash = passwordHash;
             novoUsuario.PasswordSalt = passwordSalt;
@@ -39,10 +39,14 @@ namespace DiagnoseVirtual.Service.Services
             var usuario = GetAll().FirstOrDefault(u => u.Cpf == cpf);
 
             if (usuario == null)
+            {
                 return null;
+            }
 
             if (!VerifyPasswordHash(password, usuario.PasswordHash, usuario.PasswordSalt))
+            {
                 return null;
+            }
 
             return usuario;
         }
@@ -52,9 +56,12 @@ namespace DiagnoseVirtual.Service.Services
             using (var hmac = new System.Security.Cryptography.HMACSHA512(passwordSalt))
             {
                 var computedHash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(password));
-                for (int i = 0; i < computedHash.Length; i++)
+                for (var i = 0; i < computedHash.Length; i++)
                 {
-                    if (computedHash[i] != passwordHash[i]) return false;
+                    if (computedHash[i] != passwordHash[i])
+                    {
+                        return false;
+                    }
                 }
 
                 return true;

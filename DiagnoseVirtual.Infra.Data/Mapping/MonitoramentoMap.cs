@@ -30,7 +30,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             builder.HasMany(x => x.Uploads)
             .WithOne(u => u.Monitoramento)
             .HasForeignKey("id_monitoramento");
-            
+
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
         }

@@ -1,5 +1,4 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
-using NetTopologySuite.Geometries;
 using System.Collections.Generic;
 using System.Linq;
 

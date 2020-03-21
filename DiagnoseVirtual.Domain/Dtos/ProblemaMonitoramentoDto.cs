@@ -8,7 +8,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public string Recomendacao { get; set; }
         public GeometriaDto Ponto { get; set; }
 
-        public ProblemaMonitoramentoDto(){}
+        public ProblemaMonitoramentoDto() { }
 
         public ProblemaMonitoramentoDto(ProblemaMonitoramento problema)
         {

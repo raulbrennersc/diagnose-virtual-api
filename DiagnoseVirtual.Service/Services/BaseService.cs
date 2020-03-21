@@ -37,17 +37,24 @@ namespace DiagnoseVirtual.Service.Services
         public void Delete(int id)
         {
             if (id == 0)
+            {
                 throw new ArgumentException("The id can't be zero.");
+            }
 
             repository.Remove(id);
         }
 
-        public IQueryable<T> GetAll() => repository.SelectAll();
+        public IQueryable<T> GetAll()
+        {
+            return repository.SelectAll();
+        }
 
         public T Get(int id)
         {
             if (id == 0)
+            {
                 throw new ArgumentException("The id can't be zero.");
+            }
 
             return repository.Select(id);
         }
