@@ -1,0 +1,36 @@
+﻿using DiagnoseVirtual.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace DiagnoseVirtual.Infra.Data.Mapping
+{
+    public class MunicipioMapping : IEntityTypeConfiguration<Municipio>
+    {
+        public void Configure(EntityTypeBuilder<Municipio> builder)
+        {
+            //Tabela
+            builder.ToTable("estado");
+            builder.HasKey(x => x.Id);
+
+            //Proriedades
+            builder.Property(x => x.Id)
+                .HasColumnName("id")
+                .IsRequired()
+                .ValueGeneratedOnAdd();
+            builder.Property(x => x.Nome)
+                .HasColumnName("nome")
+                .IsRequired();
+            builder.Property(x => x.CodigoIbge)
+                .HasColumnName("codigo_ibge")
+                .IsRequired();
+
+            //Relacoes
+
+            //Indices
+            builder.HasIndex(x => x.Id).IsUnique();
+        }
+    }
+}

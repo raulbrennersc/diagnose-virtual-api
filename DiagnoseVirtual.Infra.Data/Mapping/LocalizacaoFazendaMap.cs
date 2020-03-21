@@ -21,14 +21,6 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasColumnName("nome")
                 .HasMaxLength(30)
                 .IsRequired();
-            builder.Property(x => x.Estado)
-                .HasColumnName("estado")
-                .HasMaxLength(20)
-                .IsRequired();
-            builder.Property(x => x.Municipio)
-                .HasColumnName("municipio")
-                .HasMaxLength(50)
-                .IsRequired();
             builder.Property(x => x.Proprietario)
                 .HasColumnName("proprietario")
                 .HasMaxLength(50)
@@ -37,12 +29,8 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasColumnName("gerente")
                 .HasMaxLength(30)
                 .IsRequired();
-            builder.Property(x => x.Telefone)
-                .HasColumnName("telefone")
-                .HasMaxLength(50)
-                .IsRequired();
-            builder.Property(x => x.Email)
-                 .HasColumnName("email")
+            builder.Property(x => x.Contato)
+                 .HasColumnName("contato")
                  .HasMaxLength(50)
                  .IsRequired();
             builder.Property(x => x.PontoReferencia)
@@ -51,6 +39,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .IsRequired();
 
             //Relacoes
+            builder.HasOne(typeof(Municipio), "id_municipio");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();

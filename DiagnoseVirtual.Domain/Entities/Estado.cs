@@ -1,9 +1,11 @@
-﻿namespace DiagnoseVirtual.Domain.Entities
+﻿using System.Collections.Generic;
+
+namespace DiagnoseVirtual.Domain.Entities
 {
-    public class Estado
+    public class Estado : BaseEntity
     {
-        public virtual int Id { get; set; }
         public virtual string Nome { get; set; }
         public virtual string Sigla { get; set; }
+        public virtual ICollection<Municipio> Municipios { get; set; }
     }
 }

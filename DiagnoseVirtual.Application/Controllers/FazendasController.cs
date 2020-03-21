@@ -202,9 +202,8 @@ namespace DiagnoseVirtual.Application.Controllers
                 Gerente = localizacao.Gerente,
                 Nome = localizacao.Nome,
                 Proprietario = localizacao.Proprietario,
-                Municipio = localizacao.Municipio,
+                Municipio = new Municipio { Id = localizacao.IdMunicipio },
                 PontoReferencia = localizacao.PontoReferencia,
-                Estado = localizacao.Estado,
                 Fazenda = fazendaBd
             };
 
@@ -308,9 +307,8 @@ namespace DiagnoseVirtual.Application.Controllers
             localizacaoBd.Gerente = localizacao.Gerente;
             localizacaoBd.Nome = localizacao.Nome;
             localizacaoBd.Proprietario = localizacao.Proprietario;
-            localizacaoBd.Municipio = localizacao.Municipio;
+            localizacaoBd.Municipio = new Municipio { Id = localizacao.IdMunicipio };
             localizacaoBd.PontoReferencia = localizacao.PontoReferencia;
-            localizacaoBd.Estado = localizacao.Estado;
 
             using (var transaction = _context.Database.BeginTransaction())
             {
