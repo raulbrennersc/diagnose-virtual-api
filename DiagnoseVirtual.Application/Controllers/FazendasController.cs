@@ -90,7 +90,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult Get()
         {
             var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == Int32.Parse(idUsuario)).ToList();
+            var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == int.Parse(idUsuario)).ToList();
 
             var result = fazendas.Select(f => new FazendaDto(f));
 
@@ -188,7 +188,7 @@ namespace DiagnoseVirtual.Application.Controllers
             }
 
             var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var usuario = _usuarioService.Get(Int32.Parse(idUsuario));
+            var usuario = _usuarioService.Get(int.Parse(idUsuario));
 
             var fazendaBd = new Fazenda
             {
@@ -196,13 +196,15 @@ namespace DiagnoseVirtual.Application.Controllers
                 Ativa = true,
             };
 
+            var municipio = new BaseService<Municipio>(_context).Get(localizacao.IdMunicipio);
+
             var localizacaoBd = new LocalizacaoFazenda
             {
                 Contato = localizacao.Contato,
                 Gerente = localizacao.Gerente,
                 Nome = localizacao.Nome,
                 Proprietario = localizacao.Proprietario,
-                Municipio = new Municipio { Id = localizacao.IdMunicipio },
+                Municipio = municipio,
                 PontoReferencia = localizacao.PontoReferencia,
                 Fazenda = fazendaBd
             };
