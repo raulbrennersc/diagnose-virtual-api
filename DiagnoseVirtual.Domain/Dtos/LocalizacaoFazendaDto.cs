@@ -16,8 +16,8 @@ namespace DiagnoseVirtual.Domain.Dtos
         public LocalizacaoFazendaDto(LocalizacaoFazenda localizacao)
         {
             Nome = localizacao.Nome;
-            IdMunicipio = localizacao.Municipio.Id;
-            IdEstado = localizacao.Municipio.Estado.Id;
+            IdMunicipio = localizacao.Municipio?.Id ?? 0;
+            IdEstado = localizacao.Municipio?.Estado.Id ?? 0;
             Proprietario = localizacao.Proprietario;
             Gerente = localizacao.Gerente;
             Contato = localizacao.Contato;
