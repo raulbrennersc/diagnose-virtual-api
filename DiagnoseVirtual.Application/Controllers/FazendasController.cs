@@ -200,7 +200,8 @@ namespace DiagnoseVirtual.Application.Controllers
 
             var localizacaoBd = new LocalizacaoFazenda
             {
-                Contato = localizacao.Contato,
+                Email = localizacao.Email,
+                Telefone = localizacao.Telefone,
                 Gerente = localizacao.Gerente,
                 Nome = localizacao.Nome,
                 Proprietario = localizacao.Proprietario,
@@ -305,7 +306,8 @@ namespace DiagnoseVirtual.Application.Controllers
 
             var localizacaoBd = fazendaBd.LocalizacaoFazenda;
 
-            localizacaoBd.Contato = localizacao.Contato;
+            localizacaoBd.Telefone = localizacao.Telefone;
+            localizacaoBd.Email = localizacao.Email;
             localizacaoBd.Gerente = localizacao.Gerente;
             localizacaoBd.Nome = localizacao.Nome;
             localizacaoBd.Proprietario = localizacao.Proprietario;
