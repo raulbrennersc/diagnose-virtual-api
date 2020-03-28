@@ -10,6 +10,7 @@ namespace DiagnoseVirtual.Domain.Entities
         public virtual byte[] PasswordHash { get; set; }
         public virtual byte[] PasswordSalt { get; set; }
         public virtual bool Ativo { get; set; }
+        public virtual bool PrimeiroAcesso { get; set; }
         public virtual IList<Fazenda> Fazendas { get; set; }
     }
 }

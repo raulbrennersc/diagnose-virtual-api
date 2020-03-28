@@ -38,6 +38,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             builder.Property(x => x.Ativo)
                 .HasDefaultValue(true)
                 .HasColumnName("ativo");
+            builder.Property(x => x.PrimeiroAcesso)
+                .HasDefaultValue(true)
+                .HasColumnName("primeiro_acesso");
 
             //Relacoes
             builder.HasMany(x => x.Fazendas)

@@ -59,7 +59,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             var token = TokenHelper.GerarTokenUsuario(usuario, config.GetSection("AppSettings:Token").Value);
 
-            return Ok(new { token });
+            return Ok(new { token, usuario.Nome, usuario.PrimeiroAcesso });
         }
     }
 }
