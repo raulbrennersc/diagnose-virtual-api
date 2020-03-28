@@ -4,6 +4,7 @@ using DiagnoseVirtual.Service.Helpers;
 using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System.Linq;
 using System;
 using System.Net;
 
@@ -60,6 +61,35 @@ namespace DiagnoseVirtual.Application.Controllers
             var token = TokenHelper.GerarTokenUsuario(usuario, config.GetSection("AppSettings:Token").Value);
 
             return Ok(new { token, usuario.Nome, usuario.PrimeiroAcesso });
+        }
+
+        [HttpPost("AceitarTermo/{cpf}")]
+        public ActionResult AceitarTermo(string cpf)
+        {
+            cpf = cpf.Replace(".", "").Replace("-", "");
+            var usuario = _usuarioService.GetAll().FirstOrDefault(u => u.Cpf == cpf);
+
+            if (!usuario.PrimeiroAcesso)
+            {
+                return BadRequest();
+            }
+            
+            using(var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    usuario.PrimeiroAcesso = false;
+
+                    _usuarioService.Put(usuario);
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch
+                {
+                    transaction.Rollback();
+                    return BadRequest();
+                }
+            }
         }
     }
 }
