@@ -26,7 +26,7 @@ namespace DiagnoseVirtual.Domain.Dtos
             }
 
             Id = monitoramento.Id;
-            IdFazenda = monitoramento.Id;
+            IdFazenda = monitoramento.Fazenda.Id;
             NomeFazenda = monitoramento.Fazenda.LocalizacaoFazenda.Nome;
             DataMonitoramento = monitoramento.DataMonitoramento;
             Problemas = monitoramento.Problemas.Select(p => new ProblemaMonitoramentoDto(p)).ToList();
