@@ -3,6 +3,7 @@ using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Infra.Data.Context;
 using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
 using System;
@@ -61,6 +62,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpGet("{idLavoura}")]
+        [ProducesResponseType(typeof(LavouraDto), StatusCodes.Status200OK)]
         public ActionResult Get(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -74,6 +76,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("DadosLavoura/{idLavoura}")]
+        [ProducesResponseType(typeof(DadosLavouraDto), StatusCodes.Status200OK)]
         public ActionResult GetDadosLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -87,6 +90,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("DemarcacaoLavoura/{idLavoura}")]
+        [ProducesResponseType(typeof(GeometriaDto), StatusCodes.Status200OK)]
         public ActionResult GetDemarcacaoLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -100,6 +104,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("TalhoesLavoura/{idLavoura}")]
+        [ProducesResponseType(typeof(List<GeometriaDto>), StatusCodes.Status200OK)]
         public ActionResult GetTalhoesLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -113,6 +118,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("DadosLavoura/{idFazenda}")]
+        [ProducesResponseType(typeof(LavouraDto), StatusCodes.Status200OK)]
         public ActionResult PostDadosLavoura(DadosLavouraDto dadosLavoura, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);

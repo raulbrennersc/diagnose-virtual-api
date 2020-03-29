@@ -39,6 +39,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("UploadGeometrias")]
+        [ProducesResponseType(typeof(List<GeometriaDto>), StatusCodes.Status200OK)]
         public ActionResult ValidarLocalizacao(IFormFile file)
         {
             var path = _hostingEnvironment.ContentRootPath;
@@ -87,6 +88,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpGet]
+        [ProducesResponseType(typeof(List<FazendaDto>), StatusCodes.Status200OK)]
         public ActionResult Get()
         {
             var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -98,6 +100,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpGet("{idFazenda}")]
+        [ProducesResponseType(typeof(FazendaDto), StatusCodes.Status200OK)]
         public ActionResult Get(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
@@ -111,6 +114,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("LocalizacaoFazenda/{idFazenda}")]
+        [ProducesResponseType(typeof(LocalizacaoFazendaDto), StatusCodes.Status200OK)]
         public ActionResult GetLocalizacaoFazenda(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
@@ -124,6 +128,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("DadosFazenda/{idFazenda}")]
+        [ProducesResponseType(typeof(DadosFazendaDto), StatusCodes.Status200OK)]
         public ActionResult GetDadosFazenda(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
@@ -137,6 +142,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
+        [ProducesResponseType(typeof(DemarcacaoDto), StatusCodes.Status200OK)]
         public ActionResult GetLocalizacaoGeoFazenda(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
@@ -154,6 +160,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("LavourasFazenda/{idFazenda}")]
+        [ProducesResponseType(typeof(List<LavouraDto>), StatusCodes.Status200OK)]
         public ActionResult GetLavourasFazenda(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
@@ -167,6 +174,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("MonitoramentosFazenda/{idFazenda}")]
+        [ProducesResponseType(typeof(List<MonitoramentoDetailDto>), StatusCodes.Status200OK)]
         public ActionResult GetMonitoramentosFazenda(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
@@ -180,6 +188,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("LocalizacaoFazenda")]
+        [ProducesResponseType(typeof(FazendaDto), StatusCodes.Status200OK)]
         public ActionResult PostLocalizacaoFazenda(LocalizacaoFazendaDto localizacao)
         {
             if (localizacao == null)

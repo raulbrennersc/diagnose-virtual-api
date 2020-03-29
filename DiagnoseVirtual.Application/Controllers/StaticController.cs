@@ -4,6 +4,7 @@ using DiagnoseVirtual.Infra.Data.Context;
 using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -29,6 +30,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("Estado")]
+        [ProducesResponseType(typeof(EstadoDto), StatusCodes.Status200OK)]
         public ActionResult Get()
         {
             var result = _estadoService.GetAll()
@@ -44,6 +46,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("Estado/{idEstado}/Municipios")]
+        [ProducesResponseType(typeof(List<EstadoDto>), StatusCodes.Status200OK)]
         public ActionResult Get(int idEstado)
         {
             var result = _municipioService.GetAll().Where(m => m.Estado.Id == idEstado)

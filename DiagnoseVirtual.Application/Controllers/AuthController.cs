@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using System.Linq;
 using System;
 using System.Net;
+using Microsoft.AspNetCore.Http;
 
 namespace DiagnoseVirtual.Application.Controllers
 {
@@ -49,6 +50,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpPost("Login")]
+        [ProducesResponseType(typeof(AuthDto), StatusCodes.Status200OK)]
         public ActionResult Login(UsuarioLoginDto usuarioLoginDto)
         {
             var usuario = _usuarioService.Login(usuarioLoginDto.Cpf, usuarioLoginDto.Password);
@@ -60,7 +62,11 @@ namespace DiagnoseVirtual.Application.Controllers
 
             var token = TokenHelper.GerarTokenUsuario(usuario, config.GetSection("AppSettings:Token").Value);
 
-            return Ok(new { token, usuario.Nome, usuario.PrimeiroAcesso });
+            return Ok(new AuthDto{ 
+                Token = token,
+                Nome = usuario.Nome,
+                PrimeiroAcesso= usuario.PrimeiroAcesso
+            });
         }
 
         [HttpPost("AceitarTermo/{cpf}")]
