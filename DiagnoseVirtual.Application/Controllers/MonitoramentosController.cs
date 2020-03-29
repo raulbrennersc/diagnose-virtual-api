@@ -46,6 +46,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
 
         [HttpGet]
+        [ProducesResponseType(typeof(List<MonitoramentoToListDto>), StatusCodes.Status200OK)]
         public ActionResult Get()
         {
             var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -61,6 +62,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpGet("{idMonitoramento}")]
+        [ProducesResponseType(typeof(MonitoramentoDetailDto), StatusCodes.Status200OK)]
         public ActionResult Get(int idMonitoramento)
         {
             var monitoramento = _monitoramentoService.Get(idMonitoramento);
@@ -73,6 +75,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpPost("Filtrar/")]
+        [ProducesResponseType(typeof(MonitoramentoDetailDto), StatusCodes.Status200OK)]
         public ActionResult Consultar(FiltroDto filtro)
         {
             if (filtro.IdFazenda == 0 || filtro.Data == DateTime.MinValue)

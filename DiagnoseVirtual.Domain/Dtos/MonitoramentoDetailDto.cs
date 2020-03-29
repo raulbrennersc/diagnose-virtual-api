@@ -8,6 +8,7 @@ namespace DiagnoseVirtual.Domain.Dtos
     public class MonitoramentoDetailDto
     {
         public int Id { get; set; }
+        public int IdFazenda { get; set; }
         public string NomeFazenda { get; set; }
         public DateTime DataMonitoramento { get; set; }
         public List<ProblemaMonitoramentoDto> Problemas { get; set; }
@@ -25,6 +26,7 @@ namespace DiagnoseVirtual.Domain.Dtos
             }
 
             Id = monitoramento.Id;
+            IdFazenda = monitoramento.Id;
             NomeFazenda = monitoramento.Fazenda.LocalizacaoFazenda.Nome;
             DataMonitoramento = monitoramento.DataMonitoramento;
             Problemas = monitoramento.Problemas.Select(p => new ProblemaMonitoramentoDto(p)).ToList();
