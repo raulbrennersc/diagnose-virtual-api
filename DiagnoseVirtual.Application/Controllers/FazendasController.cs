@@ -304,7 +304,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpPut]
-        [Route("LocalizacaoFazenda/idFazenda")]
+        [Route("LocalizacaoFazenda/{idFazenda}")]
         public ActionResult PutLocalizacaoFazenda(LocalizacaoFazendaDto localizacao, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
