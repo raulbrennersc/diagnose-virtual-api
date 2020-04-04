@@ -206,6 +206,10 @@ namespace DiagnoseVirtual.Application.Controllers
             };
 
             var municipio = new BaseService<Municipio>(_context).Get(localizacao.IdMunicipio);
+            if (municipio == null)
+            {
+                return BadRequest("O municipio indicado nao existe");
+            }
 
             var localizacaoBd = new LocalizacaoFazenda
             {
@@ -313,6 +317,12 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
+            var municipio = new BaseService<Municipio>(_context).Get(localizacao.IdMunicipio);
+            if(municipio == null)
+            {
+                return BadRequest("O municipio indicado nao existe");
+            }
+
             var localizacaoBd = fazendaBd.LocalizacaoFazenda;
 
             localizacaoBd.Telefone = localizacao.Telefone;
@@ -320,7 +330,7 @@ namespace DiagnoseVirtual.Application.Controllers
             localizacaoBd.Gerente = localizacao.Gerente;
             localizacaoBd.Nome = localizacao.Nome;
             localizacaoBd.Proprietario = localizacao.Proprietario;
-            localizacaoBd.Municipio = new Municipio { Id = localizacao.IdMunicipio };
+            localizacaoBd.Municipio = municipio;
             localizacaoBd.PontoReferencia = localizacao.PontoReferencia;
 
             using (var transaction = _context.Database.BeginTransaction())
