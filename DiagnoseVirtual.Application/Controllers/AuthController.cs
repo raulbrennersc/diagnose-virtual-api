@@ -8,6 +8,8 @@ using System.Linq;
 using System;
 using System.Net;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DiagnoseVirtual.Application.Controllers
 {
@@ -69,11 +71,12 @@ namespace DiagnoseVirtual.Application.Controllers
             });
         }
 
-        [HttpPost("AceitarTermo/{cpf}")]
-        public ActionResult AceitarTermo(string cpf)
+        [HttpPost("AceitarTermo")]
+        [Authorize]
+        public ActionResult AceitarTermo()
         {
-            cpf = cpf.Replace(".", "").Replace("-", "");
-            var usuario = _usuarioService.GetAll().FirstOrDefault(u => u.Cpf == cpf);
+            var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var usuario = _usuarioService.Get(int.Parse(idUsuario));
 
             if (!usuario.PrimeiroAcesso)
             {
