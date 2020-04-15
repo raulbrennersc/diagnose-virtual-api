@@ -37,6 +37,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
+
+            //Regras
+            builder.HasQueryFilter(m => m.Ativo);
         }
     }
 }
