@@ -22,6 +22,10 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .IsRequired()
                 .HasColumnName("data_monitoramento");
 
+            builder.Property(x => x.Ativo)
+                .HasColumnName("ativo")
+                .HasDefaultValue(true);
+
             //Relacoes
             builder.HasMany(x => x.Problemas)
             .WithOne(p => p.Monitoramento)
