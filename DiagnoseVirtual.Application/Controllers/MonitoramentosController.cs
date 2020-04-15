@@ -74,6 +74,33 @@ namespace DiagnoseVirtual.Application.Controllers
             return Ok(new MonitoramentoDetailDto(monitoramento));
         }
 
+        [HttpDelete("{idMonitoramento}")]
+        public ActionResult Delete(int idMonitoramento)
+        {
+            var monitoramento = _monitoramentoService.Get(idMonitoramento);
+            if (monitoramento == null)
+            {
+                return NotFound(Constants.ERR_MONITORAMENTO_NAO_ENCONTRADO);
+            }
+            using(var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    monitoramento.Ativo = false;
+                    _monitoramentoService.Put(monitoramento);
+                    transaction.Commit();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
+
+
+            return Ok(new MonitoramentoDetailDto(monitoramento));
+        }
+
         [HttpPost("Filtrar/")]
         [ProducesResponseType(typeof(MonitoramentoDetailDto), StatusCodes.Status200OK)]
         public ActionResult Consultar(FiltroDto filtro)
