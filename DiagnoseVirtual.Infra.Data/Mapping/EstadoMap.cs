@@ -7,7 +7,7 @@ using System.Text;
 
 namespace DiagnoseVirtual.Infra.Data.Mapping
 {
-    public class EstadoMapping : IEntityTypeConfiguration<Estado>
+    public class EstadoMap : IEntityTypeConfiguration<Estado>
     {
         public void Configure(EntityTypeBuilder<Estado> builder)
         {
