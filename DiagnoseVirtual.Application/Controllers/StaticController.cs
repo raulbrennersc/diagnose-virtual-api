@@ -31,7 +31,7 @@ namespace DiagnoseVirtual.Application.Controllers
         [HttpGet]
         [Route("Estado")]
         [ProducesResponseType(typeof(EstadoDto), StatusCodes.Status200OK)]
-        public ActionResult Get()
+        public ActionResult GetEstados()
         {
             var result = _estadoService.GetAll()
                 .Select(e => new EstadoDto
@@ -47,13 +47,28 @@ namespace DiagnoseVirtual.Application.Controllers
         [HttpGet]
         [Route("Estado/{idEstado}/Municipios")]
         [ProducesResponseType(typeof(List<EstadoDto>), StatusCodes.Status200OK)]
-        public ActionResult Get(int idEstado)
+        public ActionResult GetMunicipios(int idEstado)
         {
             var result = _municipioService.GetAll().Where(m => m.Estado.Id == idEstado)
                 .Select(m => new MunicipioDto
                 {
                     Id = m.Id,
                     Nome = m.Nome,                   
+                });
+
+            return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("Culturas")]
+        [ProducesResponseType(typeof(List<EstadoDto>), StatusCodes.Status200OK)]
+        public ActionResult GetCulturas(int idEstado)
+        {
+            var result = new BaseService<Cultura>(_context).GetAll()
+                .Select(m => new 
+                {
+                    m.Id,
+                    m.Nome,
                 });
 
             return Ok(result);
