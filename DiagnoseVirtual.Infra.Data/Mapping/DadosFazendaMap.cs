@@ -27,8 +27,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             //Relacoes
             builder.HasOne(x => x.Cultura)
                 .WithMany()
-                .HasForeignKey("id_cultura")
-                .IsRequired();
+                .HasForeignKey("id_cultura");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
