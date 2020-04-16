@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiagnoseVirtual.Infra.Data.Migrations
 {
     [DbContext(typeof(PsqlContext))]
-    [Migration("20200416001911_11")]
+    [Migration("20200416002440_11")]
     partial class _11
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -31,11 +31,16 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnName("nome")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cultura");
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("cultura");
                 });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.DadosFazenda", b =>

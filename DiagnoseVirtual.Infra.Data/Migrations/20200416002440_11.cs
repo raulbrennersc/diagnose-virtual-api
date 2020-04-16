@@ -19,17 +19,17 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 nullable: true);
 
             migrationBuilder.CreateTable(
-                name: "Cultura",
+                name: "cultura",
                 schema: "diagnose_virtual",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Nome = table.Column<string>(nullable: true)
+                    nome = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Cultura", x => x.Id);
+                    table.PrimaryKey("PK_cultura", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
@@ -38,13 +38,20 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 table: "dados_fazenda",
                 column: "id_cultura");
 
+            migrationBuilder.CreateIndex(
+                name: "IX_cultura_Id",
+                schema: "diagnose_virtual",
+                table: "cultura",
+                column: "Id",
+                unique: true);
+
             migrationBuilder.AddForeignKey(
-                name: "FK_dados_fazenda_Cultura_id_cultura",
+                name: "FK_dados_fazenda_cultura_id_cultura",
                 schema: "diagnose_virtual",
                 table: "dados_fazenda",
                 column: "id_cultura",
                 principalSchema: "diagnose_virtual",
-                principalTable: "Cultura",
+                principalTable: "cultura",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
         }
@@ -52,12 +59,12 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_dados_fazenda_Cultura_id_cultura",
+                name: "FK_dados_fazenda_cultura_id_cultura",
                 schema: "diagnose_virtual",
                 table: "dados_fazenda");
 
             migrationBuilder.DropTable(
-                name: "Cultura",
+                name: "cultura",
                 schema: "diagnose_virtual");
 
             migrationBuilder.DropIndex(

@@ -29,11 +29,16 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
                     b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnName("nome")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Cultura");
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("cultura");
                 });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.DadosFazenda", b =>
