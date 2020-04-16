@@ -245,7 +245,8 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PostDadosFazenda(DadosFazendaDto dadosFazenda, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
-            if (dadosFazenda == null || fazendaBd == null || fazendaBd.Concluida)
+            var culturaBd = new BaseService<Cultura>(_context).Get(dadosFazenda.IdCultura);
+            if (dadosFazenda == null || fazendaBd == null || fazendaBd.Concluida || culturaBd == null)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
@@ -253,7 +254,7 @@ namespace DiagnoseVirtual.Application.Controllers
             var dadosFazendaBd = new DadosFazenda
             {
                 AreaTotal = dadosFazenda.AreaTotal,
-                Cultura = dadosFazenda.Cultura,
+                Cultura = culturaBd,
                 QuantidadeLavouras = dadosFazenda.QuantidadeLavouras,
                 Fazenda = fazendaBd
             };
@@ -354,7 +355,8 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PutDadosFazenda(DadosFazendaDto dadosFazenda, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
-            if (dadosFazenda == null || fazendaBd == null || !fazendaBd.Concluida)
+            var culturaBd = new BaseService<Cultura>(_context).Get(dadosFazenda.IdCultura);
+            if (dadosFazenda == null || fazendaBd == null || !fazendaBd.Concluida || culturaBd == null)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
@@ -362,7 +364,7 @@ namespace DiagnoseVirtual.Application.Controllers
             var dadosFazendaBd = fazendaBd.DadosFazenda;
 
             dadosFazendaBd.AreaTotal = dadosFazenda.AreaTotal;
-            dadosFazendaBd.Cultura = dadosFazenda.Cultura;
+            dadosFazendaBd.Cultura = culturaBd;
             dadosFazendaBd.QuantidadeLavouras = dadosFazenda.QuantidadeLavouras;
 
             using (var transaction = _context.Database.BeginTransaction())

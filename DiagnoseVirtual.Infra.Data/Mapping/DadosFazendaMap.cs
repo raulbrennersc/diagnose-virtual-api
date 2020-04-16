@@ -17,10 +17,6 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasColumnName("id")
                 .IsRequired()
                 .ValueGeneratedOnAdd();
-            builder.Property(x => x.Cultura)
-                .HasColumnName("cultura")
-                .IsRequired()
-                .HasMaxLength(100);
             builder.Property(x => x.AreaTotal)
                 .HasColumnName("area_total")
                 .IsRequired();
@@ -29,6 +25,10 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .IsRequired();
 
             //Relacoes
+            builder.HasOne(x => x.Cultura)
+                .WithMany()
+                .HasForeignKey("id_cultura")
+                .IsRequired();
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
