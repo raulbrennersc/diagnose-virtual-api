@@ -11,7 +11,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public DadosFazendaDto() { }
         public DadosFazendaDto(DadosFazenda dados)
         {
-            IdCultura = dados.Cultura.Id;
+            IdCultura = dados.Cultura?.Id ?? 0;
             AreaTotal = dados.AreaTotal;
             QuantidadeLavouras = dados.QuantidadeLavouras;
         }
