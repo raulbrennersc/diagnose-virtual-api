@@ -103,7 +103,7 @@ namespace DiagnoseVirtual.Application.Controllers
             }
         }
 
-        [HttpPost("ResetPassword")]
+        [HttpPost("ResetPassword/{cpf}")]
         public ActionResult ResetPassword(string cpf)
         {
             var usuario = _usuarioService.GetByCpf(cpf);
