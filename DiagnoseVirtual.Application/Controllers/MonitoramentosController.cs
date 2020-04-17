@@ -158,6 +158,47 @@ namespace DiagnoseVirtual.Application.Controllers
             }
         }
 
+        [HttpPut("{idMonitoramento}")]
+        public ActionResult Put(MonitoramentoPostDto monitoramentoDto, int idMonitoramento)
+        {
+            var monitoramento = _monitoramentoService.Get(idMonitoramento);
+            if (monitoramento == null)
+            {
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var idsProblemas = monitoramento.Problemas.Select(p => p.Id).ToList();
+                    foreach (var idProblema in idsProblemas)
+                    {
+                        _problemaMonitoramentoService.Delete(idProblema);
+                    }
+                    var idsUploads = monitoramento.Uploads.Select(u => u.Id).ToList();
+                    foreach (var idUpload in idsUploads)
+                    {
+                        _uploadMonitoramentoService.Delete(idUpload);
+                    }
+
+                    monitoramento.DataMonitoramento = DateTime.Now;
+                    _monitoramentoService.Put(monitoramento);
+                    var problemas = MontarProblemas(monitoramentoDto, monitoramento);
+                    var uploads = MontarUploads(monitoramentoDto, monitoramento);
+                    _problemaMonitoramentoService.Post(problemas);
+                    _uploadMonitoramentoService.Post(uploads);
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
+        }
+
         private List<ProblemaMonitoramento> MontarProblemas(MonitoramentoPostDto monitoramentoDto, Monitoramento monitoramento)
         {
             var problemasMonitoramento = new List<ProblemaMonitoramento>();
