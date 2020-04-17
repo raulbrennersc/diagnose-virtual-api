@@ -64,10 +64,11 @@ namespace DiagnoseVirtual.Application.Controllers
 
             var token = TokenHelper.GerarTokenUsuario(usuario, config.GetSection("AppSettings:Token").Value);
 
-            return Ok(new AuthDto{ 
+            return Ok(new AuthDto
+            {
                 Token = token,
                 Nome = usuario.Nome,
-                PrimeiroAcesso= usuario.PrimeiroAcesso
+                PrimeiroAcesso = usuario.PrimeiroAcesso
             });
         }
 
@@ -82,8 +83,8 @@ namespace DiagnoseVirtual.Application.Controllers
             {
                 return BadRequest();
             }
-            
-            using(var transaction = _context.Database.BeginTransaction())
+
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
@@ -99,6 +100,22 @@ namespace DiagnoseVirtual.Application.Controllers
                     return BadRequest();
                 }
             }
+        }
+
+        [HttpPost("ResetPassword")]
+        public ActionResult ResetPassword(string cpf)
+        {
+            var usuario = _usuarioService.GetByCpf(cpf);
+
+            if (usuario == null)
+            {
+                return BadRequest("Não existe nenhum usuário com este CPF.");
+            }
+
+            var novaSenha = "novasenha";
+            _usuarioService.ResetarSenha(usuario, novaSenha);
+
+            return Ok("Senha resetada com sucesso.");
         }
     }
 }

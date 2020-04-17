@@ -14,6 +14,11 @@ namespace DiagnoseVirtual.Service.Services
             return GetAll().Any(u => u.Cpf == cpf);
         }
 
+        public Usuario GetByCpf(string cpf)
+        {
+            return GetAll().FirstOrDefault(u => u.Cpf == cpf);
+        }
+
         public Usuario Cadastrar(UsuarioRegistroDto novoUsuarioDto)
         {
             var novoUsuario = new Usuario
@@ -31,6 +36,18 @@ namespace DiagnoseVirtual.Service.Services
             Post(novoUsuario);
 
             return novoUsuario;
+        }
+
+        public Usuario ResetarSenha(Usuario usuario, string novaSenha)
+        {
+            CreatePasswordHash(novaSenha, out var passwordHash, out var passwordSalt);
+
+            usuario.PasswordHash = passwordHash;
+            usuario.PasswordSalt = passwordSalt;
+
+            Put(usuario);
+
+            return usuario;
         }
 
         public Usuario Login(string cpf, string password)
