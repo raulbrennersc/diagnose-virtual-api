@@ -10,6 +10,7 @@ using System.Net;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
+using MimeKit;
 
 namespace DiagnoseVirtual.Application.Controllers
 {
@@ -113,7 +114,29 @@ namespace DiagnoseVirtual.Application.Controllers
             }
 
             var novaSenha = "novasenha";
-            _usuarioService.ResetarSenha(usuario, novaSenha);
+            using(var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _usuarioService.ResetarSenha(usuario, novaSenha);
+                    transaction.Commit();
+                }
+                catch(Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode(StatusCodes.Status500InternalServerError);
+                }
+            }
+
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("Diagnosys", "qipixel2@gmail.com"));
+            message.To.Add(new MailboxAddress(usuario.Nome, usuario.Email));
+            message.Subject = "Recuperação de senha";
+            var body = new BodyBuilder();
+            body.HtmlBody = $"<p>Prezado(a) {usuario.Nome}, segue a nova senha que poderá ser utilizada para acessar o Diagnosys.</p>" +
+                $"<p>Nova senha: {novaSenha}.</p>";
+            message.Body = body.ToMessageBody();
+            new EmailService().SendEmail(message);
 
             return Ok("Senha resetada com sucesso.");
         }

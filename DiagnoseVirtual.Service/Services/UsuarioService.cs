@@ -16,7 +16,7 @@ namespace DiagnoseVirtual.Service.Services
 
         public Usuario GetByCpf(string cpf)
         {
-            return GetAll().FirstOrDefault(u => u.Cpf == cpf);
+            return GetAll().FirstOrDefault(u => u.Cpf == cpf.Replace(".", "").Replace("-", ""));
         }
 
         public Usuario Cadastrar(UsuarioRegistroDto novoUsuarioDto)
