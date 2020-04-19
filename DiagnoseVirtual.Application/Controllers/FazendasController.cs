@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -313,7 +314,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PutLocalizacaoFazenda(LocalizacaoFazendaDto localizacao, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
-            if (localizacao == null || fazendaBd == null || !fazendaBd.Concluida)
+            if (localizacao == null || fazendaBd == null)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
@@ -356,7 +357,7 @@ namespace DiagnoseVirtual.Application.Controllers
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             var culturaBd = new BaseService<Cultura>(_context).Get(dadosFazenda.IdCultura);
-            if (dadosFazenda == null || fazendaBd == null || !fazendaBd.Concluida || culturaBd == null)
+            if (dadosFazenda == null || fazendaBd == null || culturaBd == null)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
@@ -410,6 +411,16 @@ namespace DiagnoseVirtual.Application.Controllers
                     return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
                 }
             }
+        }
+
+        [HttpGet]
+        [Route("Teste")]
+        public ActionResult Teste()
+        {
+            var fazenda = _fazendaService.GetAll().FirstOrDefault(f => f.Demarcacao != null);
+            var writer = new GeoJsonWriter();
+            var t = writer.Write(fazenda.Demarcacao);
+            return Ok(t);
         }
     }
 }
