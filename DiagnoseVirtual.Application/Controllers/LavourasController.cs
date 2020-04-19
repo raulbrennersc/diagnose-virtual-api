@@ -239,7 +239,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PutDadosLavoura(DadosLavouraDto dadosLavoura, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
-            if (dadosLavoura == null || !lavouraBd.Concluida)
+            if (dadosLavoura == null)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
@@ -275,7 +275,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PutDemarcacaoLavoura(GeometriaDto geometriaDemarcacao, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
-            if (geometriaDemarcacao == null || lavouraBd == null || !lavouraBd.Concluida)
+            if (geometriaDemarcacao == null || lavouraBd == null)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
