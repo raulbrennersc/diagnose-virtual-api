@@ -7,13 +7,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace DiagnoseVirtual.Application.Controllers
 {
@@ -22,20 +27,24 @@ namespace DiagnoseVirtual.Application.Controllers
     [Authorize]
     public class FazendasController : ControllerBase
     {
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly BaseService<Fazenda> _fazendaService;
         private readonly UsuarioService _usuarioService;
         private readonly BaseService<LocalizacaoFazenda> _localizacaoService;
         private readonly BaseService<DadosFazenda> _dadosFazendaService;
         private readonly IWebHostEnvironment _hostingEnvironment;
+        private readonly IConfiguration _config;
         private readonly PsqlContext _context = new PsqlContext();
 
-        public FazendasController(IWebHostEnvironment hostingEnvironment)
+        public FazendasController(IWebHostEnvironment hostingEnvironment, IHttpClientFactory httpClientFactory, IConfiguration config)
         {
             _hostingEnvironment = hostingEnvironment;
             _fazendaService = new BaseService<Fazenda>(_context);
             _usuarioService = new UsuarioService(_context);
             _localizacaoService = new BaseService<LocalizacaoFazenda>(_context);
             _dadosFazendaService = new BaseService<DadosFazenda>(_context);
+            _httpClientFactory = httpClientFactory;
+            _config = config;
         }
 
         [HttpPost]
@@ -278,7 +287,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        public ActionResult PostLocalizacaoGeoFazenda(DemarcacaoDto demarcacaoDto, int idFazenda)
+        public async Task<ActionResult> PostLocalizacaoGeoFazenda(DemarcacaoDto demarcacaoDto, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (demarcacaoDto == null || demarcacaoDto.Geometrias == null || !demarcacaoDto.Geometrias.Any() || fazendaBd == null || fazendaBd.Demarcacao != null || fazendaBd.Concluida)
@@ -292,6 +301,20 @@ namespace DiagnoseVirtual.Application.Controllers
             var geometrias = polygons.Select(p => factory.CreateGeometry(p));
 
             fazendaBd.Demarcacao = geometrias.FirstOrDefault();
+
+            var client = _httpClientFactory.CreateClient();
+            var body = new PdiDto
+            {
+                usr = "app",
+                pw = "1234",
+                layer = "fazenda",
+                cod = "idFazenda",
+                geometria = new GeoJsonWriter().Write(fazendaBd.Demarcacao)
+            };
+
+            var jsonBody = JsonSerializer.Serialize(body, body.GetType());
+            await client.PostAsync(_config.GetSection("AppSettings:UrlPdi").Value,
+                new StringContent(jsonBody, Encoding.UTF8, "application/json"));
 
             using (var transaction = _context.Database.BeginTransaction())
             {
