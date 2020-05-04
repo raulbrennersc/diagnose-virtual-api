@@ -41,7 +41,8 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasForeignKey("id_fazenda");
             builder.HasOne(x => x.Etapa)
                 .WithMany()
-                .HasForeignKey("id_etapa");
+                .HasForeignKey("id_etapa")
+                .IsRequired();
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();

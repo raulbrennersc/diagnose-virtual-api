@@ -12,7 +12,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
         public void Configure(EntityTypeBuilder<EtapaFazenda> builder)
         {
             //Tabela
-            builder.ToTable("municipio");
+            builder.ToTable("etapa_fazenda");
             builder.HasKey(x => x.Id);
 
             //Proriedades
