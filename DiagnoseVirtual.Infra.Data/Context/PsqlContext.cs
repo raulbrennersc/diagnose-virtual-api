@@ -15,6 +15,7 @@ namespace DiagnoseVirtual.Infra.Data.Context
         public DbSet<Estado> Estados { get; set; }
         public DbSet<Municipio> Municipios { get; set; }
         public DbSet<Cultura> Culturas { get; set; }
+        public DbSet<EtapaFazenda> EtapasFazenda { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -46,6 +47,7 @@ namespace DiagnoseVirtual.Infra.Data.Context
             modelBuilder.Entity<Estado>(new EstadoMap().Configure);
             modelBuilder.Entity<Municipio>(new MunicipioMap().Configure);
             modelBuilder.Entity<Cultura>(new CulturaMap().Configure);
+            modelBuilder.Entity<EtapaFazenda>(new EtapaFazendaMap().Configure);
         }
     }
 }
