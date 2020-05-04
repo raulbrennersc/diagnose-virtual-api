@@ -103,10 +103,10 @@ namespace DiagnoseVirtual.Application.Controllers
         [ProducesResponseType(typeof(List<FazendaDto>), StatusCodes.Status200OK)]
         public ActionResult Get()
         {
-            var idUsuario = HttpContext.User.FindFirst("Id").Value;
+            var idUsuario = HttpContext.User.FindFirst("IdUsuario").Value;
             var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == int.Parse(idUsuario)).ToList();
 
-            var result = fazendas.Select(f => new FazendaDto(f));
+            var result = fazendas.Select(f => new FazendaToListDto(f));
 
             return Ok(result);
         }

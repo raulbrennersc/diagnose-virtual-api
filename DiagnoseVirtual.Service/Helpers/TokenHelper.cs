@@ -13,8 +13,8 @@ namespace DiagnoseVirtual.Service.Helpers
         {
             var claims = new[]
             {
-                new Claim("Id", usuario.Id.ToString()),
-                new Claim(ClaimTypes.Name, usuario.Nome),
+                new Claim("IdUsuario", usuario.Id.ToString()),
+                new Claim("NomeUsuario", usuario.Nome),
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(tokenKey));

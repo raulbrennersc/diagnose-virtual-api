@@ -61,7 +61,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("Culturas")]
-        [ProducesResponseType(typeof(List<EstadoDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<Cultura>), StatusCodes.Status200OK)]
         public ActionResult GetCulturas(int idEstado)
         {
             var result = new BaseService<Cultura>(_context).GetAll()
