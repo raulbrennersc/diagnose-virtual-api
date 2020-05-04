@@ -6,13 +6,18 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using NetTopologySuite.Geometries;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
 using System.Security.Claims;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DiagnoseVirtual.Application.Controllers
 {
@@ -27,12 +32,14 @@ namespace DiagnoseVirtual.Application.Controllers
         private readonly BaseService<ProblemaMonitoramento> _problemaMonitoramentoService;
         private readonly BaseService<UploadMonitoramento> _uploadMonitoramentoService;
         private readonly IWebHostEnvironment _webHostingEnvironment;
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _config;
 
         // private readonly BaseService<LocalizacaoFazenda> _localizacaoService;
         // private readonly BaseService<DadosFazenda> _dadosFazendaService;
         private readonly PsqlContext _context = new PsqlContext();
 
-        public MonitoramentosController(IWebHostEnvironment hostingEnvironment)
+        public MonitoramentosController(IWebHostEnvironment hostingEnvironment, IHttpClientFactory httpClientFactory, IConfiguration config)
         {
             _fazendaService = new BaseService<Fazenda>(_context);
             _usuarioService = new UsuarioService(_context);
@@ -40,8 +47,8 @@ namespace DiagnoseVirtual.Application.Controllers
             _problemaMonitoramentoService = new BaseService<ProblemaMonitoramento>(_context);
             _uploadMonitoramentoService = new BaseService<UploadMonitoramento>(_context);
             _webHostingEnvironment = hostingEnvironment;
-            // _localizacaoService = new BaseService<LocalizacaoFazenda>(_context);
-            // _dadosFazendaService = new BaseService<DadosFazenda>(_context);
+            _httpClientFactory = httpClientFactory;
+            _config = config;
         }
 
 
@@ -281,10 +288,25 @@ namespace DiagnoseVirtual.Application.Controllers
                 || arquivosExistentes.Any(a => a == nomeArquivoModificado);
         }
 
-        [HttpPost]
-        [Route("teste")]
-        public ActionResult Teste([FromForm]MonitoramentoPostDto monitoramento)
+        [HttpGet("teste")]
+        [ProducesResponseType(typeof(MonitoramentoDetailDto), StatusCodes.Status200OK)]
+        public async Task<ActionResult> Teste()
         {
+            var body = new List<PdiDto>
+            {
+                new PdiDto{
+                    usr = "app",
+                    pw = "pdi2020",
+                    layer = "fazenda",
+                    cod = 5.ToString(),
+                }
+            };
+            var jsonBody = JsonConvert.SerializeObject(body);
+
+            var client = _httpClientFactory.CreateClient();
+            var url = _config.GetSection("AppSettings:UrlPdi").Value + "/query";
+            var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+
             return Ok();
         }
 

@@ -13,7 +13,7 @@ namespace DiagnoseVirtual.Service.Helpers
         {
             var claims = new[]
             {
-                new Claim(ClaimTypes.NameIdentifier, usuario.Id.ToString()),
+                new Claim("Id", usuario.Id.ToString()),
                 new Claim(ClaimTypes.Name, usuario.Nome),
             };
 

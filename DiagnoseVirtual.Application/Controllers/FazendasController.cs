@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,6 +19,7 @@ using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace DiagnoseVirtual.Application.Controllers
@@ -27,14 +29,14 @@ namespace DiagnoseVirtual.Application.Controllers
     [Authorize]
     public class FazendasController : ControllerBase
     {
-        private readonly IHttpClientFactory _httpClientFactory;
         private readonly BaseService<Fazenda> _fazendaService;
         private readonly UsuarioService _usuarioService;
         private readonly BaseService<LocalizacaoFazenda> _localizacaoService;
         private readonly BaseService<DadosFazenda> _dadosFazendaService;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly IConfiguration _config;
         private readonly PsqlContext _context = new PsqlContext();
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _config;
 
         public FazendasController(IWebHostEnvironment hostingEnvironment, IHttpClientFactory httpClientFactory, IConfiguration config)
         {
@@ -101,7 +103,7 @@ namespace DiagnoseVirtual.Application.Controllers
         [ProducesResponseType(typeof(List<FazendaDto>), StatusCodes.Status200OK)]
         public ActionResult Get()
         {
-            var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var idUsuario = HttpContext.User.FindFirst("Id").Value;
             var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == int.Parse(idUsuario)).ToList();
 
             var result = fazendas.Select(f => new FazendaDto(f));
@@ -302,19 +304,20 @@ namespace DiagnoseVirtual.Application.Controllers
 
             fazendaBd.Demarcacao = geometrias.FirstOrDefault();
 
-            var client = _httpClientFactory.CreateClient();
-            var body = new PdiDto
+            var body = new List<PdiDto>
             {
-                usr = "app",
-                pw = "1234",
-                layer = "fazenda",
-                cod = "idFazenda",
-                geometria = new GeoJsonWriter().Write(fazendaBd.Demarcacao)
+                new PdiDto{
+                    usr = "app",
+                    pw = "pdi2020",
+                    layer = "fazenda",
+                    cod = fazendaBd.Id.ToString(),
+                    geometria = new GeometriaDtoCorreto(fazendaBd.Demarcacao),
+                }
             };
+            var jsonBody = JsonConvert.SerializeObject(body);
 
-            var jsonBody = JsonSerializer.Serialize(body, body.GetType());
-            await client.PostAsync(_config.GetSection("AppSettings:UrlPdi").Value,
-                new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+            var client = _httpClientFactory.CreateClient();
+            var url = _config.GetSection("AppSettings:UrlPdi").Value + "/insert";
 
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -322,7 +325,12 @@ namespace DiagnoseVirtual.Application.Controllers
                 {
                     _fazendaService.Put(fazendaBd);
                     transaction.Commit();
-                    return Ok();
+                    var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+                    if (req.IsSuccessStatusCode)
+                    {
+                        return Ok();
+                    }
+                    throw new Exception("Erro ao cadastrar geometria.");
                 }
                 catch (Exception ex)
                 {
@@ -407,7 +415,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPut]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        public ActionResult PutLocalizacaoGeoFazenda(DemarcacaoDto demarcacaoDto, int idFazenda)
+        public async Task<ActionResult> PutLocalizacaoGeoFazenda(DemarcacaoDto demarcacaoDto, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (demarcacaoDto == null || demarcacaoDto.Geometrias == null || !demarcacaoDto.Geometrias.Any() || fazendaBd == null || !fazendaBd.Concluida)
@@ -422,11 +430,27 @@ namespace DiagnoseVirtual.Application.Controllers
 
             fazendaBd.Demarcacao = geometrias.FirstOrDefault();
 
+            var body = new List<PdiDto>
+            {
+                new PdiDto{
+                    usr = "app",
+                    pw = "pdi2020",
+                    layer = "fazenda",
+                    cod = 6.ToString(),
+                    geometria = new GeometriaDtoCorreto(fazendaBd.Demarcacao),
+                }
+            };
+            var jsonBody = JsonConvert.SerializeObject(body);
+
+            var client = _httpClientFactory.CreateClient();
+            var url = _config.GetSection("AppSettings:UrlPdi").Value + "/insert";
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
                     _fazendaService.Put(fazendaBd);
+                    var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
                     return Ok();
                 }
                 catch (Exception ex)

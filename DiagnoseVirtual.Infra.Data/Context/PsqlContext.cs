@@ -22,7 +22,7 @@ namespace DiagnoseVirtual.Infra.Data.Context
             {
                 optionsBuilder
                     .UseLazyLoadingProxies()
-                    .UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=qipixel;", x => x.UseNetTopologySuite());
+                    .UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=diagnosys;", x => x.UseNetTopologySuite());
             }
         }
 

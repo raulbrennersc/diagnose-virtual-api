@@ -19,9 +19,6 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Demarcacao)
                 .HasColumnName("demarcacao_geom");
-            builder.Property(x => x.UrlPdi)
-                .HasColumnName("url_pdi")
-                .HasDefaultValue("");
             builder.Property(x => x.Concluida)
                 .HasDefaultValue(false)
                 .HasColumnName("concluida");

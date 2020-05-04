@@ -5,11 +5,16 @@ using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using NetTopologySuite.Geometries;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace DiagnoseVirtual.Application.Controllers
 {
@@ -23,14 +28,18 @@ namespace DiagnoseVirtual.Application.Controllers
         private readonly BaseService<Talhao> _talhaoService;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly PsqlContext _context = new PsqlContext();
+        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly IConfiguration _config;
 
-        public LavourasController(IWebHostEnvironment hostingEnvironment)
+        public LavourasController(IWebHostEnvironment hostingEnvironment, IHttpClientFactory httpClientFactory, IConfiguration config)
         {
             _hostingEnvironment = hostingEnvironment;
             _lavouraService = new BaseService<Lavoura>(_context);
             _dadosLavouraService = new BaseService<DadosLavoura>(_context);
             _fazendaService = new BaseService<Fazenda>(_context);
             _talhaoService = new BaseService<Talhao>(_context);
+            _httpClientFactory = httpClientFactory;
+            _config = config;
         }
 
         [HttpPost]
@@ -195,7 +204,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("TalhoesLavoura/{idLavoura}")]
-        public ActionResult PostTalhoesLavoura(List<GeometriaDto> talhoes, int idLavoura)
+        public async Task<ActionResult> PostTalhoesLavoura(List<GeometriaDto> talhoes, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Concluida)
@@ -208,6 +217,36 @@ namespace DiagnoseVirtual.Application.Controllers
                 .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray())).ToList();
             var talhoesBd = polygons.Select(p => factory.CreateGeometry(p))
                 .Select(g => new Talhao { Geometria = g, Lavoura = lavouraBd }).ToList();
+
+            var listaTalhoes = new List<Geometry>();
+            foreach (var talhoesCadastrados in lavouraBd.Fazenda.Lavouras.Select(l => l.Talhoes))
+            {
+                listaTalhoes.AddRange(talhoesCadastrados.Select(t => t.Geometria));
+            }
+
+            listaTalhoes.AddRange(talhoesBd.Select(t => t.Geometria));
+            var geometriaPdi = listaTalhoes.FirstOrDefault();
+            foreach (var geometria in listaTalhoes)
+            {
+                geometriaPdi = geometriaPdi.Union(geometria);
+            }
+
+
+            var body = new List<PdiDto>
+            {
+                new PdiDto{
+                    usr = "app",
+                    pw = "pdi2020",
+                    layer = "fazenda",
+                    cod = 6.ToString(),
+                    geometria = new GeometriaDtoCorreto(geometriaPdi),
+                }
+            };
+
+            var jsonBody = JsonConvert.SerializeObject(body);
+
+            var client = _httpClientFactory.CreateClient();
+            var url = _config.GetSection("AppSettings:UrlPdi").Value + "/insert";
 
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -224,7 +263,13 @@ namespace DiagnoseVirtual.Application.Controllers
                     }
 
                     transaction.Commit();
-                    return Ok();
+                    var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+                    if (req.IsSuccessStatusCode)
+                    {
+                        return Ok();
+                    }
+
+                    throw new Exception("Erro ao cadastrar geometrias.");
                 }
                 catch (Exception ex)
                 {
@@ -302,7 +347,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPut]
         [Route("TalhoesLavoura/{idLavoura}")]
-        public ActionResult PutTalhoesLavoura(List<GeometriaDto> talhoes, int idLavoura)
+        public async Task<ActionResult> PutTalhoesLavoura(List<GeometriaDto> talhoes, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Talhoes == null)
@@ -316,6 +361,36 @@ namespace DiagnoseVirtual.Application.Controllers
             var talhoesBd = polygons.Select(p => factory.CreateGeometry(p))
                 .Select(g => new Talhao { Geometria = g, Lavoura = lavouraBd }).ToList();
 
+            var geometriaTalhoes = new List<Geometry>();
+            foreach (var talhoesCadastrados in lavouraBd.Fazenda.Lavouras.Select(l => l.Talhoes))
+            {
+                geometriaTalhoes.AddRange(talhoesCadastrados.Select(t => t.Geometria));
+            }
+
+            geometriaTalhoes.AddRange(talhoesBd.Select(t => t.Geometria));
+            var geometriaPdi = geometriaTalhoes.FirstOrDefault();
+            foreach (var geometria in geometriaTalhoes)
+            {
+                geometriaPdi = geometriaPdi.Union(geometria);
+            }
+
+
+            var body = new List<PdiDto>
+            {
+                new PdiDto{
+                    usr = "app",
+                    pw = "pdi2020",
+                    layer = "fazenda",
+                    cod = 6.ToString(),
+                    geometria = new GeometriaDtoCorreto(geometriaPdi),
+                }
+            };
+
+            var jsonBody = JsonConvert.SerializeObject(body);
+
+            var client = _httpClientFactory.CreateClient();
+            var url = _config.GetSection("AppSettings:UrlPdi").Value + "/insert";
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -324,7 +399,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     {
                         _talhaoService.Post(talhao);
                     }
-
+                    var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
                     transaction.Commit();
                     return Ok();
                 }
