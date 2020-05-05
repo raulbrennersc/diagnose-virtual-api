@@ -1,6 +1,7 @@
 ﻿using DiagnoseVirtual.Application.Helpers;
 using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
+using DiagnoseVirtual.Domain.Enums;
 using DiagnoseVirtual.Infra.Data.Context;
 using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -211,8 +212,10 @@ namespace DiagnoseVirtual.Application.Controllers
             var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
             var usuario = _usuarioService.Get(int.Parse(idUsuario));
 
+            var etapaDados = new BaseService<EtapaFazenda>(_context).Get((int)EEtapaFazenda.DadosFazenda);
             var fazendaBd = new Fazenda
             {
+                Etapa = etapaDados,
                 Usuario = usuario,
                 Ativa = true,
             };
@@ -263,6 +266,8 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
+            var etapaDemarcacao = new BaseService<EtapaFazenda>(_context).Get((int)EEtapaFazenda.Demarcacao);
+            fazendaBd.Etapa = etapaDemarcacao;
             var dadosFazendaBd = new DadosFazenda
             {
                 AreaTotal = dadosFazenda.AreaTotal,
@@ -302,6 +307,8 @@ namespace DiagnoseVirtual.Application.Controllers
                 .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray())).ToList();
             var geometrias = polygons.Select(p => factory.CreateGeometry(p));
 
+            var etapaConclusao = new BaseService<EtapaFazenda>(_context).Get((int)EEtapaFazenda.Conclusao);
+            fazendaBd.Etapa = etapaConclusao;
             fazendaBd.Demarcacao = geometrias.FirstOrDefault();
 
             var body = new List<PdiDto>
