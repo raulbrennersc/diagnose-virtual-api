@@ -73,5 +73,20 @@ namespace DiagnoseVirtual.Application.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("EtapasFazenda")]
+        [ProducesResponseType(typeof(List<EtapaFazenda>), StatusCodes.Status200OK)]
+        public ActionResult GetEtapasFazenda()
+        {
+            var result = new BaseService<EtapaFazenda>(_context).GetAll()
+                .Select(m => new
+                {
+                    m.Id,
+                    m.Nome,
+                });
+
+            return Ok(result);
+        }
     }
 }
