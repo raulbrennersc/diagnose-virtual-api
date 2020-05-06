@@ -110,7 +110,7 @@ namespace DiagnoseVirtual.Application.Controllers
             var idUsuario = HttpContext.User.FindFirst("IdUsuario").Value;
             var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == int.Parse(idUsuario)).ToList();
 
-            var result = fazendas.Select(f => new FazendaMinDto(f));
+            var result = fazendas.Select(f => new FazendaMinDto(f)).OrderByDescending(f => f.Id);
 
             return Ok(result);
         }
@@ -272,7 +272,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PostDadosFazenda(DadosFazendaDto dadosFazenda, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
-            var culturaBd = new BaseService<Cultura>(_context).Get(dadosFazenda.IdCultura);
+            var culturaBd = new BaseService<Cultura>(_context).Get(dadosFazenda?.IdCultura ?? 0);
             if (dadosFazenda == null || fazendaBd == null || fazendaBd.Concluida || culturaBd == null)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
