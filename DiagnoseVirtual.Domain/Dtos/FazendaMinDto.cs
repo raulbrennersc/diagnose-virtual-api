@@ -5,13 +5,13 @@ using System.Text;
 
 namespace DiagnoseVirtual.Domain.Dtos
 {
-    public class FazendaToListDto
+    public class FazendaMinDto
     {
         public int Id { get; set; }
         public string Nome { get; set; }
         public int IdEtapa { get; set; }
 
-        public FazendaToListDto(Fazenda fazenda)
+        public FazendaMinDto(Fazenda fazenda)
         {
             Id = fazenda.Id;
             Nome = fazenda.LocalizacaoFazenda.Nome;

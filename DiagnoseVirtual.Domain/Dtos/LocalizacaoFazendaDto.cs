@@ -7,6 +7,8 @@ namespace DiagnoseVirtual.Domain.Dtos
         public string Nome { get; set; }
         public int IdMunicipio { get; set; }
         public int IdEstado { get; set; }
+        public string NomeMunicipio { get; set; }
+        public string NomeEstado { get; set; }
         public string Proprietario { get; set; }
         public string Gerente { get; set; }
         public string Email { get; set; }
@@ -19,6 +21,8 @@ namespace DiagnoseVirtual.Domain.Dtos
             Nome = localizacao.Nome;
             IdMunicipio = localizacao.Municipio?.Id ?? 0;
             IdEstado = localizacao.Municipio?.Estado.Id ?? 0;
+            NomeMunicipio = localizacao.Municipio?.Nome;
+            NomeEstado = localizacao.Municipio?.Estado.Nome;
             Proprietario = localizacao.Proprietario;
             Gerente = localizacao.Gerente;
             Email = localizacao.Email;

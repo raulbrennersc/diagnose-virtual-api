@@ -3,11 +3,15 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NetTopologySuite.Features;
+using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 using System;
 using System.Net;
 using System.Text;
@@ -27,7 +31,21 @@ namespace DiagnoseVirtual.Application
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddHttpClient();
-            services.AddControllers().AddNewtonsoftJson();
+            services.AddControllers(options =>
+            {
+                options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(Point)));
+                options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(Polygon)));
+                options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(Geometry)));
+                options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(FeatureCollection)));
+                options.ModelMetadataDetailsProviders.Add(new SuppressChildValidationMetadataProvider(typeof(Feature)));
+            }).AddNewtonsoftJson(options =>
+            {
+                var s = GeoJsonSerializer.Create(new Newtonsoft.Json.JsonSerializerSettings(), new GeometryFactory(new PrecisionModel(), 4326));
+                foreach (var converter in s.Converters)
+                {
+                    options.SerializerSettings.Converters.Add(converter);
+                }
+            });
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo

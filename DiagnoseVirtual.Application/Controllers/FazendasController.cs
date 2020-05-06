@@ -1,4 +1,5 @@
-﻿using DiagnoseVirtual.Application.Helpers;
+﻿
+using DiagnoseVirtual.Application.Helpers;
 using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Domain.Enums;
@@ -9,8 +10,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using NetTopologySuite.IO;
+using NetTopologySuite.IO.Converters;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -107,7 +110,7 @@ namespace DiagnoseVirtual.Application.Controllers
             var idUsuario = HttpContext.User.FindFirst("IdUsuario").Value;
             var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == int.Parse(idUsuario)).ToList();
 
-            var result = fazendas.Select(f => new FazendaToListDto(f));
+            var result = fazendas.Select(f => new FazendaMinDto(f));
 
             return Ok(result);
         }
@@ -115,6 +118,19 @@ namespace DiagnoseVirtual.Application.Controllers
         [HttpGet("{idFazenda}")]
         [ProducesResponseType(typeof(FazendaDto), StatusCodes.Status200OK)]
         public ActionResult Get(int idFazenda)
+        {
+            var fazenda = _fazendaService.Get(idFazenda);
+            if (fazenda == null)
+            {
+                return NotFound(Constants.ERR_FAZENDA_NAO_ENCONTRADA);
+            }
+
+            return Ok(new FazendaMinDto(fazenda));
+        }
+
+        [HttpGet("{idFazenda}/Completa")]
+        [ProducesResponseType(typeof(FazendaDto), StatusCodes.Status200OK)]
+        public ActionResult GetCompleta(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null)
@@ -164,11 +180,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return NotFound(Constants.ERR_DEMARCACAO_FAZENDA_NAO_ENCONTRADA);
             }
 
-            var demarcacao = new DemarcacaoDto();
-            demarcacao.Geometrias = new List<GeometriaDto>();
-            demarcacao.Geometrias.Add(new GeometriaDto(fazenda.Demarcacao));
-
-            return Ok(demarcacao);
+            return Ok((Polygon) fazenda.Demarcacao);
         }
 
         [HttpGet]
@@ -209,7 +221,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var idUsuario = HttpContext.User.FindFirst("IdUsuario").Value;
             var usuario = _usuarioService.Get(int.Parse(idUsuario));
 
             var etapaDados = new BaseService<EtapaFazenda>(_context).Get((int)EEtapaFazenda.DadosFazenda);
@@ -294,22 +306,17 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        public async Task<ActionResult> PostLocalizacaoGeoFazenda(DemarcacaoDto demarcacaoDto, int idFazenda)
+        public async Task<ActionResult> PostLocalizacaoGeoFazenda(Polygon demarcacao, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
-            if (demarcacaoDto == null || demarcacaoDto.Geometrias == null || !demarcacaoDto.Geometrias.Any() || fazendaBd == null || fazendaBd.Demarcacao != null || fazendaBd.Concluida)
+            if (demarcacao == null || fazendaBd == null || fazendaBd.Concluida)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            var factory = Geometry.DefaultFactory;
-            var polygons = demarcacaoDto.Geometrias
-                .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray())).ToList();
-            var geometrias = polygons.Select(p => factory.CreateGeometry(p));
-
             var etapaConclusao = new BaseService<EtapaFazenda>(_context).Get((int)EEtapaFazenda.Conclusao);
             fazendaBd.Etapa = etapaConclusao;
-            fazendaBd.Demarcacao = geometrias.FirstOrDefault();
+            fazendaBd.Demarcacao = demarcacao;
 
             var body = new List<PdiDto>
             {
@@ -332,12 +339,13 @@ namespace DiagnoseVirtual.Application.Controllers
                 {
                     _fazendaService.Put(fazendaBd);
                     transaction.Commit();
-                    var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
-                    if (req.IsSuccessStatusCode)
-                    {
-                        return Ok();
-                    }
-                    throw new Exception("Erro ao cadastrar geometria.");
+                    return Ok();
+                    //var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+                    //if (req.IsSuccessStatusCode)
+                    //{
+                    //    return Ok();
+                    //}
+                    //throw new Exception("Erro ao cadastrar geometria.");
                 }
                 catch (Exception ex)
                 {
