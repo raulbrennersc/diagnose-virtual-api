@@ -113,7 +113,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet("{idFazenda}")]
         [ProducesResponseType(typeof(FazendaDto), StatusCodes.Status200OK)]
-        public ActionResult Get(int idFazenda)
+        public async Task<ActionResult> Get(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null)
@@ -121,7 +121,33 @@ namespace DiagnoseVirtual.Application.Controllers
                 return NotFound(Constants.ERR_FAZENDA_NAO_ENCONTRADA);
             }
 
-            return Ok(new FazendaDto(fazenda));
+            var url = string.Empty;
+            if(fazenda.Demarcacao != null)
+            {
+                var body = new List<PdiDto>
+                {
+                    new PdiDto{
+                        usr = "app",
+                        pw = "pdi2020",
+                        layer = "fazenda",
+                        cod = fazenda.Id.ToString(),
+                    }
+                };
+                var jsonBody = JsonConvert.SerializeObject(body);
+
+                var client = _httpClientFactory.CreateClient();
+                var urlReq = _config.GetSection("AppSettings:UrlPdi").Value + "/query";
+                var req = await client.PostAsync(urlReq, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+                dynamic obj = await req.Content.ReadAsStringAsync();
+                obj = Newtonsoft.Json.JsonConvert.DeserializeObject(obj);
+                url = obj[0].imgs[0].images[0];
+            }
+
+            var resposta = new FazendaDto(fazenda);
+            resposta.UrlImagem = url;
+
+
+            return Ok(resposta);
         }
 
         [HttpGet]

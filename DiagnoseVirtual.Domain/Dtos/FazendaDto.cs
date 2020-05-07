@@ -7,6 +7,7 @@ namespace DiagnoseVirtual.Domain.Dtos
     public class FazendaDto
     {
         public int Id { get; set; }
+        public string UrlImagem { get; set; }
         public LocalizacaoFazendaDto LocalizacaoFazenda { get; set; }
         public DadosFazendaDto DadosFazenda { get; set; }
         public DemarcacaoDto LocalizacaoGeo { get; set; }
