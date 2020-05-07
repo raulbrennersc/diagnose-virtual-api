@@ -103,12 +103,45 @@ namespace DiagnoseVirtual.Application.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("ExcluirFazenda/{idFazenda}")]
+        public ActionResult Excluir(int idFazenda)
+        {
+            var fazenda = _fazendaService.Get(idFazenda);
+            if (fazenda == null)
+            {
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
+
+            if (!fazenda.Ativa)
+            {
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
+
+            fazenda.Ativa = false;
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _fazendaService.Put(fazenda);
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
+        }
+
         [HttpGet]
         [ProducesResponseType(typeof(List<FazendaDto>), StatusCodes.Status200OK)]
         public ActionResult Get()
         {
             var idUsuario = HttpContext.User.FindFirst("IdUsuario").Value;
-            var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == int.Parse(idUsuario)).ToList();
+            var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == int.Parse(idUsuario) && f.Ativa).ToList();
 
             var result = fazendas.Select(f => new FazendaMinDto(f)).OrderByDescending(f => f.Id);
 
@@ -430,20 +463,15 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPut]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        public async Task<ActionResult> PutLocalizacaoGeoFazenda(DemarcacaoDto demarcacaoDto, int idFazenda)
+        public async Task<ActionResult> PutLocalizacaoGeoFazenda(Polygon demarcacao, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
-            if (demarcacaoDto == null || demarcacaoDto.Geometrias == null || !demarcacaoDto.Geometrias.Any() || fazendaBd == null || !fazendaBd.Concluida)
+            if (demarcacao == null || fazendaBd == null)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            var factory = Geometry.DefaultFactory;
-            var polygons = demarcacaoDto.Geometrias
-                .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray())).ToList();
-            var geometrias = polygons.Select(p => factory.CreateGeometry(p));
-
-            fazendaBd.Demarcacao = geometrias.FirstOrDefault();
+            fazendaBd.Demarcacao = demarcacao;
 
             var body = new List<PdiDto>
             {
