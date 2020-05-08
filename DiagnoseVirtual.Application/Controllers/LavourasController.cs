@@ -70,6 +70,17 @@ namespace DiagnoseVirtual.Application.Controllers
             }
         }
 
+        [HttpGet]
+        [ProducesResponseType(typeof(LavouraMinDto), StatusCodes.Status200OK)]
+        public ActionResult GetAll()
+        {
+            var idUsuario = int.Parse(HttpContext.User.FindFirst("IdUsuario").Value);
+            var lavouras = _fazendaService.GetAll().Where(f => f.Usuario.Id == idUsuario).Select(f => f.Lavouras)
+                .ToList().Aggregate((result, item) => result.Concat(item).ToList());
+
+            return Ok(lavouras.Select(l => new LavouraMinDto(l)));
+        }
+
         [HttpGet("{idLavoura}")]
         [ProducesResponseType(typeof(LavouraDto), StatusCodes.Status200OK)]
         public ActionResult Get(int idLavoura)

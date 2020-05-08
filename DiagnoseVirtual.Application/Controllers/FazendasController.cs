@@ -217,8 +217,8 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpGet]
-        [Route("LavourasFazenda/{idFazenda}")]
-        [ProducesResponseType(typeof(List<LavouraDto>), StatusCodes.Status200OK)]
+        [Route("{idFazenda}/Lavouras")]
+        [ProducesResponseType(typeof(List<LavouraMinDto>), StatusCodes.Status200OK)]
         public ActionResult GetLavourasFazenda(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
@@ -227,7 +227,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return NotFound(Constants.ERR_LAVOURAS_FAZENDA_NAO_ENCONTRADA);
             }
 
-            return Ok(fazenda.Lavouras.Select(l => new LavouraDto(l)));
+            return Ok(fazenda.Lavouras.Select(l => new LavouraMinDto(l)));
         }
 
         [HttpGet]
