@@ -109,7 +109,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("DemarcacaoLavoura/{idLavoura}")]
-        [ProducesResponseType(typeof(GeometriaDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Geometry), StatusCodes.Status200OK)]
         public ActionResult GetDemarcacaoLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -118,12 +118,12 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_DEMARCACAO_LAVOURA_NAO_ENCONTRADA);
             }
 
-            return Ok(new GeometriaDto(lavoura.Demarcacao));
+            return Ok(lavoura.Demarcacao);
         }
 
         [HttpGet]
         [Route("TalhoesLavoura/{idLavoura}")]
-        [ProducesResponseType(typeof(List<GeometriaDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<Geometry>), StatusCodes.Status200OK)]
         public ActionResult GetTalhoesLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -132,7 +132,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_TALHOES_LAVOURA_NAO_ENCONTRADOS);
             }
 
-            return Ok(lavoura.Talhoes.Select(t => new GeometriaDto(t)));
+            return Ok(lavoura.Talhoes);
         }
 
         [HttpPost]

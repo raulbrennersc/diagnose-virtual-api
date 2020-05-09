@@ -55,13 +55,13 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("UploadGeometrias")]
-        [ProducesResponseType(typeof(List<GeometriaDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<Geometry>), StatusCodes.Status200OK)]
         public ActionResult ValidarLocalizacao(IFormFile file)
         {
             var path = _hostingEnvironment.ContentRootPath;
             try
             {
-                var result = GeoFileHelper.ReadFile(file, path).Select(g => new GeometriaDto(g));
+                var result = GeoFileHelper.ReadFile(file, path);
                 return Ok(result);
             }
             catch
@@ -204,7 +204,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        [ProducesResponseType(typeof(DemarcacaoDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Polygon), StatusCodes.Status200OK)]
         public ActionResult GetLocalizacaoGeoFazenda(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
@@ -213,7 +213,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return NotFound(Constants.ERR_DEMARCACAO_FAZENDA_NAO_ENCONTRADA);
             }
 
-            return Ok((Polygon) fazenda.Demarcacao);
+            return Ok(fazenda.Demarcacao);
         }
 
         [HttpGet]
