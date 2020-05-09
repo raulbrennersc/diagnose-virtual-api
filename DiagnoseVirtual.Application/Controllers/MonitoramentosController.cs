@@ -209,16 +209,14 @@ namespace DiagnoseVirtual.Application.Controllers
         private List<ProblemaMonitoramento> MontarProblemas(MonitoramentoPostDto monitoramentoDto, Monitoramento monitoramento)
         {
             var problemasMonitoramento = new List<ProblemaMonitoramento>();
-            var factory = Geometry.DefaultFactory;
             foreach (var problemaDto in monitoramentoDto.Problemas)
             {
-                var ponto = factory.CreatePoint(new Coordinate(problemaDto.Ponto.Coordinates[0][0], problemaDto.Ponto.Coordinates[0][1]));
                 var problema = new ProblemaMonitoramento
                 {
                     Descricao = problemaDto.Descricao,
                     Monitoramento = monitoramento,
                     Recomendacao = problemaDto.Recomendacao,
-                    Ponto = ponto,
+                    Ponto = problemaDto.Ponto,
                 };
                 problemasMonitoramento.Add(problema);
             }

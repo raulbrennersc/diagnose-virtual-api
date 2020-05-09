@@ -25,7 +25,6 @@ namespace DiagnoseVirtual.Application.Controllers
         private readonly BaseService<Lavoura> _lavouraService;
         private readonly BaseService<DadosLavoura> _dadosLavouraService;
         private readonly BaseService<Fazenda> _fazendaService;
-        private readonly BaseService<Talhao> _talhaoService;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly PsqlContext _context = new PsqlContext();
         private readonly IHttpClientFactory _httpClientFactory;
@@ -37,7 +36,6 @@ namespace DiagnoseVirtual.Application.Controllers
             _lavouraService = new BaseService<Lavoura>(_context);
             _dadosLavouraService = new BaseService<DadosLavoura>(_context);
             _fazendaService = new BaseService<Fazenda>(_context);
-            _talhaoService = new BaseService<Talhao>(_context);
             _httpClientFactory = httpClientFactory;
             _config = config;
         }
@@ -133,7 +131,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_TALHOES_LAVOURA_NAO_ENCONTRADOS);
             }
 
-            return Ok(lavoura.Talhoes.Select(t => new GeometriaDto(t.Geometria)));
+            return Ok(lavoura.Talhoes.Select(t => new GeometriaDto(t)));
         }
 
         [HttpPost]
@@ -183,19 +181,14 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("DemarcacaoLavoura/{idLavoura}")]
-        public ActionResult PostDemarcacaoLavoura(GeometriaDto geometriaDemarcacao, int idLavoura)
+        public ActionResult PostDemarcacaoLavoura(Polygon geometriaDemarcacao, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (geometriaDemarcacao == null || lavouraBd == null || lavouraBd.Concluida)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
-
-            var factory = Geometry.DefaultFactory;
-            var polygon = factory.CreatePolygon(geometriaDemarcacao.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray());
-            var demarcacaoBd = factory.CreateGeometry(polygon);
-
-            lavouraBd.Demarcacao = demarcacaoBd;
+            lavouraBd.Demarcacao = geometriaDemarcacao;
 
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -215,7 +208,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("TalhoesLavoura/{idLavoura}")]
-        public async Task<ActionResult> PostTalhoesLavoura(List<GeometriaDto> talhoes, int idLavoura)
+        public async Task<ActionResult> PostTalhoesLavoura(MultiPolygon talhoes, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Concluida)
@@ -223,24 +216,8 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            var factory = Geometry.DefaultFactory;
-            var polygons = talhoes
-                .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray())).ToList();
-            var talhoesBd = polygons.Select(p => factory.CreateGeometry(p))
-                .Select(g => new Talhao { Geometria = g, Lavoura = lavouraBd }).ToList();
-
-            var listaTalhoes = new List<Geometry>();
-            foreach (var talhoesCadastrados in lavouraBd.Fazenda.Lavouras.Select(l => l.Talhoes))
-            {
-                listaTalhoes.AddRange(talhoesCadastrados.Select(t => t.Geometria));
-            }
-
-            listaTalhoes.AddRange(talhoesBd.Select(t => t.Geometria));
-            var geometriaPdi = listaTalhoes.FirstOrDefault();
-            foreach (var geometria in listaTalhoes)
-            {
-                geometriaPdi = geometriaPdi.Union(geometria);
-            }
+            lavouraBd.Talhoes = talhoes;
+            var geometriaPdi = talhoes;
 
 
             var body = new List<PdiDto>
@@ -263,16 +240,6 @@ namespace DiagnoseVirtual.Application.Controllers
             {
                 try
                 {
-                    foreach (var talhao in lavouraBd.Talhoes)
-                    {
-                        _talhaoService.Delete(talhao.Id);
-                    }
-
-                    foreach (var talhao in talhoesBd)
-                    {
-                        _talhaoService.Post(talhao);
-                    }
-
                     transaction.Commit();
                     var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
                     if (req.IsSuccessStatusCode)
@@ -328,7 +295,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPut]
         [Route("DemarcacaoLavoura/{idLavoura}")]
-        public ActionResult PutDemarcacaoLavoura(GeometriaDto geometriaDemarcacao, int idLavoura)
+        public ActionResult PutDemarcacaoLavoura(Polygon geometriaDemarcacao, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (geometriaDemarcacao == null || lavouraBd == null)
@@ -336,9 +303,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            var factory = Geometry.DefaultFactory;
-            var polygon = factory.CreatePolygon(geometriaDemarcacao.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray());
-            lavouraBd.Demarcacao = factory.CreateGeometry(polygon);
+            lavouraBd.Demarcacao = geometriaDemarcacao;
 
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -358,7 +323,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPut]
         [Route("TalhoesLavoura/{idLavoura}")]
-        public async Task<ActionResult> PutTalhoesLavoura(List<GeometriaDto> talhoes, int idLavoura)
+        public async Task<ActionResult> PutTalhoesLavoura(MultiPolygon talhoes, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Talhoes == null)
@@ -366,21 +331,10 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            var factory = Geometry.DefaultFactory;
-            var polygons = talhoes
-                .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c[0], c[1])).ToArray())).ToList();
-            var talhoesBd = polygons.Select(p => factory.CreateGeometry(p))
-                .Select(g => new Talhao { Geometria = g, Lavoura = lavouraBd }).ToList();
+            lavouraBd.Talhoes = talhoes;
 
-            var geometriaTalhoes = new List<Geometry>();
-            foreach (var talhoesCadastrados in lavouraBd.Fazenda.Lavouras.Select(l => l.Talhoes))
-            {
-                geometriaTalhoes.AddRange(talhoesCadastrados.Select(t => t.Geometria));
-            }
-
-            geometriaTalhoes.AddRange(talhoesBd.Select(t => t.Geometria));
-            var geometriaPdi = geometriaTalhoes.FirstOrDefault();
-            foreach (var geometria in geometriaTalhoes)
+            var geometriaPdi = talhoes.FirstOrDefault();
+            foreach (var geometria in talhoes)
             {
                 geometriaPdi = geometriaPdi.Union(geometria);
             }
@@ -406,10 +360,6 @@ namespace DiagnoseVirtual.Application.Controllers
             {
                 try
                 {
-                    foreach (var talhao in talhoesBd)
-                    {
-                        _talhaoService.Post(talhao);
-                    }
                     var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
                     transaction.Commit();
                     return Ok();

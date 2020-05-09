@@ -23,7 +23,7 @@ namespace DiagnoseVirtual.Domain.Dtos
             var talhoes = new List<GeometriaDto>();
             foreach (var lavoura in monitoramento.Fazenda.Lavouras)
             {
-                talhoes.AddRange(lavoura.Talhoes.Select(t => new GeometriaDto(t.Geometria)));
+                talhoes.AddRange(lavoura.Talhoes.Select(t => new GeometriaDto(t)));
             }
 
             Id = monitoramento.Id;

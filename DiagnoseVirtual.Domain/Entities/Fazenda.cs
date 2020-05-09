@@ -9,7 +9,7 @@ namespace DiagnoseVirtual.Domain.Entities
         public virtual EtapaFazenda Etapa { get; set; }
         public virtual LocalizacaoFazenda LocalizacaoFazenda { get; set; }
         public virtual DadosFazenda DadosFazenda { get; set; }
-        public virtual Geometry Demarcacao { get; set; }
+        public virtual Polygon Demarcacao { get; set; }
         public virtual bool Concluida { get; set; }
         public virtual bool Ativa { get; set; }
         public virtual IList<Lavoura> Lavouras { get; set; }

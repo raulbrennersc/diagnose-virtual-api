@@ -10,8 +10,8 @@ namespace DiagnoseVirtual.Domain.Dtos
         public int Id { get; set; }
         public int IdEtapa { get; set; }
         public DadosLavouraDto DadosLavoura { get; set; }
-        public Geometry Demarcacao { get; set; }
-        public ICollection<Geometry> Talhoes { get; set; }
+        public Polygon Demarcacao { get; set; }
+        public MultiPolygon Talhoes { get; set; }
         public bool Concluida { get; set; }
 
         public LavouraDto() { }
@@ -21,7 +21,7 @@ namespace DiagnoseVirtual.Domain.Dtos
             IdEtapa = lavoura.Etapa.Id;
             DadosLavoura = lavoura.DadosLavoura != null ? new DadosLavouraDto(lavoura.DadosLavoura) : null;
             Demarcacao = lavoura.Demarcacao;
-            Talhoes = lavoura.Talhoes?.Select(t => t.Geometria).ToList();
+            Talhoes = lavoura.Talhoes;
             Concluida = lavoura.Concluida;
         }
     }
