@@ -94,6 +94,19 @@ namespace DiagnoseVirtual.Application.Controllers
             return Ok(new LavouraMinDto(lavoura));
         }
 
+        [HttpGet("{idLavoura}/Completa")]
+        [ProducesResponseType(typeof(LavouraMinDto), StatusCodes.Status200OK)]
+        public ActionResult GetLavouraCompleta(int idLavoura)
+        {
+            var lavoura = _lavouraService.Get(idLavoura);
+            if (lavoura == null)
+            {
+                return NotFound(Constants.ERR_LAVOURA_NAO_ENCONTRADA);
+            }
+
+            return Ok(new LavouraDto(lavoura));
+        }
+
         [HttpGet]
         [Route("DadosLavoura/{idLavoura}")]
         [ProducesResponseType(typeof(DadosLavouraDto), StatusCodes.Status200OK)]
