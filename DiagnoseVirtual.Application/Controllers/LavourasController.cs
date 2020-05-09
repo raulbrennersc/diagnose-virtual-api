@@ -70,7 +70,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(LavouraMinDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<LavouraMinDto>), StatusCodes.Status200OK)]
         public ActionResult GetAll()
         {
             var idUsuario = int.Parse(HttpContext.User.FindFirst("IdUsuario").Value);
@@ -81,7 +81,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpGet("{idLavoura}")]
-        [ProducesResponseType(typeof(LavouraDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(LavouraMinDto), StatusCodes.Status200OK)]
         public ActionResult Get(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -90,7 +90,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return NotFound(Constants.ERR_LAVOURA_NAO_ENCONTRADA);
             }
 
-            return Ok(new LavouraDto(lavoura));
+            return Ok(new LavouraMinDto(lavoura));
         }
 
         [HttpGet]
@@ -109,7 +109,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("DemarcacaoLavoura/{idLavoura}")]
-        [ProducesResponseType(typeof(Geometry), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Polygon), StatusCodes.Status200OK)]
         public ActionResult GetDemarcacaoLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -123,7 +123,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("TalhoesLavoura/{idLavoura}")]
-        [ProducesResponseType(typeof(List<Geometry>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MultiPolygon), StatusCodes.Status200OK)]
         public ActionResult GetTalhoesLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -137,7 +137,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("DadosLavoura/{idFazenda}")]
-        [ProducesResponseType(typeof(LavouraDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(LavouraMinDto), StatusCodes.Status200OK)]
         public ActionResult PostDadosLavoura(DadosLavouraDto dadosLavoura, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
@@ -172,7 +172,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     _lavouraService.Post(lavouraBd);
                     _dadosLavouraService.Post(dadosLavouraBd);
                     transaction.Commit();
-                    return Ok(new LavouraDto { Id = lavouraBd.Id });
+                    return Ok(new LavouraMinDto(lavouraBd));
                 }
                 catch (Exception ex)
                 {

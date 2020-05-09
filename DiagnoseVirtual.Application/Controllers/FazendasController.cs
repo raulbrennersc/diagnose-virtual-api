@@ -137,7 +137,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpGet]
-        [ProducesResponseType(typeof(List<FazendaDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<FazendaMinDto>), StatusCodes.Status200OK)]
         public ActionResult Get()
         {
             var idUsuario = HttpContext.User.FindFirst("IdUsuario").Value;
@@ -149,7 +149,7 @@ namespace DiagnoseVirtual.Application.Controllers
         }
 
         [HttpGet("{idFazenda}")]
-        [ProducesResponseType(typeof(FazendaDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FazendaMinDto), StatusCodes.Status200OK)]
         public ActionResult Get(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
@@ -246,7 +246,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("LocalizacaoFazenda")]
-        [ProducesResponseType(typeof(FazendaDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FazendaMinDto), StatusCodes.Status200OK)]
         public ActionResult PostLocalizacaoFazenda(LocalizacaoFazendaDto localizacao)
         {
             if (localizacao == null)
@@ -290,7 +290,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     _fazendaService.Post(fazendaBd);
                     _localizacaoService.Post(localizacaoBd);
                     transaction.Commit();
-                    return Ok(new FazendaDto { Id = fazendaBd.Id });
+                    return Ok(new FazendaMinDto(fazendaBd));
                 }
                 catch (Exception ex)
                 {
@@ -501,16 +501,6 @@ namespace DiagnoseVirtual.Application.Controllers
                     return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
                 }
             }
-        }
-
-        [HttpGet]
-        [Route("Teste")]
-        public ActionResult Teste()
-        {
-            var fazenda = _fazendaService.GetAll().FirstOrDefault(f => f.Demarcacao != null);
-            var writer = new GeoJsonWriter();
-            var t = writer.Write(fazenda.Demarcacao);
-            return Ok(t);
         }
     }
 }
