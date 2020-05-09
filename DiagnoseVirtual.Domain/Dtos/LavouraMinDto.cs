@@ -5,6 +5,7 @@ namespace DiagnoseVirtual.Domain.Dtos
     public class LavouraMinDto
     {
         public int Id { get; set; }
+        public int IdFazenda { get; set; }
         public string Nome { get; set; }
         public int idEtapa { get; set; }
         public bool Concluida { get; set; }
@@ -12,6 +13,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public LavouraMinDto(Lavoura lavoura)
         {
             Id = lavoura.Id;
+            IdFazenda = lavoura.Fazenda.Id;
             idEtapa = lavoura.Etapa.Id;
             Nome = lavoura.DadosLavoura.Nome;
             Concluida = lavoura.Concluida;
