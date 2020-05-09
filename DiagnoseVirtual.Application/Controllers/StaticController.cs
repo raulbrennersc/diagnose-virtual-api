@@ -80,6 +80,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult GetEtapasFazenda()
         {
             var result = new BaseService<EtapaFazenda>(_context).GetAll()
+                .OrderBy(e => e.Id)
                 .Select(m => new
                 {
                     m.Id,
@@ -95,6 +96,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult GetEtapasLavoura()
         {
             var result = new BaseService<EtapaLavoura>(_context).GetAll()
+                .OrderBy(e => e.Id)
                 .Select(m => new
                 {
                     m.Id,
