@@ -158,10 +158,10 @@ namespace DiagnoseVirtual.Application.Controllers
                 Cultivar = dadosLavoura.Cultivar,
                 EspacamentoHorizontal = dadosLavoura.EspacamentoHorizontal,
                 EspacamentoVertical = dadosLavoura.EspacamentoVertical,
-                MesAnoPlantio = dadosLavoura.Data,
+                MesAnoPlantio = dadosLavoura.MesAnoPlantio,
                 Nome = dadosLavoura.Nome,
                 NumeroPlantas = dadosLavoura.NumeroPlantas,
-                Observacoes = dadosLavoura.Observacao,
+                Observacoes = dadosLavoura.Observacoes,
                 Lavoura = lavouraBd,
             };
 
@@ -278,10 +278,10 @@ namespace DiagnoseVirtual.Application.Controllers
             dadosLavouraBd.Cultivar = dadosLavoura.Cultivar;
             dadosLavouraBd.EspacamentoHorizontal = dadosLavoura.EspacamentoHorizontal;
             dadosLavouraBd.EspacamentoVertical = dadosLavoura.EspacamentoVertical;
-            dadosLavouraBd.MesAnoPlantio = dadosLavoura.Data;
+            dadosLavouraBd.MesAnoPlantio = dadosLavoura.MesAnoPlantio;
             dadosLavouraBd.Nome = dadosLavoura.Nome;
             dadosLavouraBd.NumeroPlantas = dadosLavoura.NumeroPlantas;
-            dadosLavouraBd.Observacoes = dadosLavoura.Observacao;
+            dadosLavouraBd.Observacoes = dadosLavoura.Observacoes;
 
             using (var transaction = _context.Database.BeginTransaction())
             {
