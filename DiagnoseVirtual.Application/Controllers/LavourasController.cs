@@ -223,7 +223,7 @@ namespace DiagnoseVirtual.Application.Controllers
             }
             var etapaDemarcacao = new BaseService<EtapaLavoura>(_context).Get((int)EEtapaLavoura.Confirmacao);
             lavouraBd.Etapa = etapaDemarcacao;
-            lavouraBd.Talhoes = talhoes;
+            lavouraBd.Talhoes = talhoes.Select(f => (Polygon) f.Geometry).ToArray();
             var geometriaPdi = talhoes.FirstOrDefault().Geometry;
             foreach (var talhao in talhoes)
             {
@@ -343,7 +343,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            lavouraBd.Talhoes = talhoes;
+            lavouraBd.Talhoes = talhoes.Select(f => (Polygon)f.Geometry).ToArray();
             var geometriaPdi = talhoes.FirstOrDefault().Geometry;
             foreach (var talhao in talhoes)
             {

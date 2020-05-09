@@ -18,7 +18,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public List<UploadMonitoramentoDto> Uploads { get; set; }
         public Polygon DemarcacaoFazenda { get; set; }
         public List<Polygon> DemarcacaoLavouras { get; set; }
-        public List<FeatureCollection> DemarcacaoTalhoes { get; set; }
+        public List<Polygon[]> DemarcacaoTalhoes { get; set; }
 
         public MonitoramentoDetailDto(Monitoramento monitoramento, string urlPdi = null)
         {

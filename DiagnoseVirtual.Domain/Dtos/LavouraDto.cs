@@ -12,7 +12,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public int IdEtapa { get; set; }
         public DadosLavouraDto DadosLavoura { get; set; }
         public Polygon Demarcacao { get; set; }
-        public FeatureCollection Talhoes { get; set; }
+        public Polygon[] Talhoes { get; set; }
         public bool Concluida { get; set; }
 
         public LavouraDto() { }
