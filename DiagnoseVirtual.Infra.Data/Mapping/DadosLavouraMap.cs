@@ -29,6 +29,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasColumnName("cultivar")
                 .IsRequired()
                 .HasMaxLength(30);
+            builder.Property(x => x.AreaTotal)
+                .HasColumnName("area_total")
+                .IsRequired();
             builder.Property(x => x.NumeroPlantas)
                 .HasColumnName("numero_plantas")
                 .IsRequired();

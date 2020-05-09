@@ -174,6 +174,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 EspacamentoVertical = dadosLavoura.EspacamentoVertical,
                 MesAnoPlantio = dadosLavoura.MesAnoPlantio,
                 Nome = dadosLavoura.Nome,
+                AreaTotal = dadosLavoura.AreaTotal,
                 NumeroPlantas = dadosLavoura.NumeroPlantas,
                 Observacoes = dadosLavoura.Observacoes,
                 Lavoura = lavouraBd,
@@ -301,6 +302,7 @@ namespace DiagnoseVirtual.Application.Controllers
             dadosLavouraBd.Nome = dadosLavoura.Nome;
             dadosLavouraBd.NumeroPlantas = dadosLavoura.NumeroPlantas;
             dadosLavouraBd.Observacoes = dadosLavoura.Observacoes;
+            dadosLavouraBd.AreaTotal = dadosLavoura.AreaTotal;
 
             using (var transaction = _context.Database.BeginTransaction())
             {

@@ -5,6 +5,7 @@
         public virtual string Nome { get; set; }
         public virtual string MesAnoPlantio { get; set; }
         public virtual string Cultivar { get; set; }
+        public virtual double AreaTotal { get; set; }
         public virtual int NumeroPlantas { get; set; }
         public virtual double EspacamentoVertical { get; set; }
         public virtual double EspacamentoHorizontal { get; set; }

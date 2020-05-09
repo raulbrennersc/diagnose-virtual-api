@@ -8,6 +8,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public string MesAnoPlantio { get; set; }
         public string Cultivar { get; set; }
         public int NumeroPlantas { get; set; }
+        public double AreaTotal { get; set; }
         public double EspacamentoVertical { get; set; }
         public double EspacamentoHorizontal { get; set; }
         public string Observacoes { get; set; }
@@ -17,6 +18,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         {
             Nome = dados.Nome;
             MesAnoPlantio = dados.MesAnoPlantio;
+            AreaTotal = dados.AreaTotal;
             Cultivar = dados.Cultivar;
             NumeroPlantas = dados.NumeroPlantas;
             EspacamentoVertical = dados.EspacamentoVertical;
