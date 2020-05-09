@@ -12,8 +12,8 @@ namespace DiagnoseVirtual.Domain.Dtos
         public LavouraMinDto(Lavoura lavoura)
         {
             Id = lavoura.Id;
-            idEtapa = lavoura.Etapa.Id;
-            Nome = lavoura.DadosLavoura.Nome;
+            idEtapa = 4;
+            Nome = "teste";
             Concluida = lavoura.Concluida;
         }
     }

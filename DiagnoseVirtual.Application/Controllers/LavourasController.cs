@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using Newtonsoft.Json;
 using System;
@@ -123,7 +124,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("TalhoesLavoura/{idLavoura}")]
-        [ProducesResponseType(typeof(MultiPolygon), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(FeatureCollection), StatusCodes.Status200OK)]
         public ActionResult GetTalhoesLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -213,7 +214,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("TalhoesLavoura/{idLavoura}")]
-        public async Task<ActionResult> PostTalhoesLavoura(MultiPolygon talhoes, int idLavoura)
+        public async Task<ActionResult> PostTalhoesLavoura(FeatureCollection talhoes, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Concluida)
@@ -223,7 +224,11 @@ namespace DiagnoseVirtual.Application.Controllers
             var etapaDemarcacao = new BaseService<EtapaLavoura>(_context).Get((int)EEtapaLavoura.Confirmacao);
             lavouraBd.Etapa = etapaDemarcacao;
             lavouraBd.Talhoes = talhoes;
-            var geometriaPdi = talhoes;
+            var geometriaPdi = talhoes.FirstOrDefault().Geometry;
+            foreach (var talhao in talhoes)
+            {
+                geometriaPdi = geometriaPdi.Union(talhao.Geometry);
+            }
 
 
             var body = new List<PdiDto>
@@ -246,12 +251,13 @@ namespace DiagnoseVirtual.Application.Controllers
             {
                 try
                 {
+                    _lavouraService.Put(lavouraBd);
                     transaction.Commit();
-                    var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
-                    if (req.IsSuccessStatusCode)
-                    {
+                    //var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+                    //if (req.IsSuccessStatusCode)
+                    //{
+                    //}
                         return Ok();
-                    }
 
                     throw new Exception("Erro ao cadastrar geometrias.");
                 }
@@ -329,7 +335,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPut]
         [Route("TalhoesLavoura/{idLavoura}")]
-        public async Task<ActionResult> PutTalhoesLavoura(MultiPolygon talhoes, int idLavoura)
+        public async Task<ActionResult> PutTalhoesLavoura(FeatureCollection talhoes, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Talhoes == null)
@@ -338,11 +344,10 @@ namespace DiagnoseVirtual.Application.Controllers
             }
 
             lavouraBd.Talhoes = talhoes;
-
-            var geometriaPdi = talhoes.FirstOrDefault();
-            foreach (var geometria in talhoes)
+            var geometriaPdi = talhoes.FirstOrDefault().Geometry;
+            foreach (var talhao in talhoes)
             {
-                geometriaPdi = geometriaPdi.Union(geometria);
+                geometriaPdi = geometriaPdi.Union(talhao.Geometry);
             }
 
 

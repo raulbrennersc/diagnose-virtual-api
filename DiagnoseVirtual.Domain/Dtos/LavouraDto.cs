@@ -1,4 +1,5 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
+using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public int IdEtapa { get; set; }
         public DadosLavouraDto DadosLavoura { get; set; }
         public Polygon Demarcacao { get; set; }
-        public MultiPolygon Talhoes { get; set; }
+        public FeatureCollection Talhoes { get; set; }
         public bool Concluida { get; set; }
 
         public LavouraDto() { }

@@ -1,5 +1,5 @@
 ﻿using NetTopologySuite.Geometries;
-using System.Collections.Generic;
+using NetTopologySuite.Features;
 
 namespace DiagnoseVirtual.Domain.Entities
 {
@@ -10,6 +10,6 @@ namespace DiagnoseVirtual.Domain.Entities
         public virtual Fazenda Fazenda { get; set; }
         public virtual Polygon Demarcacao { get; set; }
         public virtual bool Concluida { get; set; }
-        public virtual MultiPolygon Talhoes { get; set; }
+        public virtual FeatureCollection Talhoes { get; set; }
     }
 }

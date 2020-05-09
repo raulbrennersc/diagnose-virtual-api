@@ -1,4 +1,5 @@
 using DiagnoseVirtual.Domain.Entities;
+using NetTopologySuite.Features;
 using NetTopologySuite.Geometries;
 using System;
 using System.Collections.Generic;
@@ -15,9 +16,9 @@ namespace DiagnoseVirtual.Domain.Dtos
         public DateTime DataMonitoramento { get; set; }
         public List<ProblemaMonitoramentoDto> Problemas { get; set; }
         public List<UploadMonitoramentoDto> Uploads { get; set; }
-        public Geometry DemarcacaoFazenda { get; set; }
+        public Polygon DemarcacaoFazenda { get; set; }
         public List<Polygon> DemarcacaoLavouras { get; set; }
-        public List<MultiPolygon> DemarcacaoTalhoes { get; set; }
+        public List<FeatureCollection> DemarcacaoTalhoes { get; set; }
 
         public MonitoramentoDetailDto(Monitoramento monitoramento, string urlPdi = null)
         {
