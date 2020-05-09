@@ -110,7 +110,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("DemarcacaoLavoura/{idLavoura}")]
-        [ProducesResponseType(typeof(Polygon), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Geometry), StatusCodes.Status200OK)]
         public ActionResult GetDemarcacaoLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
@@ -185,7 +185,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("DemarcacaoLavoura/{idLavoura}")]
-        public ActionResult PostDemarcacaoLavoura(Polygon geometriaDemarcacao, int idLavoura)
+        public ActionResult PostDemarcacaoLavoura(Geometry geometriaDemarcacao, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (geometriaDemarcacao == null || lavouraBd == null || lavouraBd.Concluida)
@@ -223,7 +223,7 @@ namespace DiagnoseVirtual.Application.Controllers
             }
             var etapaDemarcacao = new BaseService<EtapaLavoura>(_context).Get((int)EEtapaLavoura.Confirmacao);
             lavouraBd.Etapa = etapaDemarcacao;
-            lavouraBd.Talhoes = talhoes.Select(f => (Polygon) f.Geometry).ToArray();
+            lavouraBd.Talhoes = talhoes.Select(f => f.Geometry).ToArray();
             var geometriaPdi = talhoes.FirstOrDefault().Geometry;
             foreach (var talhao in talhoes)
             {
@@ -307,7 +307,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPut]
         [Route("DemarcacaoLavoura/{idLavoura}")]
-        public ActionResult PutDemarcacaoLavoura(Polygon geometriaDemarcacao, int idLavoura)
+        public ActionResult PutDemarcacaoLavoura(Geometry geometriaDemarcacao, int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
             if (geometriaDemarcacao == null || lavouraBd == null)
@@ -343,13 +343,12 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            lavouraBd.Talhoes = talhoes.Select(f => (Polygon)f.Geometry).ToArray();
+            lavouraBd.Talhoes = talhoes.Select(f => f.Geometry).ToArray();
             var geometriaPdi = talhoes.FirstOrDefault().Geometry;
             foreach (var talhao in talhoes)
             {
                 geometriaPdi = geometriaPdi.Union(talhao.Geometry);
             }
-
 
             var body = new List<PdiDto>
             {
@@ -371,7 +370,7 @@ namespace DiagnoseVirtual.Application.Controllers
             {
                 try
                 {
-                    var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+                    //var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
                     transaction.Commit();
                     return Ok();
                 }

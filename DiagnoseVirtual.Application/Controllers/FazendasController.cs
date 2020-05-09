@@ -204,7 +204,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        [ProducesResponseType(typeof(Polygon), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Geometry), StatusCodes.Status200OK)]
         public ActionResult GetLocalizacaoGeoFazenda(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
@@ -339,7 +339,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        public async Task<ActionResult> PostLocalizacaoGeoFazenda(Polygon demarcacao, int idFazenda)
+        public async Task<ActionResult> PostLocalizacaoGeoFazenda(Geometry demarcacao, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (demarcacao == null || fazendaBd == null || fazendaBd.Concluida)
@@ -463,7 +463,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPut]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        public async Task<ActionResult> PutLocalizacaoGeoFazenda(Polygon demarcacao, int idFazenda)
+        public async Task<ActionResult> PutLocalizacaoGeoFazenda(Geometry demarcacao, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (demarcacao == null || fazendaBd == null)

@@ -24,4 +24,8 @@
     <PackageReference Include="SharpKml.Core" Version="5.1.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

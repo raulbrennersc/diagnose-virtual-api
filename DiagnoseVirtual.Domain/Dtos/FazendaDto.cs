@@ -11,7 +11,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public int IdEtapa { get; set; }
         public LocalizacaoFazendaDto LocalizacaoFazenda { get; set; }
         public DadosFazendaDto DadosFazenda { get; set; }
-        public Polygon Demarcacao { get; set; }
+        public Geometry Demarcacao { get; set; }
         public bool Ativa { get; set; }
         public bool Concluida { get; set; }
 
