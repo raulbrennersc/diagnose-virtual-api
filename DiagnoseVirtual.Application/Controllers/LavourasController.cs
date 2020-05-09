@@ -1,5 +1,6 @@
 ﻿using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
+using DiagnoseVirtual.Domain.Enums;
 using DiagnoseVirtual.Infra.Data.Context;
 using DiagnoseVirtual.Service.Services;
 using Microsoft.AspNetCore.Hosting;
@@ -140,6 +141,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PostDadosLavoura(DadosLavouraDto dadosLavoura, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
+            var etapaDados = new BaseService<EtapaLavoura>(_context).Get((int)EEtapaLavoura.DemarcacaoLavoura);
             if (dadosLavoura == null || fazendaBd == null || !fazendaBd.Concluida)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
@@ -148,6 +150,7 @@ namespace DiagnoseVirtual.Application.Controllers
             var lavouraBd = new Lavoura
             {
                 Fazenda = fazendaBd,
+                Etapa = etapaDados,
             };
 
             var dadosLavouraBd = new DadosLavoura
@@ -188,6 +191,8 @@ namespace DiagnoseVirtual.Application.Controllers
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
+            var etapaDemarcacao= new BaseService<EtapaLavoura>(_context).Get((int)EEtapaLavoura.Talhoes);
+            lavouraBd.Etapa = etapaDemarcacao;
             lavouraBd.Demarcacao = geometriaDemarcacao;
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -215,7 +220,8 @@ namespace DiagnoseVirtual.Application.Controllers
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
-
+            var etapaDemarcacao = new BaseService<EtapaLavoura>(_context).Get((int)EEtapaLavoura.Confirmacao);
+            lavouraBd.Etapa = etapaDemarcacao;
             lavouraBd.Talhoes = talhoes;
             var geometriaPdi = talhoes;
 

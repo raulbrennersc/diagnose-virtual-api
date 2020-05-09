@@ -88,5 +88,20 @@ namespace DiagnoseVirtual.Application.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet]
+        [Route("EtapasLavoura")]
+        [ProducesResponseType(typeof(List<EtapaLavoura>), StatusCodes.Status200OK)]
+        public ActionResult GetEtapasLavoura()
+        {
+            var result = new BaseService<EtapaLavoura>(_context).GetAll()
+                .Select(m => new
+                {
+                    m.Id,
+                    m.Nome,
+                });
+
+            return Ok(result);
+        }
     }
 }

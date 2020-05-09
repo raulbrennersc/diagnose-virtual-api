@@ -347,7 +347,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            var etapaConclusao = new BaseService<EtapaFazenda>(_context).Get((int)EEtapaFazenda.Conclusao);
+            var etapaConclusao = new BaseService<EtapaFazenda>(_context).Get((int)EEtapaFazenda.Confirmacao);
             fazendaBd.Etapa = etapaConclusao;
             fazendaBd.Demarcacao = demarcacao;
 
