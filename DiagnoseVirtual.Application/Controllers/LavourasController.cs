@@ -80,7 +80,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            lavouraBd.Concluida = true;
+            lavouraBd.Ativa = false;
 
             using (var transaction = _context.Database.BeginTransaction())
             {
