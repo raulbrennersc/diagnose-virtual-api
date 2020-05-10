@@ -103,8 +103,16 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult GetAll()
         {
             var idUsuario = int.Parse(HttpContext.User.FindFirst("IdUsuario").Value);
-            var lavouras = _fazendaService.GetAll().Where(f => f.Usuario.Id == idUsuario && f.Ativa).Select(f => f.Lavouras.Where(l => l.Ativa))
-                .ToList().Aggregate((result, item) => result.Concat(item).ToList());
+            var lLavouras = _fazendaService.GetAll().Where(f => f.Usuario.Id == idUsuario && f.Ativa).Select(f => f.Lavouras.Where(l => l.Ativa))
+                .ToList();
+            var lavouras = new List<Lavoura>();
+            foreach (var l1 in lLavouras)
+            {
+                foreach (var l in l1)
+                {
+                    lavouras.Add(l);
+                }
+            }
 
             return Ok(lavouras.Select(l => new LavouraMinDto(l)));
         }
