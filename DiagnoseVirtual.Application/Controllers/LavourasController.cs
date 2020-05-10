@@ -75,7 +75,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult PostExcluirLavoura(int idLavoura)
         {
             var lavouraBd = _lavouraService.Get(idLavoura);
-            if (lavouraBd == null || lavouraBd.Concluida)
+            if (lavouraBd == null || !lavouraBd.Ativa)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
