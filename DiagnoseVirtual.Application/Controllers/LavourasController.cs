@@ -137,7 +137,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpGet]
         [Route("TalhoesLavoura/{idLavoura}")]
-        [ProducesResponseType(typeof(FeatureCollection), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(Geometry[]), StatusCodes.Status200OK)]
         public ActionResult GetTalhoesLavoura(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
