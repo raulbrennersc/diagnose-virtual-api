@@ -10,6 +10,7 @@ namespace DiagnoseVirtual.Domain.Entities
         public virtual Fazenda Fazenda { get; set; }
         public virtual Geometry Demarcacao { get; set; }
         public virtual bool Concluida { get; set; }
+        public virtual bool Ativa { get; set; }
         public virtual Geometry[] Talhoes { get; set; }
     }
 }

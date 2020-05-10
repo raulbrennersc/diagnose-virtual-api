@@ -22,6 +22,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             builder.Property(x => x.Concluida)
                 .HasColumnName("concluida")
                 .HasDefaultValue(false);
+            builder.Property(x => x.Ativa)
+                .HasColumnName("ativa")
+                .HasDefaultValue(true);
             builder.Property(x => x.Talhoes)
                 .HasColumnName("talhoes"); ;
 

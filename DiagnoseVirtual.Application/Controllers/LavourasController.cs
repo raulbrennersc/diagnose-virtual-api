@@ -70,12 +70,40 @@ namespace DiagnoseVirtual.Application.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("ExcluirLavoura/{idLavoura}")]
+        public ActionResult PostExcluirLavoura(int idLavoura)
+        {
+            var lavouraBd = _lavouraService.Get(idLavoura);
+            if (lavouraBd == null || lavouraBd.Concluida)
+            {
+                return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
+
+            lavouraBd.Concluida = true;
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _lavouraService.Put(lavouraBd);
+                    transaction.Commit();
+                    return Ok();
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return StatusCode((int)HttpStatusCode.InternalServerError, ex.Message);
+                }
+            }
+        }
+
         [HttpGet]
         [ProducesResponseType(typeof(List<LavouraMinDto>), StatusCodes.Status200OK)]
         public ActionResult GetAll()
         {
             var idUsuario = int.Parse(HttpContext.User.FindFirst("IdUsuario").Value);
-            var lavouras = _fazendaService.GetAll().Where(f => f.Usuario.Id == idUsuario).Select(f => f.Lavouras)
+            var lavouras = _fazendaService.GetAll().Where(f => f.Usuario.Id == idUsuario && f.Ativa).Select(f => f.Lavouras.Where(l => l.Ativa))
                 .ToList().Aggregate((result, item) => result.Concat(item).ToList());
 
             return Ok(lavouras.Select(l => new LavouraMinDto(l)));
@@ -86,7 +114,7 @@ namespace DiagnoseVirtual.Application.Controllers
         public ActionResult Get(int idLavoura)
         {
             var lavoura = _lavouraService.Get(idLavoura);
-            if (lavoura == null)
+            if (lavoura == null || !lavoura.Ativa)
             {
                 return NotFound(Constants.ERR_LAVOURA_NAO_ENCONTRADA);
             }

@@ -227,7 +227,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return NotFound(Constants.ERR_LAVOURAS_FAZENDA_NAO_ENCONTRADA);
             }
 
-            return Ok(fazenda.Lavouras.Select(l => new LavouraMinDto(l)));
+            return Ok(fazenda.Lavouras.Where(l => l.Ativa).Select(l => new LavouraMinDto(l)));
         }
 
         [HttpGet]
