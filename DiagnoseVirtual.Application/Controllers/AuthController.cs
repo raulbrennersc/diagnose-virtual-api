@@ -19,11 +19,12 @@ namespace DiagnoseVirtual.Application.Controllers
     public class AuthController : ControllerBase
     {
         private readonly UsuarioService _usuarioService;
-        private readonly PsqlContext _context = new PsqlContext();
+        private readonly PsqlContext _context;
         private readonly IConfiguration config;
 
-        public AuthController(IConfiguration config)
+        public AuthController(IConfiguration config, PsqlContext context)
         {
+            _context = context;
             this.config = config;
             _usuarioService = new UsuarioService(_context);
         }

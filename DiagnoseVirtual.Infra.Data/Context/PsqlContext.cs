@@ -18,14 +18,19 @@ namespace DiagnoseVirtual.Infra.Data.Context
         public DbSet<EtapaFazenda> EtapasFazenda { get; set; }
         public DbSet<EtapaLavoura> EtapasLavoura { get; set; }
 
+        public PsqlContext(DbContextOptions<PsqlContext> options) : base(options)
+        {
+
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder
-                    .UseLazyLoadingProxies()
-                    .UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=diagnosys;", x => x.UseNetTopologySuite());
-                    //.UseNpgsql("User ID=postgres;Password=notpostgres;Host=qipixel.cvwutkisxoxi.sa-east-1.rds.amazonaws.com;Port=5432;Database=diagnosys_demo;", x => x.UseNetTopologySuite());
+                //optionsBuilder
+                //    .UseLazyLoadingProxies()
+                //    .UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=diagnosys;", x => x.UseNetTopologySuite());
+                //    //.UseNpgsql("User ID=postgres;Password=notpostgres;Host=qipixel.cvwutkisxoxi.sa-east-1.rds.amazonaws.com;Port=5432;Database=diagnosys_demo;", x => x.UseNetTopologySuite());
             }
         }
 

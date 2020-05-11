@@ -38,12 +38,13 @@ namespace DiagnoseVirtual.Application.Controllers
         private readonly BaseService<LocalizacaoFazenda> _localizacaoService;
         private readonly BaseService<DadosFazenda> _dadosFazendaService;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly PsqlContext _context = new PsqlContext();
+        private readonly PsqlContext _context;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _config;
 
-        public FazendasController(IWebHostEnvironment hostingEnvironment, IHttpClientFactory httpClientFactory, IConfiguration config)
+        public FazendasController(IWebHostEnvironment hostingEnvironment, IHttpClientFactory httpClientFactory, IConfiguration config, PsqlContext context)
         {
+            _context = context;
             _hostingEnvironment = hostingEnvironment;
             _fazendaService = new BaseService<Fazenda>(_context);
             _usuarioService = new UsuarioService(_context);

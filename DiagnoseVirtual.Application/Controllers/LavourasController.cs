@@ -28,12 +28,13 @@ namespace DiagnoseVirtual.Application.Controllers
         private readonly BaseService<DadosLavoura> _dadosLavouraService;
         private readonly BaseService<Fazenda> _fazendaService;
         private readonly IWebHostEnvironment _hostingEnvironment;
-        private readonly PsqlContext _context = new PsqlContext();
+        private readonly PsqlContext _context;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _config;
 
-        public LavourasController(IWebHostEnvironment hostingEnvironment, IHttpClientFactory httpClientFactory, IConfiguration config)
+        public LavourasController(IWebHostEnvironment hostingEnvironment, IHttpClientFactory httpClientFactory, IConfiguration config, PsqlContext context)
         {
+            _context = context;
             _hostingEnvironment = hostingEnvironment;
             _lavouraService = new BaseService<Lavoura>(_context);
             _dadosLavouraService = new BaseService<DadosLavoura>(_context);

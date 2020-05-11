@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,10 +21,11 @@ namespace DiagnoseVirtual.Application.Controllers
     {
         private readonly BaseService<Estado> _estadoService;
         private readonly BaseService<Municipio> _municipioService;
-        private readonly PsqlContext _context = new PsqlContext();
+        private readonly PsqlContext _context;
 
-        public StaticController()
+        public StaticController(PsqlContext context, IConfiguration config)
         {
+            _context = context;
             _estadoService = new BaseService<Estado>(_context);
             _municipioService = new BaseService<Municipio>(_context);
         }
