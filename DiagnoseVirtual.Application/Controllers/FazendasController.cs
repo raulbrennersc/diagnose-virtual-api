@@ -371,14 +371,13 @@ namespace DiagnoseVirtual.Application.Controllers
                 try
                 {
                     _fazendaService.Put(fazendaBd);
-                    transaction.Commit();
-                    return Ok();
-                    //var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
-                    //if (req.IsSuccessStatusCode)
-                    //{
-                    //    return Ok();
-                    //}
-                    //throw new Exception("Erro ao cadastrar geometria.");
+                    var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+                    if (req.IsSuccessStatusCode)
+                    {
+                        transaction.Commit();
+                        return Ok();
+                    }
+                    throw new Exception("Erro ao cadastrar geometria.");
                 }
                 catch (Exception ex)
                 {
@@ -493,6 +492,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 try
                 {
                     _fazendaService.Put(fazendaBd);
+                    transaction.Commit();
                     var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
                     return Ok();
                 }
