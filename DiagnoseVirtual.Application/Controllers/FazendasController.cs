@@ -340,7 +340,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        public async Task<ActionResult> PostLocalizacaoGeoFazenda(Geometry demarcacao, int idFazenda)
+        public async Task<ActionResult> PostDemarcacaoFazenda(Geometry demarcacao, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (demarcacao == null || fazendaBd == null || fazendaBd.Concluida)
@@ -372,6 +372,8 @@ namespace DiagnoseVirtual.Application.Controllers
                 try
                 {
                     _fazendaService.Put(fazendaBd);
+                    transaction.Commit();
+                    return Ok();
                     var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
                     if (req.IsSuccessStatusCode)
                     {
