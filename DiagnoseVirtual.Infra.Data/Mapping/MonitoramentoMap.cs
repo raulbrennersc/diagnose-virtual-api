@@ -26,6 +26,10 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasColumnName("ativo")
                 .HasDefaultValue(true);
 
+            builder.Property(x => x.UrlPdi)
+                .HasColumnName("url_pdi")
+                .HasDefaultValue(true);
+
             //Relacoes
             builder.HasMany(x => x.Problemas)
             .WithOne(p => p.Monitoramento)

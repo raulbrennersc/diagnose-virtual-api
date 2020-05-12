@@ -32,6 +32,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .IsRequired()
                 .HasColumnName("ponto_geom");
 
+            builder.Property(x => x.Imagens)
+                .HasColumnName("imagens");
+
             //Relacoes
 
             //Indices

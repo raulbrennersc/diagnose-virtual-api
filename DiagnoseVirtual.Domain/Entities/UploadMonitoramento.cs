@@ -4,6 +4,6 @@ namespace DiagnoseVirtual.Domain.Entities
     {
         public virtual Monitoramento Monitoramento { get; set; }
         public string NomeArquivo { get; set; }
-        public string Url { get; set; }
+        public byte[] Arquivo { get; set; }
     }
 }
