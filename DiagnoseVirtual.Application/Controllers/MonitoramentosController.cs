@@ -66,6 +66,17 @@ namespace DiagnoseVirtual.Application.Controllers
             return Ok(result);
         }
 
+        [HttpGet("Fazendas")]
+        [ProducesResponseType(typeof(List<FazendaMinDto>), StatusCodes.Status200OK)]
+        public ActionResult GetFazendasMonitoramento()
+        {
+            var idUsuario = HttpContext.User.FindFirst("IdUsuario").Value;
+            var fazendas = _fazendaService.GetAll().Where(f => f.Ativa && f.Usuario.Id == int.Parse(idUsuario) && f.Lavouras.Any(l => l.Concluida))
+                .ToList().Select(f => new FazendaMinDto(f));
+
+            return Ok(fazendas);
+        }
+
         [HttpGet("{idMonitoramento}")]
         [ProducesResponseType(typeof(MonitoramentoDetailDto), StatusCodes.Status200OK)]
         public ActionResult Get(int idMonitoramento)
