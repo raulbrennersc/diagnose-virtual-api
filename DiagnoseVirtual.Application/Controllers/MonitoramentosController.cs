@@ -34,9 +34,6 @@ namespace DiagnoseVirtual.Application.Controllers
         private readonly IWebHostEnvironment _webHostingEnvironment;
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly IConfiguration _config;
-
-        // private readonly BaseService<LocalizacaoFazenda> _localizacaoService;
-        // private readonly BaseService<DadosFazenda> _dadosFazendaService;
         private readonly PsqlContext _context;
 
         public MonitoramentosController(IWebHostEnvironment hostingEnvironment, IHttpClientFactory httpClientFactory, IConfiguration config, PsqlContext context)
@@ -264,7 +261,7 @@ namespace DiagnoseVirtual.Application.Controllers
                     {
                         Monitoramento = monitoramento,
                         NomeArquivo = nomeArquivo,
-                        Url = filePath.Replace(basePath, "18.229.125.193"),
+                        //Url = filePath.Replace(basePath, "18.229.125.193"),
                     };
                     uploads.Add(upload);
                 }
@@ -287,26 +284,19 @@ namespace DiagnoseVirtual.Application.Controllers
                 || arquivosExistentes.Any(a => a == nomeArquivoModificado);
         }
 
-        [HttpGet("teste")]
+        [HttpPost("upload")]
         [ProducesResponseType(typeof(MonitoramentoDetailDto), StatusCodes.Status200OK)]
-        public async Task<ActionResult> Teste()
+        public async Task<IActionResult> Upload(IFormFile upload)
         {
-            var body = new List<PdiDto>
-            {
-                new PdiDto{
-                    usr = "app",
-                    pw = "pdi2020",
-                    layer = "fazenda",
-                    cod = 5.ToString(),
-                }
-            };
-            var jsonBody = JsonConvert.SerializeObject(body);
+            var memoryStream = new MemoryStream();
+            await upload.CopyToAsync(memoryStream);
+            memoryStream.Position = 0;
+            var bytes = memoryStream.ToArray();
+            var fileName = upload.FileName;
+            var download = File(bytes, "multipart/form-data", fileName);
 
-            var client = _httpClientFactory.CreateClient();
-            var url = _config.GetSection("AppSettings:UrlPdi").Value + "/query";
-            var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
 
-            return Ok();
+            return download;
         }
 
     }
