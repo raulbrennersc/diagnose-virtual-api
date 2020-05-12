@@ -7,6 +7,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public int Id { get; set; }
         public int IdFazenda { get; set; }
         public string Nome { get; set; }
+        public string NomeFazenda { get; set; }
         public int idEtapa { get; set; }
         public bool Concluida { get; set; }
 
@@ -16,6 +17,7 @@ namespace DiagnoseVirtual.Domain.Dtos
             IdFazenda = lavoura.Fazenda.Id;
             idEtapa = lavoura.Etapa.Id;
             Nome = lavoura.DadosLavoura.Nome;
+            NomeFazenda = lavoura.Fazenda.LocalizacaoFazenda.Nome;
             Concluida = lavoura.Concluida;
         }
     }

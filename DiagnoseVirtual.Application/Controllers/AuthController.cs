@@ -78,7 +78,7 @@ namespace DiagnoseVirtual.Application.Controllers
         [Authorize]
         public ActionResult AceitarTermo()
         {
-            var idUsuario = HttpContext.User.FindFirst("Id").Value;
+            var idUsuario = HttpContext.User.FindFirst("IdUsuario").Value;
             var usuario = _usuarioService.Get(int.Parse(idUsuario));
 
             if (!usuario.PrimeiroAcesso)
