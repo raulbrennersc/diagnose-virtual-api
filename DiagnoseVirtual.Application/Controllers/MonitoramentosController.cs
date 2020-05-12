@@ -57,8 +57,8 @@ namespace DiagnoseVirtual.Application.Controllers
         [ProducesResponseType(typeof(List<MonitoramentoToListDto>), StatusCodes.Status200OK)]
         public ActionResult Get()
         {
-            var idUsuario = HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-            var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == Int32.Parse(idUsuario)).ToList();
+            var idUsuario = HttpContext.User.FindFirst("Id").Value;
+            var fazendas = _fazendaService.GetAll().Where(f => f.Usuario.Id == int.Parse(idUsuario)).ToList();
 
             var result = new List<MonitoramentoToListDto>();
             foreach (var fazenda in fazendas)
