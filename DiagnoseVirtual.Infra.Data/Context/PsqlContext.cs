@@ -27,10 +27,10 @@ namespace DiagnoseVirtual.Infra.Data.Context
         {
             if (!optionsBuilder.IsConfigured)
             {
-                //optionsBuilder
-                //    .UseLazyLoadingProxies()
-                //    .UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=diagnosys;", x => x.UseNetTopologySuite());
-                //    //.UseNpgsql("User ID=postgres;Password=notpostgres;Host=qipixel.cvwutkisxoxi.sa-east-1.rds.amazonaws.com;Port=5432;Database=diagnosys_demo;", x => x.UseNetTopologySuite());
+                optionsBuilder
+                    .UseLazyLoadingProxies()
+                    .UseNpgsql("User ID=postgres;Password=postgres;Host=localhost;Port=5432;Database=diagnosys;", x => x.UseNetTopologySuite());
+                //.UseNpgsql("User ID=postgres;Password=notpostgres;Host=qipixel.cvwutkisxoxi.sa-east-1.rds.amazonaws.com;Port=5432;Database=diagnosys_demo;", x => x.UseNetTopologySuite());
             }
         }
 
