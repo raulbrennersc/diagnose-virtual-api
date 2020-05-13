@@ -77,17 +77,17 @@ namespace DiagnoseVirtual.Application.Controllers
             return Ok(fazendas);
         }
 
-        [HttpGet("Fazenda")]
+        [HttpGet("Fazenda/{idFazenda}")]
         [ProducesResponseType(typeof(MonitoramentoDetailDto), StatusCodes.Status200OK)]
-        public ActionResult GetFazenda(int idMonitoramento)
+        public ActionResult GetFazenda(int idFazenda)
         {
-            var monitoramento = _monitoramentoService.Get(idMonitoramento);
-            if (monitoramento == null)
+            var fazenda = _fazendaService.Get(idFazenda);
+            if (fazenda == null)
             {
                 return NotFound(Constants.ERR_MONITORAMENTO_NAO_ENCONTRADO);
             }
 
-            return Ok(new MonitoramentoDetailDto(monitoramento));
+            return Ok(new MonitoramentoDetailDto(fazenda));
         }
 
         [HttpGet("{idMonitoramento}")]

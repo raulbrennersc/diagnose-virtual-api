@@ -18,8 +18,8 @@ namespace DiagnoseVirtual.Domain.Dtos
         public List<ProblemaMonitoramentoDto> Problemas { get; set; }
         public List<UploadMonitoramentoDto> Uploads { get; set; }
         public Geometry DemarcacaoFazenda { get; set; }
-        public List<Geometry> DemarcacaoLavouras { get; set; }
-        public List<Geometry> DemarcacaoTalhoes { get; set; }
+        public List<Geometry> DemarcacoesLavoura { get; set; }
+        public List<Geometry> DemarcacoesTalhao { get; set; }
 
         public MonitoramentoDetailDto(Monitoramento monitoramento)
         {
@@ -30,14 +30,14 @@ namespace DiagnoseVirtual.Domain.Dtos
             Problemas = monitoramento.Problemas.Select(p => new ProblemaMonitoramentoDto(p)).ToList();
             Uploads = monitoramento.Uploads.Select(u => new UploadMonitoramentoDto(u)).ToList();
             DemarcacaoFazenda = monitoramento.Fazenda.Demarcacao;
-            DemarcacaoLavouras = monitoramento.Fazenda.Lavouras.Select(l => l.Demarcacao).ToList();
-            DemarcacaoTalhoes = new List<Geometry>();
+            DemarcacoesLavoura = monitoramento.Fazenda.Lavouras.Select(l => l.Demarcacao).ToList();
+            DemarcacoesTalhao = new List<Geometry>();
             var listasTalhoes = monitoramento.Fazenda.Lavouras.Select(l => l.Talhoes).ToList();
             foreach (var lista in listasTalhoes)
             {
                 foreach (var t in lista)
                 {
-                    DemarcacaoTalhoes.Add(t);
+                    DemarcacoesTalhao.Add(t);
                 }
             }
             UrlPdi = monitoramento.UrlPdi;
@@ -47,14 +47,14 @@ namespace DiagnoseVirtual.Domain.Dtos
         {
             DataImagemPdi = DateTime.Now;
             DemarcacaoFazenda = fazenda.Demarcacao;
-            DemarcacaoLavouras = fazenda.Lavouras.Select(l => l.Demarcacao).ToList();
-            DemarcacaoTalhoes = new List<Geometry>();
+            DemarcacoesLavoura = fazenda.Lavouras.Select(l => l.Demarcacao).ToList();
+            DemarcacoesTalhao = new List<Geometry>();
             var listasTalhoes = fazenda.Lavouras.Select(l => l.Talhoes).ToList();
             foreach (var lista in listasTalhoes)
             {
                 foreach (var t in lista)
                 {
-                    DemarcacaoTalhoes.Add(t);
+                    DemarcacoesTalhao.Add(t);
                 }
             }
             UrlPdi = "";
