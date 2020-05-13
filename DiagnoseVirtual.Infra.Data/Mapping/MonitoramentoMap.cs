@@ -22,6 +22,10 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .IsRequired()
                 .HasColumnName("data_monitoramento");
 
+            builder.Property(x => x.DataImagemPdi)
+                .IsRequired()
+                .HasColumnName("data_imagem_pdi");
+
             builder.Property(x => x.Ativo)
                 .HasColumnName("ativo")
                 .HasDefaultValue(true);

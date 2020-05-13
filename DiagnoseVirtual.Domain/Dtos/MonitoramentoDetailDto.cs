@@ -14,6 +14,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public string NomeFazenda { get; set; }
         public string UrlPdi { get; set; }
         public DateTime DataMonitoramento { get; set; }
+        public DateTime DataImagemPdi { get; set; }
         public List<ProblemaMonitoramentoDto> Problemas { get; set; }
         public List<UploadMonitoramentoDto> Uploads { get; set; }
         public Geometry DemarcacaoFazenda { get; set; }
@@ -40,6 +41,23 @@ namespace DiagnoseVirtual.Domain.Dtos
                 }
             }
             UrlPdi = monitoramento.UrlPdi;
+        }
+
+        public MonitoramentoDetailDto(Fazenda fazenda)
+        {
+            DataImagemPdi = DateTime.Now;
+            DemarcacaoFazenda = fazenda.Demarcacao;
+            DemarcacaoLavouras = fazenda.Lavouras.Select(l => l.Demarcacao).ToList();
+            DemarcacaoTalhoes = new List<Geometry>();
+            var listasTalhoes = fazenda.Lavouras.Select(l => l.Talhoes).ToList();
+            foreach (var lista in listasTalhoes)
+            {
+                foreach (var t in lista)
+                {
+                    DemarcacaoTalhoes.Add(t);
+                }
+            }
+            UrlPdi = "";
         }
     }
 }
