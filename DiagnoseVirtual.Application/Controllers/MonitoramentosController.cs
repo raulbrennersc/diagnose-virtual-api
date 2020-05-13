@@ -173,9 +173,10 @@ namespace DiagnoseVirtual.Application.Controllers
 
                     _monitoramentoService.Post(monitoramento);
                     var problemas = MontarProblemas(monitoramentoDto, monitoramento);
-                    var uploads = MontarUploads(monitoramentoDto, monitoramento);
+                    var uploads = monitoramentoDto.Uploads == null ? null :  MontarUploads(monitoramentoDto, monitoramento);
                     _problemaMonitoramentoService.Post(problemas);
-                    _uploadMonitoramentoService.Post(uploads);
+                    if(uploads != null)
+                        _uploadMonitoramentoService.Post(uploads);
                     transaction.Commit();
                     return Ok();
                 }
