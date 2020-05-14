@@ -496,7 +496,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 {
                     _fazendaService.Put(fazendaBd);
                     transaction.Commit();
-                    var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
+                    //var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
                     return Ok();
                 }
                 catch (Exception ex)
