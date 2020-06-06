@@ -331,7 +331,7 @@ namespace DiagnoseVirtual.Application.Controllers
             }
 
             var dadosLavouraBd = lavouraBd.DadosLavoura;
-
+            dadosLavouraBd.Lavoura.Fazenda = _fazendaService.Get(dadosLavoura.IdFazenda);
             dadosLavouraBd.Cultivar = dadosLavoura.Cultivar;
             dadosLavouraBd.EspacamentoHorizontal = dadosLavoura.EspacamentoHorizontal;
             dadosLavouraBd.EspacamentoVertical = dadosLavoura.EspacamentoVertical;

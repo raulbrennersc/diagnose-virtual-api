@@ -4,6 +4,7 @@ namespace DiagnoseVirtual.Domain.Dtos
 {
     public class DadosLavouraDto
     {
+        public int IdFazenda { get; set; }
         public string Nome { get; set; }
         public string MesAnoPlantio { get; set; }
         public string Cultivar { get; set; }
@@ -16,6 +17,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public DadosLavouraDto() { }
         public DadosLavouraDto(DadosLavoura dados)
         {
+            IdFazenda = dados.Lavoura.Fazenda.Id;
             Nome = dados.Nome;
             MesAnoPlantio = dados.MesAnoPlantio;
             AreaTotal = dados.AreaTotal;
