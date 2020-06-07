@@ -25,7 +25,6 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasDefaultValue(true)
                 .HasColumnName("ativa");
             builder.Property(x => x.IdPdi)
-                .HasDefaultValue(true)
                 .HasColumnName("id_pdi");
 
             //Relacoes
