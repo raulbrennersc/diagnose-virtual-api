@@ -20,6 +20,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
@@ -206,7 +208,7 @@ namespace DiagnoseVirtual.Application.Controllers
         [HttpGet]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
         [ProducesResponseType(typeof(Geometry), StatusCodes.Status200OK)]
-        public ActionResult GetLocalizacaoGeoFazenda(int idFazenda)
+        public ActionResult GetDemarcacaoFazenda(int idFazenda)
         {
             var fazenda = _fazendaService.Get(idFazenda);
             if (fazenda == null || fazenda.Demarcacao == null)
@@ -340,7 +342,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPost]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        public async Task<ActionResult> PostDemarcacaoFazenda(Geometry demarcacao, int idFazenda)
+        public ActionResult PostDemarcacaoFazenda(Geometry demarcacao, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (demarcacao == null || fazendaBd == null || fazendaBd.Concluida)
@@ -352,35 +354,21 @@ namespace DiagnoseVirtual.Application.Controllers
             fazendaBd.Etapa = etapaConclusao;
             fazendaBd.Demarcacao = demarcacao;
 
-            var body = new List<PdiDto>
+            var objReq = PdiHttpReqHelper.PdiInsertReq(fazendaBd.Demarcacao);
+            var respostaPdi = HttpRequestHelper.MakeJsonRequest<PdiResponseDto>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/insert", objReq);
+            if (respostaPdi != null)
             {
-                new PdiDto{
-                    usr = "app",
-                    pw = "pdi2020",
-                    layer = "fazenda",
-                    cod = fazendaBd.Id.ToString(),
-                    geometria = new GeometriaDtoCorreto(fazendaBd.Demarcacao),
-                }
-            };
-            var jsonBody = JsonConvert.SerializeObject(body);
-
-            var client = _httpClientFactory.CreateClient();
-            var url = _config.GetSection("AppSettings:UrlPdi").Value + "/insert";
+                fazendaBd.IdPdi = respostaPdi.Feature_Id;
+            }
 
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
+
                     _fazendaService.Put(fazendaBd);
                     transaction.Commit();
                     return Ok();
-                    var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
-                    if (req.IsSuccessStatusCode)
-                    {
-                        transaction.Commit();
-                        return Ok();
-                    }
-                    throw new Exception("Erro ao cadastrar geometria.");
                 }
                 catch (Exception ex)
                 {
@@ -465,7 +453,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
         [HttpPut]
         [Route("LocalizacaoGeoFazenda/{idFazenda}")]
-        public async Task<ActionResult> PutLocalizacaoGeoFazenda(Geometry demarcacao, int idFazenda)
+        public ActionResult PutDemarcacaoFazenda(Geometry demarcacao, int idFazenda)
         {
             var fazendaBd = _fazendaService.Get(idFazenda);
             if (demarcacao == null || fazendaBd == null)
@@ -475,20 +463,13 @@ namespace DiagnoseVirtual.Application.Controllers
 
             fazendaBd.Demarcacao = demarcacao;
 
-            var body = new List<PdiDto>
-            {
-                new PdiDto{
-                    usr = "app",
-                    pw = "pdi2020",
-                    layer = "fazenda",
-                    cod = 6.ToString(),
-                    geometria = new GeometriaDtoCorreto(fazendaBd.Demarcacao),
-                }
-            };
-            var jsonBody = JsonConvert.SerializeObject(body);
+            var objReq = PdiHttpReqHelper.PdiInsertReq(fazendaBd.Demarcacao);
 
-            var client = _httpClientFactory.CreateClient();
-            var url = _config.GetSection("AppSettings:UrlPdi").Value + "/insert";
+            var respostaPdi = HttpRequestHelper.MakeJsonRequest<PdiResponseDto>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/insert", objReq);
+            if (respostaPdi != null)
+            {
+                fazendaBd.IdPdi = respostaPdi.Feature_Id;
+            }
 
             using (var transaction = _context.Database.BeginTransaction())
             {
@@ -496,7 +477,6 @@ namespace DiagnoseVirtual.Application.Controllers
                 {
                     _fazendaService.Put(fazendaBd);
                     transaction.Commit();
-                    //var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
                     return Ok();
                 }
                 catch (Exception ex)

@@ -14,6 +14,7 @@ namespace DiagnoseVirtual.Domain.Dtos
         public Geometry Demarcacao { get; set; }
         public bool Ativa { get; set; }
         public bool Concluida { get; set; }
+        public string IdPdi { get; set; }
 
         public FazendaDto() { }
         public FazendaDto(Fazenda fazenda)
@@ -25,6 +26,7 @@ namespace DiagnoseVirtual.Domain.Dtos
             Demarcacao = fazenda.Demarcacao;
             Ativa = fazenda.Ativa;
             Concluida = fazenda.Concluida;
+            IdPdi = fazenda.IdPdi;
         }
     }
 }

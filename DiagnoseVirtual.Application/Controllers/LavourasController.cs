@@ -281,36 +281,13 @@ namespace DiagnoseVirtual.Application.Controllers
                 geometriaPdi = geometriaPdi.Union(talhao.Geometry);
             }
 
-
-            var body = new List<PdiDto>
-            {
-                new PdiDto{
-                    usr = "app",
-                    pw = "pdi2020",
-                    layer = "fazenda",
-                    cod = 6.ToString(),
-                    geometria = new GeometriaDtoCorreto(geometriaPdi),
-                }
-            };
-
-            var jsonBody = JsonConvert.SerializeObject(body);
-
-            var client = _httpClientFactory.CreateClient();
-            var url = _config.GetSection("AppSettings:UrlPdi").Value + "/insert";
-
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
                     _lavouraService.Put(lavouraBd);
                     transaction.Commit();
-                    //var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
-                    //if (req.IsSuccessStatusCode)
-                    //{
-                    //}
-                        return Ok();
-
-                    throw new Exception("Erro ao cadastrar geometrias.");
+                    return Ok();
                 }
                 catch (Exception ex)
                 {
@@ -401,28 +378,11 @@ namespace DiagnoseVirtual.Application.Controllers
             {
                 geometriaPdi = geometriaPdi.Union(talhao.Geometry);
             }
-
-            var body = new List<PdiDto>
-            {
-                new PdiDto{
-                    usr = "app",
-                    pw = "pdi2020",
-                    layer = "fazenda",
-                    cod = 6.ToString(),
-                    geometria = new GeometriaDtoCorreto(geometriaPdi),
-                }
-            };
-
-            var jsonBody = JsonConvert.SerializeObject(body);
-
-            var client = _httpClientFactory.CreateClient();
-            var url = _config.GetSection("AppSettings:UrlPdi").Value + "/insert";
-
+            
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    //var req = await client.PostAsync(url, new StringContent(jsonBody, Encoding.UTF8, "application/json"));
                     transaction.Commit();
                     return Ok();
                 }

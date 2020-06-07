@@ -47,9 +47,9 @@ namespace DiagnoseVirtual.Domain.Dtos
         {
             DataImagemPdi = DateTime.Now;
             DemarcacaoFazenda = fazenda.Demarcacao;
-            DemarcacoesLavoura = fazenda.Lavouras.Select(l => l.Demarcacao).ToList();
+            DemarcacoesLavoura = fazenda.Lavouras.Where(l => l.Ativa).Select(l => l.Demarcacao).ToList();
             DemarcacoesTalhao = new List<Geometry>();
-            var listasTalhoes = fazenda.Lavouras.Select(l => l.Talhoes).ToList();
+            var listasTalhoes = fazenda.Lavouras.Where(l => l.Ativa).Select(l => l.Talhoes).ToList();
             foreach (var lista in listasTalhoes)
             {
                 foreach (var t in lista)

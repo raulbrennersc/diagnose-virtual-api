@@ -1,3 +1,4 @@
+using DiagnoseVirtual.Application.Helpers;
 using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Infra.Data.Context;
@@ -15,6 +16,8 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Formatting;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -87,7 +90,24 @@ namespace DiagnoseVirtual.Application.Controllers
                 return NotFound(Constants.ERR_MONITORAMENTO_NAO_ENCONTRADO);
             }
 
-            return Ok(new MonitoramentoDetailDto(fazenda));
+            var urlpdi = "";
+            if (!string.IsNullOrEmpty(fazenda.IdPdi))
+            {
+                var responsePdi = (List<PdiQueryDto>)HttpRequestHelper.MakeJsonRequest<List<PdiQueryDto>>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/query", PdiHttpReqHelper.PdiQueryReq(fazenda.IdPdi));
+                if((responsePdi?.Any() ?? false ) && (responsePdi.FirstOrDefault().Imgs?.Any() ?? false) && (responsePdi.FirstOrDefault().Imgs.FirstOrDefault()?.Images.Any() ?? false) )
+                {
+                    var images = responsePdi.FirstOrDefault().Imgs.FirstOrDefault().Images;
+                    urlpdi = images.FirstOrDefault(i => i.EndsWith(".png") && i.Contains("ndvi") );
+                }
+            }
+            
+
+            var response = new MonitoramentoDetailDto(fazenda)
+            {
+                UrlPdi = urlpdi
+            };
+
+            return Ok(response);
         }
 
         [HttpGet("{idMonitoramento}")]
