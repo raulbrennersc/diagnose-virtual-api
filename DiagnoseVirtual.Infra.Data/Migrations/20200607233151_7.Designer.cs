@@ -11,8 +11,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DiagnoseVirtual.Infra.Data.Migrations
 {
     [DbContext(typeof(PsqlContext))]
-    [Migration("20200131000751_3")]
-    partial class _3
+    [Migration("20200607233151_7")]
+    partial class _7
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -22,6 +22,26 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn)
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Cultura", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnName("nome")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("cultura");
+                });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.DadosFazenda", b =>
                 {
@@ -35,14 +55,11 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnName("area_total")
                         .HasColumnType("double precision");
 
-                    b.Property<string>("Cultura")
-                        .IsRequired()
-                        .HasColumnName("cultura")
-                        .HasColumnType("character varying(100)")
-                        .HasMaxLength(100);
-
                     b.Property<int>("QuantidadeLavouras")
                         .HasColumnName("quantidade_lavouras")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("id_cultura")
                         .HasColumnType("integer");
 
                     b.Property<int?>("id_fazenda")
@@ -52,6 +69,8 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
 
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("id_cultura");
 
                     b.HasIndex("id_fazenda")
                         .IsUnique();
@@ -66,6 +85,10 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnName("id")
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<double>("AreaTotal")
+                        .HasColumnName("area_total")
+                        .HasColumnType("double precision");
 
                     b.Property<string>("Cultivar")
                         .IsRequired()
@@ -117,6 +140,76 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     b.ToTable("dados_lavoura");
                 });
 
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Estado", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnName("nome")
+                        .HasColumnType("character varying(30)")
+                        .HasMaxLength(30);
+
+                    b.Property<string>("Sigla")
+                        .IsRequired()
+                        .HasColumnName("sigla")
+                        .HasColumnType("character varying(2)")
+                        .HasMaxLength(2);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("estado");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.EtapaFazenda", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnName("nome")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("etapa_fazenda");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.EtapaLavoura", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnName("nome")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.ToTable("etapa_lavoura");
+                });
+
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Fazenda", b =>
                 {
                     b.Property<int>("Id")
@@ -141,6 +234,13 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnName("demarcacao_geom")
                         .HasColumnType("geometry");
 
+                    b.Property<string>("IdPdi")
+                        .HasColumnName("id_pdi")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("id_etapa")
+                        .HasColumnType("integer");
+
                     b.Property<int?>("id_usuario")
                         .HasColumnType("integer");
 
@@ -148,6 +248,8 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
 
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("id_etapa");
 
                     b.HasIndex("id_usuario");
 
@@ -162,6 +264,12 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
+                    b.Property<bool>("Ativa")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ativa")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
                     b.Property<bool>("Concluida")
                         .ValueGeneratedOnAdd()
                         .HasColumnName("concluida")
@@ -172,6 +280,14 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnName("demarcacao_geom")
                         .HasColumnType("geometry");
 
+                    b.Property<Geometry[]>("Talhoes")
+                        .HasColumnName("talhoes")
+                        .HasColumnType("geometry[]");
+
+                    b.Property<int?>("id_etapa")
+                        .IsRequired()
+                        .HasColumnType("integer");
+
                     b.Property<int?>("id_fazenda")
                         .HasColumnType("integer");
 
@@ -179,6 +295,8 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
 
                     b.HasIndex("Id")
                         .IsUnique();
+
+                    b.HasIndex("id_etapa");
 
                     b.HasIndex("id_fazenda");
 
@@ -193,29 +311,17 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<string>("Contato")
+                    b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnName("contato")
+                        .HasColumnName("email")
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
-
-                    b.Property<string>("Estado")
-                        .IsRequired()
-                        .HasColumnName("estado")
-                        .HasColumnType("character varying(20)")
-                        .HasMaxLength(20);
 
                     b.Property<string>("Gerente")
                         .IsRequired()
                         .HasColumnName("gerente")
                         .HasColumnType("character varying(30)")
                         .HasMaxLength(30);
-
-                    b.Property<string>("Municipio")
-                        .IsRequired()
-                        .HasColumnName("municipio")
-                        .HasColumnType("character varying(50)")
-                        .HasMaxLength(50);
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -235,7 +341,16 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("character varying(50)")
                         .HasMaxLength(50);
 
+                    b.Property<string>("Telefone")
+                        .IsRequired()
+                        .HasColumnName("telefone")
+                        .HasColumnType("character varying(20)")
+                        .HasMaxLength(20);
+
                     b.Property<int?>("id_fazenda")
+                        .HasColumnType("integer");
+
+                    b.Property<int?>("id_municipio")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -246,10 +361,12 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     b.HasIndex("id_fazenda")
                         .IsUnique();
 
+                    b.HasIndex("id_municipio");
+
                     b.ToTable("localizacao_fazenda");
                 });
 
-            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Talhao", b =>
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Monitoramento", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -257,12 +374,27 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnType("integer")
                         .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
-                    b.Property<Geometry>("Geometria")
-                        .IsRequired()
-                        .HasColumnName("geometria_geom")
-                        .HasColumnType("geometry");
+                    b.Property<bool>("Ativo")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("ativo")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
 
-                    b.Property<int?>("id_lavoura")
+                    b.Property<DateTime>("DataImagemPdi")
+                        .HasColumnName("data_imagem_pdi")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<DateTime>("DataMonitoramento")
+                        .HasColumnName("data_monitoramento")
+                        .HasColumnType("timestamp without time zone");
+
+                    b.Property<string>("UrlPdi")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("url_pdi")
+                        .HasColumnType("text")
+                        .HasDefaultValue("True");
+
+                    b.Property<int?>("id_fazenda")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -270,9 +402,113 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     b.HasIndex("Id")
                         .IsUnique();
 
-                    b.HasIndex("id_lavoura");
+                    b.HasIndex("id_fazenda");
 
-                    b.ToTable("talhao");
+                    b.ToTable("monitoramento");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Municipio", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<int>("CodigoIbge")
+                        .HasColumnName("codigo_ibge")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasColumnName("nome")
+                        .HasColumnType("text");
+
+                    b.Property<int?>("id_estado")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("id_estado");
+
+                    b.ToTable("municipio");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.ProblemaMonitoramento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<string>("Descricao")
+                        .IsRequired()
+                        .HasColumnName("descricao")
+                        .HasColumnType("character varying(140)")
+                        .HasMaxLength(140);
+
+                    b.Property<byte[][]>("Imagens")
+                        .HasColumnName("imagens")
+                        .HasColumnType("bytea[]");
+
+                    b.Property<Geometry>("Ponto")
+                        .IsRequired()
+                        .HasColumnName("ponto_geom")
+                        .HasColumnType("geometry");
+
+                    b.Property<string>("Recomendacao")
+                        .IsRequired()
+                        .HasColumnName("recomendacao")
+                        .HasColumnType("character varying(140)")
+                        .HasMaxLength(140);
+
+                    b.Property<int?>("id_monitoramento")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("id_monitoramento");
+
+                    b.ToTable("problema_monitoramento");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.UploadMonitoramento", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("id")
+                        .HasColumnType("integer")
+                        .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
+
+                    b.Property<byte[]>("Arquivo")
+                        .IsRequired()
+                        .HasColumnName("arquivo")
+                        .HasColumnType("bytea");
+
+                    b.Property<string>("NomeArquivo")
+                        .IsRequired()
+                        .HasColumnName("nome_arquivo")
+                        .HasColumnType("character varying(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<int?>("id_monitoramento")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Id")
+                        .IsUnique();
+
+                    b.HasIndex("id_monitoramento");
+
+                    b.ToTable("upload_monitoramento");
                 });
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Usuario", b =>
@@ -317,6 +553,12 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                         .HasColumnName("password_salt")
                         .HasColumnType("bytea");
 
+                    b.Property<bool>("PrimeiroAcesso")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnName("primeiro_acesso")
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true);
+
                     b.HasKey("Id");
 
                     b.HasIndex("Cpf")
@@ -333,6 +575,10 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.DadosFazenda", b =>
                 {
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.Cultura", "Cultura")
+                        .WithMany()
+                        .HasForeignKey("id_cultura");
+
                     b.HasOne("DiagnoseVirtual.Domain.Entities.Fazenda", "Fazenda")
                         .WithOne("DadosFazenda")
                         .HasForeignKey("DiagnoseVirtual.Domain.Entities.DadosFazenda", "id_fazenda");
@@ -347,6 +593,10 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Fazenda", b =>
                 {
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.EtapaFazenda", "Etapa")
+                        .WithMany()
+                        .HasForeignKey("id_etapa");
+
                     b.HasOne("DiagnoseVirtual.Domain.Entities.Usuario", "Usuario")
                         .WithMany("Fazendas")
                         .HasForeignKey("id_usuario");
@@ -354,6 +604,12 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
 
             modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Lavoura", b =>
                 {
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.EtapaLavoura", "Etapa")
+                        .WithMany()
+                        .HasForeignKey("id_etapa")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("DiagnoseVirtual.Domain.Entities.Fazenda", "Fazenda")
                         .WithMany("Lavouras")
                         .HasForeignKey("id_fazenda");
@@ -364,13 +620,38 @@ namespace DiagnoseVirtual.Infra.Data.Migrations
                     b.HasOne("DiagnoseVirtual.Domain.Entities.Fazenda", "Fazenda")
                         .WithOne("LocalizacaoFazenda")
                         .HasForeignKey("DiagnoseVirtual.Domain.Entities.LocalizacaoFazenda", "id_fazenda");
+
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.Municipio", "Municipio")
+                        .WithMany()
+                        .HasForeignKey("id_municipio");
                 });
 
-            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Talhao", b =>
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Monitoramento", b =>
                 {
-                    b.HasOne("DiagnoseVirtual.Domain.Entities.Lavoura", "Lavoura")
-                        .WithMany("Talhoes")
-                        .HasForeignKey("id_lavoura");
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.Fazenda", "Fazenda")
+                        .WithMany("Monitoramentos")
+                        .HasForeignKey("id_fazenda");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.Municipio", b =>
+                {
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.Estado", "Estado")
+                        .WithMany("Municipios")
+                        .HasForeignKey("id_estado");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.ProblemaMonitoramento", b =>
+                {
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.Monitoramento", "Monitoramento")
+                        .WithMany("Problemas")
+                        .HasForeignKey("id_monitoramento");
+                });
+
+            modelBuilder.Entity("DiagnoseVirtual.Domain.Entities.UploadMonitoramento", b =>
+                {
+                    b.HasOne("DiagnoseVirtual.Domain.Entities.Monitoramento", "Monitoramento")
+                        .WithMany("Uploads")
+                        .HasForeignKey("id_monitoramento");
                 });
 #pragma warning restore 612, 618
         }

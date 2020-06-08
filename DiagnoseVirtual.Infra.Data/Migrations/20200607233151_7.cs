@@ -2,32 +2,32 @@
 
 namespace DiagnoseVirtual.Infra.Data.Migrations
 {
-    public partial class _3 : Migration
+    public partial class _7 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "mes_ano_plantio",
+                name: "id_pdi",
                 schema: "diagnose_virtual",
-                table: "dados_lavoura",
-                maxLength: 20,
-                nullable: false,
+                table: "fazenda",
+                nullable: true,
                 oldClrType: typeof(string),
-                oldType: "character varying(7)",
-                oldMaxLength: 7);
+                oldType: "text",
+                oldNullable: true,
+                oldDefaultValue: "True");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "mes_ano_plantio",
+                name: "id_pdi",
                 schema: "diagnose_virtual",
-                table: "dados_lavoura",
-                type: "character varying(7)",
-                maxLength: 7,
-                nullable: false,
+                table: "fazenda",
+                type: "text",
+                nullable: true,
+                defaultValue: "True",
                 oldClrType: typeof(string),
-                oldMaxLength: 20);
+                oldNullable: true);
         }
     }
 }

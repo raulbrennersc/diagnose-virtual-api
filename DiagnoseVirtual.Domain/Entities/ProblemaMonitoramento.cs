@@ -1,4 +1,3 @@
-using System;
 using NetTopologySuite.Geometries;
 
 namespace DiagnoseVirtual.Domain.Entities
@@ -9,5 +8,6 @@ namespace DiagnoseVirtual.Domain.Entities
         public Geometry Ponto { get; set; }
         public string Descricao { get; set; }
         public string Recomendacao { get; set; }
+        public byte[][] Imagens { get; set; }
     }
 }

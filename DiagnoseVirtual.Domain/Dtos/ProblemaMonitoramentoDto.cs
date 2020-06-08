@@ -1,4 +1,5 @@
 using DiagnoseVirtual.Domain.Entities;
+using NetTopologySuite.Geometries;
 
 namespace DiagnoseVirtual.Domain.Dtos
 {
@@ -6,15 +7,16 @@ namespace DiagnoseVirtual.Domain.Dtos
     {
         public string Descricao { get; set; }
         public string Recomendacao { get; set; }
-        public GeometriaDto Ponto { get; set; }
+        public Geometry Ponto { get; set; }
+        public string Imagens { get; set; }
 
-        public ProblemaMonitoramentoDto(){}
+        public ProblemaMonitoramentoDto() { }
 
         public ProblemaMonitoramentoDto(ProblemaMonitoramento problema)
         {
             Descricao = problema.Descricao;
             Recomendacao = problema.Recomendacao;
-            Ponto = new GeometriaDto(problema.Ponto);
+            Ponto = problema.Ponto;
         }
     }
 }

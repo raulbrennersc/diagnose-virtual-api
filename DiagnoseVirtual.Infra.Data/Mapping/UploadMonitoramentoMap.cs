@@ -20,16 +20,15 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
 
             builder.Property(x => x.NomeArquivo)
                 .IsRequired()
-                .HasMaxLength(25)
+                .HasMaxLength(50)
                 .HasColumnName("nome_arquivo");
 
-            builder.Property(x => x.Url)
+            builder.Property(x => x.Arquivo)
                 .IsRequired()
-                .HasMaxLength(100)
-                .HasColumnName("url");
+                .HasColumnName("arquivo");
 
             //Relacoes
-            
+
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();
         }

@@ -12,13 +12,15 @@ namespace DiagnoseVirtual.Infra.Data.Context
         public DbSet<DadosLavoura> DadosLavouras { get; set; }
         public DbSet<Lavoura> Lavouras { get; set; }
         public DbSet<LocalizacaoFazenda> LocalizacaoFazendas { get; set; }
+        public DbSet<Estado> Estados { get; set; }
+        public DbSet<Municipio> Municipios { get; set; }
+        public DbSet<Cultura> Culturas { get; set; }
+        public DbSet<EtapaFazenda> EtapasFazenda { get; set; }
+        public DbSet<EtapaLavoura> EtapasLavoura { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public PsqlContext(DbContextOptions<PsqlContext> options) : base(options)
         {
-            if (!optionsBuilder.IsConfigured)
-                optionsBuilder
-                    .UseLazyLoadingProxies()
-                    .UseNpgsql("User ID=docker;Password=docker;Host=localhost;Port=5432;Database=qipixel_ark;", x => x.UseNetTopologySuite());
+
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -34,10 +36,14 @@ namespace DiagnoseVirtual.Infra.Data.Context
             modelBuilder.Entity<LocalizacaoFazenda>(new LocalizacaoFazendaMap().Configure);
             modelBuilder.Entity<Lavoura>(new LavouraMap().Configure);
             modelBuilder.Entity<DadosLavoura>(new DadosLavouraMap().Configure);
-            modelBuilder.Entity<Talhao>(new TalhaoMap().Configure);
             modelBuilder.Entity<Monitoramento>(new MonitoramentoMap().Configure);
             modelBuilder.Entity<ProblemaMonitoramento>(new ProblemaMonitoramentoMap().Configure);
             modelBuilder.Entity<UploadMonitoramento>(new UploadMonitoramentoMap().Configure);
+            modelBuilder.Entity<Estado>(new EstadoMap().Configure);
+            modelBuilder.Entity<Municipio>(new MunicipioMap().Configure);
+            modelBuilder.Entity<Cultura>(new CulturaMap().Configure);
+            modelBuilder.Entity<EtapaFazenda>(new EtapaFazendaMap().Configure);
+            modelBuilder.Entity<EtapaLavoura>(new EtapaLavouraMap().Configure);
         }
     }
 }

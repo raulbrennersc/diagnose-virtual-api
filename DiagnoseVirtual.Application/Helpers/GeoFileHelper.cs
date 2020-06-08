@@ -53,8 +53,8 @@ namespace DiagnoseVirtual.Application.Helpers
 
             var factory = NTSGeometries.Geometry.DefaultFactory;
             var NTSPolygons = polygons
-                .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c.Latitude, c.Longitude)).ToArray())).ToList();
-            var geometrias = NTSPolygons.Select(p => (NTSGeometries.Geometry)factory.CreateGeometry(p)).ToList();
+                .Select(g => factory.CreatePolygon(g.Coordinates.Select(c => new Coordinate(c.Longitude, c.Latitude)).ToArray())).ToList();
+            var geometrias = NTSPolygons.Select(p => factory.CreateGeometry(p)).ToList();
             return geometrias;
         }
 

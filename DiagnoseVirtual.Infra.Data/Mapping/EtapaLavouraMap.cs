@@ -1,25 +1,28 @@
 ﻿using DiagnoseVirtual.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace DiagnoseVirtual.Infra.Data.Mapping
 {
-    public class TalhaoMap : IEntityTypeConfiguration<Talhao>
+    public class EtapaLavouraMap : IEntityTypeConfiguration<EtapaLavoura>
     {
-        public void Configure(EntityTypeBuilder<Talhao> builder)
+        public void Configure(EntityTypeBuilder<EtapaLavoura> builder)
         {
             //Tabela
-            builder.ToTable("talhao");
+            builder.ToTable("etapa_lavoura");
             builder.HasKey(x => x.Id);
 
             //Proriedades
             builder.Property(x => x.Id)
-                .IsRequired()
                 .HasColumnName("id")
-                .ValueGeneratedOnAdd();
-            builder.Property(x => x.Geometria)
                 .IsRequired()
-                .HasColumnName("geometria_geom");
+                .ValueGeneratedOnAdd();
+            builder.Property(x => x.Nome)
+                .HasColumnName("nome")
+                .IsRequired();
 
             //Relacoes
 

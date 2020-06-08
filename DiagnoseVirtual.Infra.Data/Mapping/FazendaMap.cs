@@ -14,7 +14,6 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
 
             //Proriedades
             builder.Property(x => x.Id)
-                .IsRequired()
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Demarcacao)
@@ -25,6 +24,8 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             builder.Property(x => x.Ativa)
                 .HasDefaultValue(true)
                 .HasColumnName("ativa");
+            builder.Property(x => x.IdPdi)
+                .HasColumnName("id_pdi");
 
             //Relacoes
             builder.HasOne(x => x.LocalizacaoFazenda)
@@ -39,6 +40,9 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             builder.HasMany(x => x.Monitoramentos)
                 .WithOne(m => m.Fazenda)
                 .HasForeignKey("id_fazenda");
+            builder.HasOne(x => x.Etapa)
+                .WithMany()
+                .HasForeignKey("id_etapa");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();

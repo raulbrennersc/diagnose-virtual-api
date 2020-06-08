@@ -39,10 +39,10 @@
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "publish release Nano",
+            "label": "publish release",
             "command": "dotnet",
             "type":"process",
-            "args" : ["publish", "--configuration", "Release", "--output", "./publish"],
+            "args" : ["publish", "--configuration", "Debug", "--output", "./publish"],
             "problemMatcher": "$msCompile"
         },
     ]

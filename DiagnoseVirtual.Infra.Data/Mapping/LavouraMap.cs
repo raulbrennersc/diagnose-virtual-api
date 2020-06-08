@@ -22,14 +22,20 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             builder.Property(x => x.Concluida)
                 .HasColumnName("concluida")
                 .HasDefaultValue(false);
+            builder.Property(x => x.Ativa)
+                .HasColumnName("ativa")
+                .HasDefaultValue(true);
+            builder.Property(x => x.Talhoes)
+                .HasColumnName("talhoes"); ;
 
             //Relacoes
             builder.HasOne(x => x.DadosLavoura)
                 .WithOne(d => d.Lavoura)
                 .HasForeignKey<DadosLavoura>("id_lavoura");
-            builder.HasMany(x => x.Talhoes)
-                .WithOne(t => t.Lavoura)
-                .HasForeignKey("id_lavoura");
+            builder.HasOne(x => x.Etapa)
+                .WithMany()
+                .HasForeignKey("id_etapa")
+                .IsRequired();
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();

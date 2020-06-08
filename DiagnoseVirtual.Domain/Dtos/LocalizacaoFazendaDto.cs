@@ -5,22 +5,28 @@ namespace DiagnoseVirtual.Domain.Dtos
     public class LocalizacaoFazendaDto
     {
         public string Nome { get; set; }
-        public string Estado { get; set; }
-        public string Municipio { get; set; }
+        public int IdMunicipio { get; set; }
+        public int IdEstado { get; set; }
+        public string NomeMunicipio { get; set; }
+        public string NomeEstado { get; set; }
         public string Proprietario { get; set; }
         public string Gerente { get; set; }
-        public string Contato { get; set; }
+        public string Email { get; set; }
+        public string Telefone { get; set; }
         public string PontoReferencia { get; set; }
 
         public LocalizacaoFazendaDto() { }
         public LocalizacaoFazendaDto(LocalizacaoFazenda localizacao)
         {
             Nome = localizacao.Nome;
-            Estado = localizacao.Estado;
-            Municipio = localizacao.Municipio;
+            IdMunicipio = localizacao.Municipio?.Id ?? 0;
+            IdEstado = localizacao.Municipio?.Estado.Id ?? 0;
+            NomeMunicipio = localizacao.Municipio?.Nome;
+            NomeEstado = localizacao.Municipio?.Estado.Nome;
             Proprietario = localizacao.Proprietario;
             Gerente = localizacao.Gerente;
-            Contato = localizacao.Contato;
+            Email = localizacao.Email;
+            Telefone = localizacao.Telefone;
             PontoReferencia = localizacao.PontoReferencia;
         }
     }
