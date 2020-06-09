@@ -1,4 +1,5 @@
-﻿using DiagnoseVirtual.Domain.Dtos;
+﻿using DiagnoseVirtual.Application.Helpers;
+using DiagnoseVirtual.Domain.Dtos;
 using DiagnoseVirtual.Domain.Entities;
 using DiagnoseVirtual.Domain.Enums;
 using DiagnoseVirtual.Infra.Data.Context;
@@ -247,6 +248,14 @@ namespace DiagnoseVirtual.Application.Controllers
             lavouraBd.Etapa = etapaDemarcacao;
             lavouraBd.Demarcacao = geometriaDemarcacao;
 
+            var objReq = PdiHttpReqHelper.PdiTalhaoInsertReq(lavouraBd.Demarcacao, lavouraBd.Fazenda.IdPdi);
+
+            var respostaPdi = HttpRequestHelper.MakeJsonRequest<PdiResponseDto>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/insert", objReq);
+            if (respostaPdi != null)
+            {
+                lavouraBd.IdPdi = respostaPdi.Feature_Id;
+            }
+
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
@@ -345,6 +354,13 @@ namespace DiagnoseVirtual.Application.Controllers
             }
 
             lavouraBd.Demarcacao = geometriaDemarcacao;
+            var objReq = PdiHttpReqHelper.PdiTalhaoInsertReq(lavouraBd.Demarcacao, lavouraBd.Fazenda.IdPdi);
+
+            var respostaPdi = HttpRequestHelper.MakeJsonRequest<PdiResponseDto>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/insert", objReq);
+            if (respostaPdi != null)
+            {
+                lavouraBd.IdPdi = respostaPdi.Feature_Id;
+            }
 
             using (var transaction = _context.Database.BeginTransaction())
             {

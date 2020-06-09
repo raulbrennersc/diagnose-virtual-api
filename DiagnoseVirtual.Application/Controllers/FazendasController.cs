@@ -354,7 +354,7 @@ namespace DiagnoseVirtual.Application.Controllers
             fazendaBd.Etapa = etapaConclusao;
             fazendaBd.Demarcacao = demarcacao;
 
-            var objReq = PdiHttpReqHelper.PdiInsertReq(fazendaBd.Demarcacao);
+            var objReq = PdiHttpReqHelper.PdiFazendaInsertReq(fazendaBd.Demarcacao);
             var respostaPdi = HttpRequestHelper.MakeJsonRequest<PdiResponseDto>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/insert", objReq);
             if (respostaPdi != null)
             {
@@ -463,7 +463,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             fazendaBd.Demarcacao = demarcacao;
 
-            var objReq = PdiHttpReqHelper.PdiInsertReq(fazendaBd.Demarcacao);
+            var objReq = PdiHttpReqHelper.PdiFazendaInsertReq(fazendaBd.Demarcacao);
 
             var respostaPdi = HttpRequestHelper.MakeJsonRequest<PdiResponseDto>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/insert", objReq);
             if (respostaPdi != null)

@@ -12,5 +12,6 @@ namespace DiagnoseVirtual.Domain.Entities
         public virtual bool Concluida { get; set; }
         public virtual bool Ativa { get; set; }
         public virtual Geometry[] Talhoes { get; set; }
+        public virtual string IdPdi { get; set; }
     }
 }

@@ -11,6 +11,8 @@ namespace DiagnoseVirtual.Domain.Dtos
         public string pw { get; set; }
         public string layer { get; set; }
         public string cod { get; set; }
+        public double espacx { get; set; }
+        public double espacy { get; set; }
         public Geometry geometria { get; set; }
 
         public PdiDto(Geometry geometria, string layer)

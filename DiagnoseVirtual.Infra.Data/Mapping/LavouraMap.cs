@@ -14,11 +14,12 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
 
             //Proriedades
             builder.Property(x => x.Id)
-                .IsRequired()
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Demarcacao)
                 .HasColumnName("demarcacao_geom");
+            builder.Property(x => x.IdPdi)
+                .HasColumnName("id_pdi");
             builder.Property(x => x.Concluida)
                 .HasColumnName("concluida")
                 .HasDefaultValue(false);
