@@ -244,9 +244,18 @@ namespace DiagnoseVirtual.Application.Controllers
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
+
+            if (!lavouraBd.Fazenda.Demarcacao.Contains(geometriaDemarcacao))
+            {
+                return BadRequest("A lavoura deve estar dentro da fazenda");
+            }
+
+
             var etapaDemarcacao= new BaseService<EtapaLavoura>(_context).Get((int)EEtapaLavoura.Talhoes);
             lavouraBd.Etapa = etapaDemarcacao;
             lavouraBd.Demarcacao = geometriaDemarcacao;
+
+
 
             var objReq = PdiHttpReqHelper.PdiTalhaoInsertReq(lavouraBd.Demarcacao, lavouraBd.Fazenda.IdPdi);
 
@@ -287,6 +296,10 @@ namespace DiagnoseVirtual.Application.Controllers
             var geometriaPdi = talhoes.FirstOrDefault().Geometry;
             foreach (var talhao in talhoes)
             {
+                if (!lavouraBd.Demarcacao.Contains(talhao.Geometry))
+                {
+                    return BadRequest("O talhão deve estar dentro da lavoura");
+                }
                 geometriaPdi = geometriaPdi.Union(talhao.Geometry);
             }
 
@@ -353,6 +366,12 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
+            if (!lavouraBd.Fazenda.Demarcacao.Contains(geometriaDemarcacao))
+            {
+                return BadRequest("A lavoura deve estar dentro da fazenda");
+            }
+
+
             lavouraBd.Demarcacao = geometriaDemarcacao;
             var objReq = PdiHttpReqHelper.PdiTalhaoInsertReq(lavouraBd.Demarcacao, lavouraBd.Fazenda.IdPdi);
 
@@ -386,6 +405,14 @@ namespace DiagnoseVirtual.Application.Controllers
             if (talhoes == null || !talhoes.Any() || lavouraBd == null || lavouraBd.Talhoes == null)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
+
+            foreach (var talhao in talhoes)
+            {
+                if (!lavouraBd.Demarcacao.Contains(talhao.Geometry))
+                {
+                    return BadRequest("O talhão deve estar dentro da lavoura");
+                }
             }
 
             lavouraBd.Talhoes = talhoes.Select(f => f.Geometry).ToArray();

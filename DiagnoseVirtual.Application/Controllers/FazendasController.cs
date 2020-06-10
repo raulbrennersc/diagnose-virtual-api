@@ -350,6 +350,11 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
+            if (demarcacao.Area > 100.4671999999705794E-07)
+            {
+                return BadRequest("Área muito grande");
+            }
+
             var etapaConclusao = new BaseService<EtapaFazenda>(_context).Get((int)EEtapaFazenda.Confirmacao);
             fazendaBd.Etapa = etapaConclusao;
             fazendaBd.Demarcacao = demarcacao;
@@ -459,6 +464,11 @@ namespace DiagnoseVirtual.Application.Controllers
             if (demarcacao == null || fazendaBd == null)
             {
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
+            }
+
+            if(demarcacao.Area > 10.4671999999705794E-07)
+            {
+                return BadRequest("Área muito grande");
             }
 
             fazendaBd.Demarcacao = demarcacao;
