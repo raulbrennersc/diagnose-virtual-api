@@ -389,16 +389,12 @@ namespace DiagnoseVirtual.Application.Controllers
             }
 
             lavouraBd.Talhoes = talhoes.Select(f => f.Geometry).ToArray();
-            var geometriaPdi = talhoes.FirstOrDefault().Geometry;
-            foreach (var talhao in talhoes)
-            {
-                geometriaPdi = geometriaPdi.Union(talhao.Geometry);
-            }
             
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
+                    _lavouraService.Put(lavouraBd);
                     transaction.Commit();
                     return Ok();
                 }

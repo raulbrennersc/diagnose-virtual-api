@@ -93,11 +93,25 @@ namespace DiagnoseVirtual.Application.Controllers
             var urlpdi = "";
             if (!string.IsNullOrEmpty(fazenda.IdPdi))
             {
-                var responsePdi = (List<PdiQueryDto>)HttpRequestHelper.MakeJsonRequest<List<PdiQueryDto>>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/query", PdiHttpReqHelper.PdiQueryReq(fazenda.IdPdi));
+                var responsePdi = (List<PdiQueryDto>)HttpRequestHelper.MakeJsonRequest<List<PdiQueryDto>>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/query", PdiHttpReqHelper.PdiQueryReq(fazenda.IdPdi, "fazenda"));
                 if((responsePdi?.Any() ?? false ) && (responsePdi.FirstOrDefault().Imgs?.Any() ?? false) && (responsePdi.FirstOrDefault().Imgs.FirstOrDefault()?.Images.Any() ?? false) )
                 {
                     var images = responsePdi.FirstOrDefault().Imgs.FirstOrDefault().Images;
                     urlpdi = images.FirstOrDefault(i => i.EndsWith(".png") && i.Contains("ndvi") );
+                }
+            }
+
+            foreach (var lavoura in fazenda.Lavouras)
+            {
+                if (!string.IsNullOrEmpty(lavoura.IdPdi))
+                {
+                    var responsePdi = (List<PdiQueryDto>)HttpRequestHelper.MakeJsonRequest<List<PdiQueryDto>>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/query", PdiHttpReqHelper.PdiQueryReq(lavoura.IdPdi, "talhao"));
+                    break;
+                    if ((responsePdi?.Any() ?? false) && (responsePdi.FirstOrDefault().Imgs?.Any() ?? false) && (responsePdi.FirstOrDefault().Imgs.FirstOrDefault()?.Images.Any() ?? false))
+                    {
+                        var images = responsePdi.FirstOrDefault().Imgs.FirstOrDefault().Images;
+                        urlpdi = images.FirstOrDefault(i => i.EndsWith(".png") && i.Contains("ndvi"));
+                    }
                 }
             }
             

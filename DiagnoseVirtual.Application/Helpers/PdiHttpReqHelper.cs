@@ -51,12 +51,12 @@ namespace DiagnoseVirtual.Application.Helpers
             };
         }
 
-        public static dynamic PdiQueryReq(string cod)
+        public static dynamic PdiQueryReq(string cod, string layer)
         {
             return new dynamic[]
             {
                 new {
-                    layer = "fazenda",
+                    layer,
                     pw = "pdi2020",
                     usr = "app",
                     cod,
