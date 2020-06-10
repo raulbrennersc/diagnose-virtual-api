@@ -350,7 +350,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            if (demarcacao.Area > 100.4671999999705794E-07)
+            if (demarcacao.Area > 50.8379255000031248E-05)
             {
                 return BadRequest("Área muito grande");
             }
@@ -466,7 +466,7 @@ namespace DiagnoseVirtual.Application.Controllers
                 return BadRequest(Constants.ERR_REQ_INVALIDA);
             }
 
-            if(demarcacao.Area > 10.4671999999705794E-07)
+            if(demarcacao.Area > 50.8379255000031248E-05)
             {
                 return BadRequest("Área muito grande");
             }
