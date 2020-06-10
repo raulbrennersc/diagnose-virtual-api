@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using NetTopologySuite.Geometries;
+using NetTopologySuite.IO;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -101,16 +102,32 @@ namespace DiagnoseVirtual.Application.Controllers
                 }
             }
 
+            var problemasPdi = new List<ProblemaMonitoramentoDto>();
+
             foreach (var lavoura in fazenda.Lavouras)
             {
                 if (!string.IsNullOrEmpty(lavoura.IdPdi))
                 {
-                    var responsePdi = (List<PdiQueryDto>)HttpRequestHelper.MakeJsonRequest<List<PdiQueryDto>>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/query", PdiHttpReqHelper.PdiQueryReq(lavoura.IdPdi, "talhao"));
-                    break;
-                    if ((responsePdi?.Any() ?? false) && (responsePdi.FirstOrDefault().Imgs?.Any() ?? false) && (responsePdi.FirstOrDefault().Imgs.FirstOrDefault()?.Images.Any() ?? false))
+                    try
                     {
-                        var images = responsePdi.FirstOrDefault().Imgs.FirstOrDefault().Images;
-                        urlpdi = images.FirstOrDefault(i => i.EndsWith(".png") && i.Contains("ndvi"));
+                        var responsePdi = HttpRequestHelper.MakeJsonRequest<dynamic>(_httpClientFactory.CreateClient(), $"{_config.GetSection("AppSettings:UrlPdi").Value}/query", PdiHttpReqHelper.PdiQueryReq(lavoura.IdPdi, "talhao"));
+                        var nomeImg = (string)responsePdi[0].pontos[0];
+                        var wktPoint = ((string)responsePdi[0].anomalias[nomeImg][0].properties.pt)
+                            .Replace("POINT ", "").Replace("(", "").Replace(")", "").Replace("-", "").Split(" ");
+                        var lat = double.Parse("-" + wktPoint[0]);
+                        var longi = double.Parse("-" + wktPoint[1]);
+                        var factory = Geometry.DefaultFactory;
+                        var geo = Geometry.DefaultFactory.CreatePoint(new Coordinate(lat, longi));
+                        var problema = new ProblemaMonitoramentoDto
+                        {
+                            Descricao = "Identificado pelo PDI",
+                            Ponto = geo,
+                        };
+                        problemasPdi.Add(problema);
+                    }
+                    catch
+                    {
+
                     }
                 }
             }
@@ -118,7 +135,8 @@ namespace DiagnoseVirtual.Application.Controllers
 
             var response = new MonitoramentoDetailDto(fazenda)
             {
-                UrlPdi = urlpdi
+                UrlPdi = urlpdi,
+                Problemas = problemasPdi
             };
 
             return Ok(response);
