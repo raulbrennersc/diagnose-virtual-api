@@ -18,14 +18,11 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             //Proriedades
             builder.Property(x => x.Id)
                 .HasColumnName("id")
-                .IsRequired()
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Nome)
-                .HasColumnName("nome")
-                .IsRequired();
+                .HasColumnName("nome");
             builder.Property(x => x.CodigoIbge)
-                .HasColumnName("codigo_ibge")
-                .IsRequired();
+                .HasColumnName("codigo_ibge");
 
             //Relacoes
             builder.HasOne(x => x.Estado)

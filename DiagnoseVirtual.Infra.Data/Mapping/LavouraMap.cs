@@ -35,8 +35,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .HasForeignKey<DadosLavoura>("id_lavoura");
             builder.HasOne(x => x.Etapa)
                 .WithMany()
-                .HasForeignKey("id_etapa")
-                .IsRequired();
+                .HasForeignKey("id_etapa");
 
             //Indices
             builder.HasIndex(x => x.Id).IsUnique();

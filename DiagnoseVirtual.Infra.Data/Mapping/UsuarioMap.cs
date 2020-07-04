@@ -14,23 +14,17 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
 
             //Propriedades
             builder.Property(x => x.Id)
-                .IsRequired()
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Nome)
-                .IsRequired()
                 .HasColumnName("nome");
             builder.Property(x => x.Cpf)
-                .IsRequired()
                 .HasColumnName("cpf");
             builder.Property(x => x.Email)
-                .IsRequired()
                 .HasColumnName("email");
             builder.Property(x => x.PasswordHash)
-                .IsRequired()
                 .HasColumnName("password_hash");
             builder.Property(x => x.PasswordSalt)
-                .IsRequired()
                 .HasColumnName("password_salt");
             builder.Property(x => x.Ativo)
                 .HasDefaultValue(true)

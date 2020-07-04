@@ -14,16 +14,13 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
 
             //Proriedades
             builder.Property(x => x.Id)
-                .IsRequired()
                 .HasColumnName("id")
                 .ValueGeneratedOnAdd();
 
             builder.Property(x => x.NomeArquivo)
-                .IsRequired()
                 .HasColumnName("nome_arquivo");
 
             builder.Property(x => x.Arquivo)
-                .IsRequired()
                 .HasColumnName("arquivo");
 
             //Relacoes

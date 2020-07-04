@@ -18,16 +18,13 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             //Proriedades
             builder.Property(x => x.Id)
                 .HasColumnName("id")
-                .IsRequired()
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Nome)
                 .HasColumnName("nome")
-                .HasMaxLength(30)
-                .IsRequired();
+                .HasMaxLength(30);
             builder.Property(x => x.Sigla)
                 .HasColumnName("sigla")
-                .HasMaxLength(2)
-                .IsRequired();
+                .HasMaxLength(2);
 
             //Relacoes
             builder.HasMany(x => x.Municipios)

@@ -15,14 +15,11 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             //Proriedades
             builder.Property(x => x.Id)
                 .HasColumnName("id")
-                .IsRequired()
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.AreaTotal)
-                .HasColumnName("area_total")
-                .IsRequired();
+                .HasColumnName("area_total");
             builder.Property(x => x.QuantidadeLavouras)
-                .HasColumnName("quantidade_lavouras")
-                .IsRequired();
+                .HasColumnName("quantidade_lavouras");
 
             //Relacoes
             builder.HasOne(x => x.Cultura)

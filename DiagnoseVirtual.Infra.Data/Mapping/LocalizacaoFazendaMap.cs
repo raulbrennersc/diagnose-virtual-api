@@ -15,28 +15,21 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
             //Proriedades
             builder.Property(x => x.Id)
                 .HasColumnName("id")
-                .IsRequired()
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Nome)
-                .HasColumnName("nome")
-                .IsRequired();
+                .HasColumnName("nome");
             builder.Property(x => x.Proprietario)
-                .HasColumnName("proprietario")
-                .IsRequired();
+                .HasColumnName("proprietario");
             builder.Property(x => x.Gerente)
-                .HasColumnName("gerente")
-                .IsRequired();
+                .HasColumnName("gerente");
             builder.Property(x => x.Email)
-                 .HasColumnName("email")
-                 .IsRequired();
+                 .HasColumnName("email");
 
             builder.Property(x => x.Telefone)
-                 .HasColumnName("telefone")
-                 .IsRequired();
+                 .HasColumnName("telefone");
 
             builder.Property(x => x.PontoReferencia)
-                .HasColumnName("ponto_referencia")
-                .IsRequired();
+                .HasColumnName("ponto_referencia");
 
             //Relacoes
             builder.HasOne(x => x.Municipio)
