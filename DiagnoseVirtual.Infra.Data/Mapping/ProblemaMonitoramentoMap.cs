@@ -19,12 +19,10 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .ValueGeneratedOnAdd();
 
             builder.Property(x => x.Descricao)
-                .HasMaxLength(140)
                 .IsRequired()
                 .HasColumnName("descricao");
 
             builder.Property(x => x.Recomendacao)
-                .HasMaxLength(140)
                 .IsRequired()
                 .HasColumnName("recomendacao");
 

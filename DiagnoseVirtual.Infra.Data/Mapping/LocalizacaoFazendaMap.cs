@@ -19,29 +19,23 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Nome)
                 .HasColumnName("nome")
-                .HasMaxLength(30)
                 .IsRequired();
             builder.Property(x => x.Proprietario)
                 .HasColumnName("proprietario")
-                .HasMaxLength(50)
                 .IsRequired();
             builder.Property(x => x.Gerente)
                 .HasColumnName("gerente")
-                .HasMaxLength(30)
                 .IsRequired();
             builder.Property(x => x.Email)
                  .HasColumnName("email")
-                 .HasMaxLength(50)
                  .IsRequired();
 
             builder.Property(x => x.Telefone)
                  .HasColumnName("telefone")
-                 .HasMaxLength(20)
                  .IsRequired();
 
             builder.Property(x => x.PontoReferencia)
                 .HasColumnName("ponto_referencia")
-                .HasMaxLength(70)
                 .IsRequired();
 
             //Relacoes

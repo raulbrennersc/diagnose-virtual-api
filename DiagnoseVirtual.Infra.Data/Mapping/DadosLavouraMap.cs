@@ -19,16 +19,13 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Nome)
                 .HasColumnName("nome")
-                .IsRequired()
-                .HasMaxLength(20);
+                .IsRequired();
             builder.Property(x => x.MesAnoPlantio)
                 .HasColumnName("mes_ano_plantio")
-                .IsRequired()
-                .HasMaxLength(20);
+                .IsRequired();
             builder.Property(x => x.Cultivar)
                 .HasColumnName("cultivar")
-                .IsRequired()
-                .HasMaxLength(30);
+                .IsRequired();
             builder.Property(x => x.AreaTotal)
                 .HasColumnName("area_total")
                 .IsRequired();
@@ -43,8 +40,7 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .IsRequired();
             builder.Property(x => x.Observacoes)
                 .HasColumnName("observacoes")
-                .IsRequired()
-                .HasMaxLength(250);
+                .IsRequired();
 
             //Relacoes
 

@@ -19,16 +19,13 @@ namespace DiagnoseVirtual.Infra.Data.Mapping
                 .ValueGeneratedOnAdd();
             builder.Property(x => x.Nome)
                 .IsRequired()
-                .HasColumnName("nome")
-                .HasMaxLength(100);
+                .HasColumnName("nome");
             builder.Property(x => x.Cpf)
                 .IsRequired()
-                .HasColumnName("cpf")
-                .HasMaxLength(11);
+                .HasColumnName("cpf");
             builder.Property(x => x.Email)
                 .IsRequired()
-                .HasColumnName("email")
-                .HasMaxLength(50);
+                .HasColumnName("email");
             builder.Property(x => x.PasswordHash)
                 .IsRequired()
                 .HasColumnName("password_hash");
