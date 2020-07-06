@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DiagnoseVirtual.Domain.Entities
 {
@@ -12,5 +13,6 @@ namespace DiagnoseVirtual.Domain.Entities
         public virtual bool Ativo { get; set; }
         public virtual bool PrimeiroAcesso { get; set; }
         public virtual IList<Fazenda> Fazendas { get; set; }
+        public virtual DateTime DataCadastro { get; set; }
     }
 }
