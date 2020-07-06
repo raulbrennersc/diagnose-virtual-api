@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using MimeKit;
+using DiagnoseVirtual.Application.Helpers;
 
 namespace DiagnoseVirtual.Application.Controllers
 {
@@ -61,7 +62,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             if (usuario == null)
             {
-                return Unauthorized();
+                return Unauthorized("Login e/ou senha incorretos!");
             }
 
             var token = TokenHelper.GerarTokenUsuario(usuario, config.GetSection("AppSettings:Token").Value);
@@ -74,16 +75,14 @@ namespace DiagnoseVirtual.Application.Controllers
             });
         }
 
-        [HttpPost("AceitarTermo")]
-        [Authorize]
-        public ActionResult AceitarTermo()
+        [HttpPut("AceitarTermo")]
+        public ActionResult AceitarTermo(UsuarioLoginDto usuarioLogin)
         {
-            var idUsuario = HttpContext.User.FindFirst("IdUsuario").Value;
-            var usuario = _usuarioService.Get(int.Parse(idUsuario));
+            var usuario = _usuarioService.Login(usuarioLogin.Cpf, usuarioLogin.Password);
 
             if (!usuario.PrimeiroAcesso)
             {
-                return BadRequest();
+                return StatusCode((int)HttpStatusCode.BadRequest, ResponseHelper.Create(Constants.ERR_INCONFORMIDADE));
             }
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -91,15 +90,21 @@ namespace DiagnoseVirtual.Application.Controllers
                 try
                 {
                     usuario.PrimeiroAcesso = false;
-
                     _usuarioService.Put(usuario);
                     transaction.Commit();
-                    return Ok();
+                    var token = TokenHelper.GerarTokenUsuario(usuario, config.GetSection("AppSettings:Token").Value);
+                    var authDto = new AuthDto
+                    {
+                        Token = token,
+                        Nome = usuario.Nome,
+                        PrimeiroAcesso = usuario.PrimeiroAcesso
+                    };
+                    return StatusCode((int)HttpStatusCode.OK, ResponseHelper.Create("Termo aceito com sucesso.", authDto));
                 }
                 catch
                 {
                     transaction.Rollback();
-                    return BadRequest();
+                    return StatusCode((int)HttpStatusCode.BadRequest, ResponseHelper.Create(Constants.ERR_INCONFORMIDADE));
                 }
             }
         }
