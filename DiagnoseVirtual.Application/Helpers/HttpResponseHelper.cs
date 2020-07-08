@@ -1,8 +1,10 @@
 ﻿using DiagnoseVirtual.Domain.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace DiagnoseVirtual.Application.Helpers
@@ -13,10 +15,10 @@ namespace DiagnoseVirtual.Application.Helpers
         public object Result { get; set; }
     }
 
-    public class ResponseHelper
+    public class HttpResponseHelper
     {
 
-        internal static MResult Create(string message, object result = null)
+        internal static ObjectResult Create(HttpStatusCode status, string message, object result = null)
         {
 
             if (result == null)
@@ -28,7 +30,13 @@ namespace DiagnoseVirtual.Application.Helpers
                 throw new InvalidTypeException("A propriedade Result não pode ser uma lista ou array de items");
             }
 
-            return new MResult { Message = message, Result = result };
+            var mResult = new MResult { Message = message, Result = result };
+
+            return new ObjectResult(mResult)
+            {
+                StatusCode = (int)status
+            };
+
         }
     }
 }

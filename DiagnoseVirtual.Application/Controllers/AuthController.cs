@@ -82,7 +82,7 @@ namespace DiagnoseVirtual.Application.Controllers
 
             if (!usuario.PrimeiroAcesso)
             {
-                return StatusCode((int)HttpStatusCode.BadRequest, ResponseHelper.Create(Constants.ERR_INCONFORMIDADE));
+                return HttpResponseHelper.Create(HttpStatusCode.BadRequest, Constants.ERR_INCONFORMIDADE);
             }
 
             using (var transaction = _context.Database.BeginTransaction())
@@ -99,12 +99,12 @@ namespace DiagnoseVirtual.Application.Controllers
                         Nome = usuario.Nome,
                         PrimeiroAcesso = usuario.PrimeiroAcesso
                     };
-                    return StatusCode((int)HttpStatusCode.OK, ResponseHelper.Create("Termo aceito com sucesso.", authDto));
+                    return HttpResponseHelper.Create(HttpStatusCode.OK, "Termo aceito com sucesso.", authDto);
                 }
                 catch
                 {
                     transaction.Rollback();
-                    return StatusCode((int)HttpStatusCode.BadRequest, ResponseHelper.Create(Constants.ERR_INCONFORMIDADE));
+                    return HttpResponseHelper.Create(HttpStatusCode.BadRequest, Constants.ERR_INCONFORMIDADE);
                 }
             }
         }
