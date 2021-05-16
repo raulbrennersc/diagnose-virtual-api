@@ -1,9 +1,0 @@
-INSERT INTO diagnose_virtual.cultura ("Id", nome) VALUES (1, 'Cafeicultura');
-INSERT INTO diagnose_virtual.cultura ("Id", nome) VALUES (2, 'Soja');
-INSERT INTO diagnose_virtual.cultura ("Id", nome) VALUES (3, 'Milho');
-INSERT INTO diagnose_virtual.cultura ("Id", nome) VALUES (4, 'HF');
-INSERT INTO diagnose_virtual.cultura ("Id", nome) VALUES (5, 'Citrus');
-INSERT INTO diagnose_virtual.cultura ("Id", nome) VALUES (6, 'Pastagem');
-INSERT INTO diagnose_virtual.cultura ("Id", nome) VALUES (7, 'Arroz');
-INSERT INTO diagnose_virtual.cultura ("Id", nome) VALUES (8, 'Feijão');
-INSERT INTO diagnose_virtual.cultura ("Id", nome) VALUES (9, 'Outras');
